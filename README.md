@@ -87,8 +87,6 @@ resume/rerun procedures, and integrations.
 
 - Never commit `.env`, local SQLite files, database exports, production
   credentials, APP_KEY, API tokens, or real student/payment data.
-- The `catatan AI Siakad/` working-notes directory is intentionally excluded
-  from this public project.
 - The SQL baseline
   [`database/schema/siakad_main_schema.sql`](database/schema/siakad_main_schema.sql)
   is only for a new empty database. It is not a database upgrade script.
