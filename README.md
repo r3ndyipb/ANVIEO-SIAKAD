@@ -102,3 +102,10 @@ Please open an issue before making large changes. Include the relevant feature,
 role, expected behavior, and test coverage. Run focused tests with an isolated
 test database; do not point automated tests at a university's operational
 database.
+
+## Contact and consultation
+
+For consultations, setup assistance, or questions about SIAKAD, contact:
+
+- Email: [salkin.lutfi@gmail.com](mailto:salkin.lutfi@gmail.com)
+- WhatsApp: [+62 857-5775-2400](https://wa.me/6285757752400)
