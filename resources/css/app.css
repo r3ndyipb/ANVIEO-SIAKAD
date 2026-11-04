@@ -1,0 +1,94 @@
+@import 'tailwindcss';
+@import './ekurikulum.css';
+@import './page-loader.css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source "../**/*.blade.php";
+@source "../**/*.js";
+@source "../**/*.vue";
+
+@theme {
+    --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+body[data-route-name^="kkn."] input[type="checkbox"],
+body[data-route-name^="kkn."] input[type="radio"] {
+    width: 14px;
+    min-width: 14px;
+    height: 14px;
+    min-height: 14px;
+    margin: 0;
+}
+
+dialog.lms-confirm-dialog {
+    width: min(480px, calc(100vw - 2rem));
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #ead1cf;
+    border-top: 4px solid #bd514a;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 24px 72px #18251c38;
+}
+
+dialog.lms-confirm-dialog .lms-dialog-heading {
+    justify-content: flex-start;
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #f0e3e1;
+    background: #fff8f7;
+}
+
+dialog.lms-confirm-dialog .lms-dialog-heading h2 {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    color: #873b35;
+    font-size: 1.05rem;
+}
+
+dialog.lms-confirm-dialog .lms-dialog-heading h2::before {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    place-items: center;
+    border-radius: 50%;
+    background: #f9e5e3;
+    color: #ad433d;
+    content: "!";
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+dialog.lms-confirm-dialog > p {
+    margin: 0;
+    padding: 1.15rem 1.25rem;
+    color: #4b5d50;
+    line-height: 1.6;
+}
+
+dialog.lms-confirm-dialog .lms-dialog-actions {
+    justify-content: flex-end;
+    gap: .65rem;
+    margin: 0;
+    padding: .9rem 1.25rem;
+    border-top: 1px solid #e8eee9;
+    background: #fafcfb;
+}
+
+dialog.lms-confirm-dialog .lms-dialog-actions form {
+    margin: 0;
+}
+
+dialog.lms-confirm-dialog .button-danger {
+    border-color: #aa3934;
+    background: #aa3934;
+    color: #fff;
+}
+
+dialog.lms-confirm-dialog .button-danger:hover {
+    border-color: #8e2e2a;
+    background: #8e2e2a;
+}

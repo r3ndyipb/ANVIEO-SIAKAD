@@ -1,0 +1,36 @@
+.simak-page-loader {
+	position: fixed;
+	inset: 0;
+	z-index: 20000;
+	display: grid;
+	place-content: center;
+	justify-items: center;
+	gap: 16px;
+	background: rgba(248, 251, 253, .94);
+	color: #174f81;
+	backdrop-filter: blur(4px);
+	transition: opacity .22s ease, visibility .22s ease;
+}
+
+.simak-page-loader[hidden] { display: none; }
+.simak-page-loader-mark { position: relative; display: grid; width: 104px; height: 104px; place-items: center; border-radius: 50%; background: rgba(255, 255, 255, .86); box-shadow: 0 12px 34px rgba(26, 73, 116, .13); }
+.simak-page-loader-mark img { width: 66px; height: 66px; object-fit: contain; }
+.simak-page-loader-orbit { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0deg 250deg, rgba(51, 135, 204, .18) 278deg, #f8df76 310deg, #fff 326deg, #66b4f1 340deg, transparent 360deg); animation: simak-loader-spin 1.15s linear infinite; -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px)); mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px)); will-change: transform; }
+.simak-page-loader-label { color: #244f73; font: 700 13px/1.4 "Avenir Next", Avenir, "Segoe UI", sans-serif; letter-spacing: .04em; }
+.simak-page-loader-dots::after { display: inline-block; width: 1.3em; text-align: left; content: ""; animation: simak-loader-dots 1.2s steps(4, end) infinite; }
+
+@keyframes simak-loader-spin {
+	to { transform: rotate(360deg); }
+}
+
+@keyframes simak-loader-dots {
+	0% { content: ""; }
+	25% { content: "."; }
+	50% { content: ".."; }
+	75%, 100% { content: "..."; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.simak-page-loader-orbit, .simak-page-loader-dots::after { animation: none; }
+	.simak-page-loader { transition-duration: .01ms; }
+}
