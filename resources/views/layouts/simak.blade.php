@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
-    <meta name="application-name" content="SIAKAD Salkin Lutfi">
+    <meta name="application-name" content="siakad smartkampus.id">
     <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
@@ -605,7 +605,7 @@
             </header>
             @include('partials.flash-notice')
             <main class="simak-content">@yield('content')</main>
-            <footer class="site-footer">© {{ date('Y') }} {{ $siteConfiguration['institution_name'] }} · SIAKAD (Sistem Informasi Akademik) · Created by <a class="profile-link" href="https://www.facebook.com/Salkin.Luthfi" target="_blank" rel="noopener noreferrer">Salkin</a></footer>
+            <footer class="site-footer">© {{ date('Y') }} {{ $siteConfiguration['institution_name'] }} · SIAKAD (Sistem Informasi Akademik) · <a class="profile-link" href="https://smartkampus.id/" target="_blank" rel="noopener noreferrer">siakad smartkampus.id</a></footer>
         </div>
     </div>
     @if ($currentUser->role !== 'admin')

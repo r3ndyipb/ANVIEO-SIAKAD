@@ -6,10 +6,10 @@ workflows. It is built with Laravel and is designed to be configured for a
 university's own database and institutional identity.
 
 > **Important:** this repository contains application code and a clean-install
-> database schema, not a populated university database. It has no demo student
-> records or shared demo login. A new local installation starts with empty
-> application tables; create the first administrator with the secure setup
-> command described below.
+> database schema, not a populated university database. A new local installation
+> starts with empty application tables; create its first administrator with
+> the secure setup command described below. The public demo below is a separate
+> installation using dummy data and intentionally public demo credentials.
 
 ## Preview
 
@@ -69,11 +69,22 @@ php artisan storage:link
 php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-The bootstrap command prompts for a private administrator password; no
-`admin/admin` password is included in this repository. Open
+The bootstrap command prompts for a private administrator password; the demo
+credentials below are not used by local installations. Open
 <http://127.0.0.1:8000> after the setup command finishes. See the installation
 guide for exact database settings, XAMPP/phpMyAdmin setup, Feeder stages,
 resume/rerun procedures, and integrations.
+
+## Live links and demo
+
+- Official SIAKAD website: <https://smartkampus.id>
+- Complete installation guide: <https://smartkampus.id>
+- Demo: <https://siakad.smartkampus.id>
+- Demo username: `admin`
+- Demo password: `admin`
+
+The demo account is public and intended only for exploring the dummy-data demo.
+Do not use these credentials for any other installation.
 
 ## Technology
 
@@ -93,8 +104,8 @@ resume/rerun procedures, and integrations.
   a database containing data you need to keep.
 - This project uses the custom license in [`LICENSE`](LICENSE). It permits free
   use and redistribution, prohibits charging for the application itself, and
-  requires preserving the “Created by Salkin” attribution. It is not an
-  OSI-approved open-source license.
+  requires preserving the visible “siakad smartkampus.id” attribution. It is
+  not an OSI-approved open-source license.
 
 ## Contributing
 
@@ -103,9 +114,7 @@ role, expected behavior, and test coverage. Run focused tests with an isolated
 test database; do not point automated tests at a university's operational
 database.
 
-## Contact and consultation
+## Official website and installation guide
 
-For consultations, setup assistance, or questions about SIAKAD, contact:
-
-- Email: [salkin.lutfi@gmail.com](mailto:salkin.lutfi@gmail.com)
-- WhatsApp: [+62 857-5775-2400](https://wa.me/6285757752400)
+- Official SIAKAD website: <https://smartkampus.id>
+- Complete installation guide: <https://smartkampus.id>

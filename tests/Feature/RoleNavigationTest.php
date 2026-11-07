@@ -23,10 +23,10 @@ class RoleNavigationTest extends TestCase
         ]));
 
         $this->get(route('dashboard'))->assertOk()
-            ->assertSee('name="application-name" content="SIAKAD Salkin Lutfi"', false)
+            ->assertSee('name="application-name" content="siakad smartkampus.id"', false)
             ->assertSee('name="robots" content="noindex, nofollow"', false)
-            ->assertSee('Created by', false)
-            ->assertSee('href="https://www.facebook.com/Salkin.Luthfi"', false)
+            ->assertSee('>siakad smartkampus.id</a>', false)
+            ->assertSee('href="https://smartkampus.id/"', false)
             ->assertSee('@media (max-width: 1100px), (hover: none) and (pointer: coarse) and (max-width: 1400px)', false)
             ->assertSee("window.matchMedia('(max-width: 1100px), (hover: none) and (pointer: coarse) and (max-width: 1400px)')", false)
             ->assertSee("window.addEventListener('orientationchange', closeSidebarAfterRotation)", false)

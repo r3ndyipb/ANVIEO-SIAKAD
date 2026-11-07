@@ -45,13 +45,14 @@ class PublicLandingTest extends TestCase
             ->assertSee('public-landing-data')
             ->assertSee('public-fallback-menu', false)
             ->assertSee('name="description"', false)
-            ->assertSee('SIAKAD Salkin Lutfi', false)
+            ->assertSee('siakad smartkampus.id', false)
+            ->assertSee('name="keywords" content="siakad smartkampus.id, salkin siakad, Sistem Informasi Akademik', false)
             ->assertSee('name="robots" content="index, follow"', false)
-            ->assertSee('property="og:site_name" content="SIAKAD Salkin Lutfi"', false)
-            ->assertSee('<title>Dashboard Universitas | SIAKAD Salkin Lutfi</title>', false)
+            ->assertSee('property="og:site_name" content="siakad smartkampus.id"', false)
+            ->assertSee('<title>Dashboard Universitas | siakad smartkampus.id</title>', false)
             ->assertSee('rel="canonical"', false)
-            ->assertSee('href="https://www.facebook.com/Salkin.Luthfi"', false)
-            ->assertSee('Created by', false)
+            ->assertSee('href="https://smartkampus.id/"', false)
+            ->assertSee('>siakad smartkampus.id</a>', false)
             ->assertDontSee('Kurikulum OBE')
             ->assertSee('dashboard-loading-flash', false)
             ->assertSee('data-page-loader')
@@ -96,7 +97,7 @@ class PublicLandingTest extends TestCase
             ->assertOk()
             ->assertSee('Universitas Dinamis Uji')
             ->assertDontSee('Universitas Khairun')
-            ->assertSee('href="https://www.facebook.com/Salkin.Luthfi"', false);
+            ->assertSee('href="https://smartkampus.id/"', false);
     }
 
     public function test_visitor_chart_retains_daily_monthly_and_yearly_counters_across_period_boundaries(): void

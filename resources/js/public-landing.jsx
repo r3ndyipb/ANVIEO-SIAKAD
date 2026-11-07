@@ -1048,7 +1048,7 @@ function PublicLanding({ root, data }) {
 			<div className="inner-hero-copy"><span>{text.heroEyebrow}</span><h1>{pageType === 'faculty' ? text.faculties : pageType === 'program' ? text.programs : data.pageTitle}</h1><p>{data.scopeName}</p></div>
 		</div>}
 		{dashboardError ? <main className="landing-main"><p className="empty-state" role="alert">{dashboardError}</p></main> : <DashboardContent data={pageData} pageType={pageType} language={language} />}
-		<footer className="public-footer"><div className="public-footer-inner"><a className="footer-brand" href={data.homeUrl}><img src={data.logoUrl} alt="" /><span><strong>{data.appName}</strong><small>{data.motto}</small></span></a><span className="footer-copyright">© {new Date().getFullYear()} {data.institutionName} · SIAKAD · Created by <a href="https://www.facebook.com/Salkin.Luthfi" target="_blank" rel="noopener noreferrer">Salkin</a></span></div></footer>
+		<footer className="public-footer"><div className="public-footer-inner"><a className="footer-brand" href={data.homeUrl}><img src={data.logoUrl} alt="" /><span><strong>{data.appName}</strong><small>{data.motto}</small></span></a><span className="footer-copyright">© {new Date().getFullYear()} {data.institutionName} · SIAKAD · <a href="https://smartkampus.id/" target="_blank" rel="noopener noreferrer">siakad smartkampus.id</a></span></div></footer>
 		{loginOpen && <LoginModal data={data} language={language} onClose={closeLogin} onForgot={openReset} />}
 		{resetOpen && <ForgotPasswordModal data={data} language={language} onClose={closeReset} onLogin={openLogin} />}
 	</div>;

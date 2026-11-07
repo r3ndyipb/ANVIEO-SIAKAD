@@ -4,20 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
-    <meta name="description" content="SIAKAD Salkin Lutfi — Sistem Informasi Akademik {{ $siteConfiguration['institution_name'] }} untuk layanan akademik, fakultas, dan program studi.">
-    <meta name="keywords" content="SIAKAD Salkin Lutfi, Siakad Salkin, Sistem Informasi Akademik, {{ $siteConfiguration['institution_name'] }}">
-    <meta name="application-name" content="SIAKAD Salkin Lutfi">
+    <meta name="description" content="siakad smartkampus.id — Sistem Informasi Akademik {{ $siteConfiguration['institution_name'] }} untuk layanan akademik, fakultas, dan program studi.">
+    <meta name="keywords" content="siakad smartkampus.id, salkin siakad, Sistem Informasi Akademik, {{ $siteConfiguration['institution_name'] }}">
+    <meta name="application-name" content="siakad smartkampus.id">
     <meta name="robots" content="index, follow">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="SIAKAD Salkin Lutfi">
-    <meta property="og:title" content="{{ $landingData['pageTitle'] }} | SIAKAD Salkin Lutfi">
-    <meta property="og:description" content="SIAKAD Salkin Lutfi — Sistem Informasi Akademik {{ $siteConfiguration['institution_name'] }}.">
+    <meta property="og:site_name" content="siakad smartkampus.id">
+    <meta property="og:title" content="{{ $landingData['pageTitle'] }} | siakad smartkampus.id">
+    <meta property="og:description" content="siakad smartkampus.id — Sistem Informasi Akademik {{ $siteConfiguration['institution_name'] }}.">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta name="twitter:card" content="summary">
     <meta name="theme-color" content="{{ $siteConfiguration['primary_color'] }}">
     <link rel="canonical" href="{{ url()->current() }}">
     <link rel="icon" type="image/png" href="{{ $siteConfiguration['logo_url'] }}">
-    <title>{{ $landingData['pageTitle'] }} | SIAKAD Salkin Lutfi</title>
+    <title>{{ $landingData['pageTitle'] }} | siakad smartkampus.id</title>
     <style>:root { --brand-primary: {{ $siteConfiguration['primary_color'] }}; --brand-primary-foreground: {{ $siteConfiguration['primary_foreground'] }}; }</style>
     @vite('resources/js/public-landing.jsx')
 </head>
@@ -49,7 +49,7 @@
                 <div class="inner-hero"><div class="inner-hero-backdrop" style="--inner-hero-image: url('{{ $siteConfiguration['hero_images'][0] }}')"></div><div class="inner-hero-copy"><span>{{ $siteConfiguration['app_full_name'] }}</span><h1>{{ $landingData['pageTitle'] }}</h1><p>{{ $landingData['scopeName'] }}</p></div></div>
             @endif
             <main id="dashboard" class="landing-main"><div class="dashboard-loading" role="status" aria-live="polite"><span class="dashboard-loading-flash" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><strong>Memuat ringkasan akademik…</strong></div></main>
-                    <footer class="public-footer"><div class="public-footer-inner"><span class="footer-copyright">© {{ date('Y') }} {{ $siteConfiguration['institution_name'] }} · SIAKAD · Created by <a href="https://www.facebook.com/Salkin.Luthfi" target="_blank" rel="noopener noreferrer">Salkin</a></span></div></footer>
+                    <footer class="public-footer"><div class="public-footer-inner"><span class="footer-copyright">© {{ date('Y') }} {{ $siteConfiguration['institution_name'] }} · SIAKAD · <a href="https://smartkampus.id/" target="_blank" rel="noopener noreferrer">siakad smartkampus.id</a></span></div></footer>
                 </div>
     </div>
     <script id="public-landing-data" type="application/json">{!! json_encode($landingData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) !!}</script>

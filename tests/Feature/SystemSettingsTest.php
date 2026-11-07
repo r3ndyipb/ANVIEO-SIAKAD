@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 class SystemSettingsTest extends TestCase
@@ -184,8 +185,13 @@ class SystemSettingsTest extends TestCase
     public function test_uploaded_application_logo_is_available_as_display_and_pdf_asset(): void
     {
         Storage::fake('public');
+        config(['app.url' => 'http://127.0.0.1:8001']);
         $image = UploadedFile::fake()->createWithContent(
             'logo-kampus.png',
+            (string) file_get_contents(public_path('images/landing/default-campus-logo.png')),
+        );
+        $preloaderImage = UploadedFile::fake()->createWithContent(
+            'preloader-kampus.png',
             (string) file_get_contents(public_path('images/landing/default-campus-logo.png')),
         );
 
@@ -195,15 +201,23 @@ class SystemSettingsTest extends TestCase
                 'motto' => 'Motto Uji',
                 'primary_color' => '#2167a5',
                 'logo' => $image,
+                'preloader_logo' => $preloaderImage,
             ])
             ->assertRedirect();
 
-        $logoPath = DB::connection('simak_main')->table('simak_site_settings')->value('logo_path');
+        URL::forceRootUrl('https://smartkampus.test/siakad');
+        $settingsRow = DB::connection('simak_main')->table('simak_site_settings')->first();
+        $logoPath = $settingsRow->logo_path;
+        $preloaderLogoPath = $settingsRow->preloader_logo_path;
         Storage::disk('public')->assertExists($logoPath);
+        Storage::disk('public')->assertExists($preloaderLogoPath);
         $settings = app(InstitutionSettings::class);
 
         $this->assertSame(Storage::disk('public')->path($logoPath), $settings->logoFilePath());
-        $this->assertSame(Storage::disk('public')->url($logoPath), $settings->forDisplay()['logo_url']);
+        $displaySettings = $settings->forDisplay();
+        $this->assertSame(url('storage/'.$logoPath), $displaySettings['logo_url']);
+        $this->assertSame(url('storage/'.$preloaderLogoPath), $displaySettings['preloader_logo_url']);
+        $this->assertStringNotContainsString('127.0.0.1:8001', $displaySettings['logo_url']);
     }
 
     public function test_webp_application_logo_is_converted_for_pdf_consumers(): void

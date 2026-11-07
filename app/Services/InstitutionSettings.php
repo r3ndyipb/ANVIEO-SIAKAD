@@ -59,7 +59,7 @@ class InstitutionSettings
         foreach (self::DEFAULT_HERO_IMAGES as $index => $image) {
             $path = $heroPaths->get($index + 1);
             $heroImages[] = filled($path)
-                ? Storage::disk('public')->url((string) $path)
+                ? $this->publicImageUrl((string) $path, asset('images/landing/'.$image))
                 : asset('images/landing/'.$image);
         }
 
@@ -183,6 +183,6 @@ class InstitutionSettings
 
     private function publicImageUrl(?string $path, string $fallback): string
     {
-        return filled($path) ? Storage::disk('public')->url($path) : $fallback;
+        return filled($path) ? url('storage/'.ltrim($path, '/')) : $fallback;
     }
 }
