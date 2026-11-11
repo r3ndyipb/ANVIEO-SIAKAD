@@ -32,6 +32,89 @@ class PublicLandingController extends Controller
         ]);
     }
 
+    public function privacy(Request $request): Response
+    {
+        return $this->page($request, 'privacy', [
+            'pageTitle' => 'Privacy Policy',
+            'scopeName' => 'ASEAN University International',
+            'legalData' => \App\Support\LegalPagesData::privacy(),
+        ]);
+    }
+
+    public function terms(Request $request): Response
+    {
+        return $this->page($request, 'terms', [
+            'pageTitle' => 'Terms of Use',
+            'scopeName' => 'ASEAN University International',
+            'legalData' => \App\Support\LegalPagesData::terms(),
+        ]);
+    }
+
+    public function accessibility(Request $request): Response
+    {
+        return $this->page($request, 'accessibility', [
+            'pageTitle' => 'Accessibility Statement',
+            'scopeName' => 'ASEAN University International',
+            'legalData' => \App\Support\LegalPagesData::accessibility(),
+        ]);
+    }
+
+    public function about(Request $request): Response
+    {
+        return $this->page($request, 'about', [
+            'pageTitle' => 'About AUI',
+            'scopeName' => 'ASEAN University International',
+        ]);
+    }
+
+    public function structure(Request $request): Response
+    {
+        return $this->page($request, 'structure', [
+            'pageTitle' => 'University Structure',
+            'scopeName' => 'ASEAN University International',
+        ]);
+    }
+
+    public function admissions(Request $request): Response
+    {
+        return $this->page($request, 'admissions', [
+            'pageTitle' => 'Admissions & Scholarships',
+            'scopeName' => 'ASEAN University International',
+        ]);
+    }
+
+    public function academic(Request $request): Response
+    {
+        return $this->page($request, 'academic', [
+            'pageTitle' => 'Academic Programmes',
+            'scopeName' => 'ASEAN University International',
+        ]);
+    }
+
+    public function accreditation(Request $request): Response
+    {
+        return $this->page($request, 'accreditation', [
+            'pageTitle' => 'Accreditation & Quality Standards',
+            'scopeName' => 'ASEAN University International',
+        ]);
+    }
+
+    public function payment(Request $request): Response
+    {
+        return $this->page($request, 'payment', [
+            'pageTitle' => 'Payment Information',
+            'scopeName' => 'ASEAN University International',
+        ]);
+    }
+
+    public function contact(Request $request): Response
+    {
+        return $this->page($request, 'contact', [
+            'pageTitle' => 'Contact Us',
+            'scopeName' => 'ASEAN University International',
+        ]);
+    }
+
     public function dtpsDetails(Request $request, string $program): JsonResponse
     {
         abort_unless($this->programRows()->contains(

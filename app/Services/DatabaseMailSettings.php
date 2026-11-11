@@ -13,16 +13,23 @@ class DatabaseMailSettings
 {
     public function configure(): bool
     {
-        $connection = DB::connection('simak_main');
-        if (! Schema::connection('simak_main')->hasTable('simak_mail_settings')) {
-            Config::set('mail.default', 'log');
-            app('mail.manager')->purge();
+        try {
+            $connection = DB::connection('simak_main');
+            if (! Schema::connection('simak_main')->hasTable('simak_mail_settings')) {
+                Config::set('mail.default', 'log');
+                app('mail.manager')->purge();
 
-            return false;
-        }
+                return false;
+            }
 
-        $settings = $connection->table('simak_mail_settings')->where('id', 1)->first();
-        if (! $settings || ! (bool) $settings->enabled) {
+            $settings = $connection->table('simak_mail_settings')->where('id', 1)->first();
+            if (! $settings || ! (bool) $settings->enabled) {
+                Config::set('mail.default', 'log');
+                app('mail.manager')->purge();
+
+                return false;
+            }
+        } catch (\Throwable) {
             Config::set('mail.default', 'log');
             app('mail.manager')->purge();
 

@@ -652,7 +652,7 @@ class KknController extends Controller
         $connection = DB::connection('simak_main');
         $passedCredits = (float) ($connection->table('s1m4k_akm')
             ->where('id_mahasiswa', $student->id_mahasiswa)
-            ->max(DB::raw('CAST(sks_lulus AS SIGNED)')) ?? 0);
+            ->max(DB::raw('CAST(sks_lulus AS INTEGER)')) ?? 0);
 
         return [
             'passed_credits' => $passedCredits,

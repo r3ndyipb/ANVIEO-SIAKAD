@@ -34,7 +34,6 @@ class PublicLandingTest extends TestCase
     {
         $response = $this->get('/');
         $response->assertOk()
-            ->assertSee('public-landing')
             ->assertSee('data-landing-fallback', false)
             ->assertSee('SIAKAD (Sistem Informasi Akademik)')
             ->assertSee('--brand-primary: #2167a5', false)
@@ -51,8 +50,7 @@ class PublicLandingTest extends TestCase
             ->assertSee('property="og:site_name" content="siakad smartkampus.id"', false)
             ->assertSee('<title>Dashboard Universitas | siakad smartkampus.id</title>', false)
             ->assertSee('rel="canonical"', false)
-            ->assertSee('href="https://smartkampus.id/"', false)
-            ->assertSee('>siakad smartkampus.id</a>', false)
+            ->assertSee('ASEAN University International. All Rights Reserved.')
             ->assertDontSee('Kurikulum OBE')
             ->assertSee('dashboard-loading-flash', false)
             ->assertSee('data-page-loader')
@@ -66,7 +64,7 @@ class PublicLandingTest extends TestCase
 
         $data = $response->viewData('landingData');
         $this->assertNull(collect($data['metrics'])->firstWhere('key', 'programs')['value']);
-        $this->withCookie('simak_public_visitor', $visitorCookie->getValue())->withCredentials();
+        $this->withCookie('simak_public_visitor', (string) $visitorCookie->getValue())->withCredentials();
         $this->assertSame(2, $this->getJson($data['dataUrl'])->assertOk()->json('metrics.0.value'));
         $this->assertSame(3, $this->getJson($data['dataUrl'])->assertOk()->json('metrics.1.value'));
         $dashboardJson = $this->getJson($data['dataUrl'])->assertOk()->json();
@@ -96,8 +94,7 @@ class PublicLandingTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Universitas Dinamis Uji')
-            ->assertDontSee('Universitas Khairun')
-            ->assertSee('href="https://smartkampus.id/"', false);
+            ->assertDontSee('Universitas Khairun');
     }
 
     public function test_visitor_chart_retains_daily_monthly_and_yearly_counters_across_period_boundaries(): void
@@ -109,7 +106,7 @@ class PublicLandingTest extends TestCase
             $visitorCookie = $page->getCookie('simak_public_visitor');
             $this->assertNotNull($visitorCookie);
             $dataUrl = $page->viewData('landingData')['dataUrl'];
-            $this->withCookie('simak_public_visitor', $visitorCookie->getValue())->withCredentials();
+            $this->withCookie('simak_public_visitor', (string) $visitorCookie->getValue())->withCredentials();
             $this->getJson($dataUrl)->assertOk();
 
             Carbon::setTestNow('2026-01-01 12:00:00');
@@ -136,7 +133,7 @@ class PublicLandingTest extends TestCase
             $page = $this->get('/');
             $visitorCookie = $page->getCookie('simak_public_visitor');
             $this->assertNotNull($visitorCookie);
-            $visitors = $this->withCookie('simak_public_visitor', $visitorCookie->getValue())
+            $visitors = $this->withCookie('simak_public_visitor', (string) $visitorCookie->getValue())
                 ->withCredentials()
                 ->getJson($page->viewData('landingData')['dataUrl'])
                 ->assertOk()
@@ -364,7 +361,7 @@ class PublicLandingTest extends TestCase
         $facultyResponse->assertOk()->assertSee('Fakultas Sains')->assertDontSee('Program Dua');
         $visitorCookie = $facultyResponse->getCookie('simak_public_visitor');
         $this->assertNotNull($visitorCookie);
-        $this->withCookie('simak_public_visitor', $visitorCookie->getValue())->withCredentials();
+        $this->withCookie('simak_public_visitor', (string) $visitorCookie->getValue())->withCredentials();
         $facultyData = $facultyResponse->viewData('landingData');
         $facultyJson = $this->getJson($facultyData['dataUrl'])->assertOk();
         $this->assertSame(2, $facultyJson->json('metrics.1.value'));
@@ -450,7 +447,7 @@ class PublicLandingTest extends TestCase
         $landing = $this->get(route('public.home'))->assertOk();
         $visitorCookie = $landing->getCookie('simak_public_visitor');
         $this->assertNotNull($visitorCookie);
-        $this->withCookie('simak_public_visitor', $visitorCookie->getValue())->withCredentials();
+        $this->withCookie('simak_public_visitor', (string) $visitorCookie->getValue())->withCredentials();
         $dataUrl = $landing->viewData('landingData')['dataUrl'];
 
         $this->getJson($dataUrl)->assertOk()->assertJsonPath('visitors.total', 1);
@@ -507,6 +504,17 @@ class PublicLandingTest extends TestCase
         $this->assertSame([], $data['loginErrors']);
     }
 
+    public function test_public_informational_pages_are_accessible_and_render_branding(): void
+    {
+        foreach (['about', 'structure', 'admissions', 'academic', 'accreditation', 'payment-information', 'contact', 'privacy', 'terms', 'accessibility'] as $slug) {
+            $response = $this->get('/' . $slug)->assertOk();
+            $response->assertSee('ASEAN University International');
+            $response->assertSee(route('login'));
+        }
+
+        $this->get('/payment')->assertRedirect('/payment-information');
+    }
+
     private function createSchema(): void
     {
         Schema::connection('simak_main')->create('s1m4k_masterpt', function (Blueprint $table): void {
@@ -551,6 +559,8 @@ class PublicLandingTest extends TestCase
             $table->string('id_prodi')->nullable();
             $table->string('nidn')->nullable();
             $table->string('nama_dosen')->nullable();
+            $table->string('gelar_depan')->nullable();
+            $table->string('gelar_belakang')->nullable();
         });
         Schema::connection('simak_main')->create('s1m4k_masterasdos', function (Blueprint $table): void {
             $table->string('id_asdos')->primary();

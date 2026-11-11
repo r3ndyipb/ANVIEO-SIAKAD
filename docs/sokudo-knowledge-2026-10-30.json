@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "kind": "sokudo-knowledge",
+  "exported_at": "2026-11-11T16:40:00.000000+07:00",
+  "workspace_id": "7cc4a749-80c8-40ba-86a8-a61d7b97e45e",
+  "count": 20,
+  "items": [
+    {
+      "name": "SIAKAD 6-Phase Academic Lifecycle Architecture",
+      "category": "academic-lifecycle",
+      "content": "### SIAKAD 6-Phase Academic Lifecycle Architecture\nSIAKAD Kampus organizes the higher education operational continuum into six interdependent, sequential phases:\n1. **Fase 1: Admisi & Registrasi Ulang**: Onboarding student cohorts, biometric/document verification, and tuition tier assignment (UKT/IPI).\n2. **Fase 2: KRS War & Perwalian**: Academic counselor (DPA) consultation, GPA-dependent credit limit assignment (18-24 SKS), and concurrent course enrollment.\n3. **Fase 3: Perkuliahan & Presensi**: 16-meeting semester plan (14 lectures + UTS + UAS), rolling QR attendance, and LMS content distribution.\n4. **Fase 4: Penilaian (UTS/UAS) & KHS**: Multi-component grading (Absensi, Tugas, Kuis, UTS, UAS, Praktikum) and OBE CPMK score aggregation.\n5. **Fase 5: Yudisium & Wisuda**: Graduation clearance, credit audits (min 144 SKS for S1), plagiarism check, and SKPI generation.\n6. **Fase 6: Sinkronisasi PDDIKTI Neo Feeder**: Reporting student activity, study plans, lecturer workloads, and gradebooks to the national database.",
+      "enabled": true
+    },
+    {
+      "name": "High-Concurrency KRS War & PostgreSQL Row-Level Locking (SELECT ... FOR UPDATE)",
+      "category": "krs-concurrency",
+      "content": "### High-Concurrency KRS War & PostgreSQL Row-Level Locking (SELECT ... FOR UPDATE)\nDuring semester enrollment peaks (KRS War), thousands of students attempt to claim limited class seats simultaneously.\n1. **The Overbooking Race Condition**: Without strict pessimistic locking, two transactions reading remaining quota `1` can both insert enrollment records, resulting in negative quota.\n2. **PostgreSQL Row-Locking Implementation**:\n   - Wrap the entire enrollment in an atomic `DB::transaction(function () { ... })`.\n   - Acquire an exclusive row lock on the class schedule:\n     `SELECT id_jadwal, kapasitas, terisi FROM t_jadwal_kuliah WHERE id_jadwal = ? FOR UPDATE;`\n   - Evaluate `terisi < kapasitas`. If full, immediately throw a `ClassCapacityExceededException`.\n   - Increment `terisi`, insert the student KRS record into `t_krs`, and commit the transaction.\n3. **Queue Throttling & Waiting Room**: Fronted by Redis-backed queue admission to maintain database connection pools below saturation thresholds.",
+      "enabled": true
+    },
+    {
+      "name": "PostgreSQL db_simak Schema & Declarative Partitioning for Presensi",
+      "category": "database-schema",
+      "content": "### PostgreSQL db_simak Schema & Declarative Partitioning for Presensi\nThe `db_simak` database utilizes PostgreSQL 15/16+ declarative partitioning to scale high-frequency academic transactions:\n1. **Attendance Partitioning (`t_presensi_perkuliahan`)**:\n   - Partitioned by range on `tahun_akademik_id` or `tanggal_perkuliahan`.\n   - Enables instant sub-second partition pruning when querying attendance for the active semester without scanning historic millions of records.\n2. **Audit Trail Partitioning (`simak_audit_log`)**:\n   - Partitioned by year and month.\n   - Retained as read-only historical archives with automated vacuum and index compression.\n3. **Composite B-Tree & Partial Indexes**:\n   - `idx_krs_mahasiswa_smt`: Composite index on `(id_mahasiswa, id_semester)`.\n   - `idx_jadwal_aktif`: Partial index on `t_jadwal_kuliah(id_prodi, id_semester)` WHERE `status_aktif = true`.",
+      "enabled": true
+    },
+    {
+      "name": "OBE (Outcome-Based Education) Curriculum: CPL, CPMK, Sub-CPMK & RPS Mapping",
+      "category": "obe-curriculum",
+      "content": "### OBE (Outcome-Based Education) Curriculum: CPL, CPMK, Sub-CPMK & RPS Mapping\nSIAKAD supports international accreditation standards (IABEE, ABET, ASIIN) and national BAN-PT/LAM criteria via a structured OBE hierarchy:\n1. **Profil Lulusan (PL)**: Target career attributes defined by the Study Program.\n2. **Capaian Pembelajaran Lulusan (CPL)**: Program-level learning outcomes categorized into Attitude, Knowledge, General Skills, and Special Skills.\n3. **Capaian Pembelajaran Mata Kuliah (CPMK)**: Granular learning outcomes assigned to specific courses, derived directly from CPL.\n4. **Sub-CPMK & Assessment Rubrics**: Measurable indicators linked to exam questions, assignments, and practical sessions.\n5. **Mathematical Integrity**: Assessment item weights per CPMK must sum to exactly 100%. The system dynamically computes cumulative CPL attainment radar charts for every student.",
+      "enabled": true
+    },
+    {
+      "name": "PDDIKTI Neo Feeder Web Service Architecture & Checkpointed Synchronization",
+      "category": "pddikti-feeder",
+      "content": "### PDDIKTI Neo Feeder Web Service Architecture & Checkpointed Synchronization\nAutomated two-way integration with Kemendikbudristek's Neo Feeder Web Service:\n1. **Authentication Lifecycle**: Authenticates via `GetToken` using university credentials; tokens are cached securely in Redis with proactive renewal.\n2. **Entity Synchronization Pipeline**:\n   - Master Reference: Prodi, Kurikulum, Mata Kuliah, Dosen.\n   - Transactional Records: Kelas Kuliah, Dosen Pengajar, KRS Mahasiswa, Nilai Perkuliahan, and Aktivitas Kuliah Mahasiswa (AKM).\n3. **Resilient Checkpointing**:\n   - Each synchronization batch records processed record IDs in `feeder_sync_checkpoints`.\n   - In case of network interruption or API timeout, the job resumes from the last confirmed checkpoint without data duplication or duplicate key errors.\n4. **Pre-Flight Validation**: Validates NIK, SKS bounds, and IPK limits locally before invoking external Feeder endpoints to ensure zero rejected batches.",
+      "enabled": true
+    },
+    {
+      "name": "Multi-Role RBAC Authorization Matrix (14+ Roles) & Data Scoping",
+      "category": "security-rbac",
+      "content": "### Multi-Role RBAC Authorization Matrix (14+ Roles) & Data Scoping\nSIAKAD Kampus strictly separates functional duties and enforces programmatic data boundaries across 14+ distinct roles:\n1. **Institutional Governance**: `admin` (System Administrator), `pimuniv` (Rektorat/Wakil Rektor), `pimfak` (Dekanat).\n2. **Program & Operational Administration**: `userprodi` (Kaprodi), `usertu` (Tata Usaha Prodi), `regulang` (Registrasi Ulang), `validasi` (Petugas Validasi Nilai/Wisuda).\n3. **Support & Service Units**: `keuangan` (BAUK/Billing), `wisuda` (Panitia Wisuda), `lppm` (Operator KKN/Pengabdian), `timkur` (Tim Kurikulum OBE).\n4. **Academic Frontline**: `dosen` (Dosen Pengampu & Pembimbing Akademik), `asdos` (Asisten Dosen), `mahasiswa` (Mahasiswa Aktif).\n5. **System Integrations**: `admin_ws` (Bearer token API service account).\nData Scoping Rule: A `userprodi` or `usertu` is strictly locked to their assigned `prodi_id` and cannot view or alter records belonging to other departments.",
+      "enabled": true
+    },
+    {
+      "name": "Midtrans Payment Gateway Integration & UKT/IPI Financial Clearance",
+      "category": "finance-billing",
+      "content": "### Midtrans Payment Gateway Integration & UKT/IPI Financial Clearance\nAutomated student tuition payment and real-time eligibility unlock:\n1. **Billing Generation**: Mass creation of semester tuition bills (UKT/IPI) categorised by admission batch and socio-economic tiers.\n2. **Midtrans Snap & Core API**:\n   - Generates Virtual Account (VA), QRIS, and bank transfer payment codes.\n   - Provides student payment portals with live countdown timers and transaction histories.\n3. **Webhook Callback Verification**:\n   - Validates incoming callback authenticity using SHA-512 signature hashing: `hash('sha512', order_id + status_code + gross_amount + server_key)`.\n   - Idempotently transitions invoice status from `PENDING` to `SETTLEMENT`.\n4. **Immediate Academic Unlocking**: Upon settlement confirmation, the system automatically sets `is_financial_cleared = true` on the student record, unblocking KRS War registration.",
+      "enabled": true
+    },
+    {
+      "name": "Laravel 12/13 Service-Action-Controller Pattern & N+1 Query Elimination",
+      "category": "laravel-architecture",
+      "content": "### Laravel 12/13 Service-Action-Controller Pattern & N+1 Query Elimination\nBackend design principles governing the SIAKAD code repository:\n1. **Thin Controllers, Rich Services**:\n   - Controllers only validate Form Requests and dispatch commands to Services (`KrsEnrollmentService`, `GradeCalculationService`).\n   - Business rules, database transactions, and event emissions remain encapsulated within service layers.\n2. **Elimination of N+1 Queries**:\n   - Development builds enforce `Model::preventLazyLoading(!app()->isProduction())`.\n   - All relational data (e.g. Schedule -> Course -> Lecturer -> Room) must be explicitly eager loaded via `with()` or `loadMissing()`.\n3. **Type Safety & Strict Typing**:\n   - All classes enforce `declare(strict_types=1);` with explicit return types and DTO parameters.",
+      "enabled": true
+    },
+    {
+      "name": "Academic UI/UX Design System: Tailwind CSS v4, High-Density Tables & WCAG 2.1 AA",
+      "category": "uiux-design",
+      "content": "### Academic UI/UX Design System: Tailwind CSS v4, High-Density Tables & WCAG 2.1 AA\nFrontend UI specifications tailored for complex academic data:\n1. **High-Density Academic Tables**:\n   - Compact table rows (`py-2 px-3`), sticky headers, and pinned action columns for schedule grids and gradebooks.\n   - Clean column sort indicators and real-time client-side / server-side filtering.\n2. **Accessibility Standards (WCAG 2.1 AA)**:\n   - Minimum color contrast ratio of 4.5:1 across all text, status badges, and buttons in both Light and Dark themes.\n   - Full keyboard accessibility: tab navigation, focus rings (`focus:ring-2 focus:ring-brand`), and ARIA status attributes.\n3. **Responsive Mobile Student Portal**:\n   - Adaptive layouts allowing students to enroll in courses, view class schedules, and inspect grades conveniently on mobile viewports.",
+      "enabled": true
+    },
+    {
+      "name": "Diátaxis Technical Documentation Framework for Multi-Stakeholder Academic Portals",
+      "category": "technical-writing",
+      "content": "### Diátaxis Technical Documentation Framework for Multi-Stakeholder Academic Portals\nThe documentation architecture of SIAKAD Kampus strictly adheres to the Diátaxis framework across four distinct quadrants:\n1. **Tutorials (Learning-Oriented)**: Guided walkthroughs for new users (e.g. \"5 Langkah Mahasiswa Baru Mengisi KRS untuk Pertama Kali\").\n2. **How-To Guides (Problem-Oriented)**: Step-by-step solutions to operational tasks (e.g. \"Cara Menghitung Nilai Akhir OBE dan Mengunci Gradebook Dosen\").\n3. **Reference (Information-Oriented)**: Technical descriptions, API endpoints, schema definitions, and validation rules (e.g. \"Spesifikasi REST API /api/v1/krs\").\n4. **Explanation (Understanding-Oriented)**: Deep dives into background philosophy and architecture (e.g. \"Arsitektur Row-Level Locking PostgreSQL pada KRS War\").",
+      "enabled": true
+    },
+    {
+      "name": "Gradebook Audit Trails, Cryptographic Hash Seals & Anti-Tampering Triggers",
+      "category": "academic-security",
+      "content": "### Gradebook Audit Trails, Cryptographic Hash Seals & Anti-Tampering Triggers\nTo prevent illicit grade inflation or retroactive score alterations:\n1. **Database Triggers (`simak_audit_log`)**: Any UPDATE or DELETE operation on `t_nilai` executes a PostgreSQL trigger capturing:\n   - Old score vs. new score.\n   - Modifier's authenticated user ID, role, and IP address.\n   - Precise microsecond timestamp.\n2. **Grade Lock State**: Once a course gradebook is finalized and approved by the Kaprodi, the status flips to `LOCKED`. Subsequent modifications require formal Dean authorization.\n3. **Cryptographic Transcript Seals**: Official PDF transcripts include an embedded SHA-256 digital signature and a verification QR code pointing to an immutable verification URL.",
+      "enabled": true
+    },
+    {
+      "name": "E-Skripsi, E-Tesis & Graduation (Wisuda) Clearance Workflows",
+      "category": "thesis-graduation",
+      "content": "### E-Skripsi, E-Tesis & Graduation (Wisuda) Clearance Workflows\nEnd-to-end management of final undergraduate and postgraduate degrees:\n1. **Milestone Progression**:\n   - Proposal submission & advisor matching -> Seminar Proposal -> Field Research -> Comprehensive Defense (Sidang Skripsi/Tesis) -> Final Revision.\n2. **Clearance Gatekeeping**:\n   - Plagiarism check threshold (Turnitin similarity < 20%).\n   - Library repository submission receipt verification.\n   - Financial zero-balance clearance (no unpaid tuition or late fees).\n3. **Graduation Roster Compilation**:\n   - Automated compilation of eligible students for Yudisium decrees.\n   - Seamless data export to National Diploma Numbering (PIN) and SKPI generators.",
+      "enabled": true
+    },
+    {
+      "name": "MBKM (Merdeka Belajar Kampus Merdeka) Credit Transfer & Equivalence Engine",
+      "category": "mbkm-transfer",
+      "content": "### MBKM (Merdeka Belajar Kampus Merdeka) Credit Transfer & Equivalence Engine\nGoverning national flagship and independent student exchange programs:\n1. **Activity Tracks**: Magang Bersertifikat, Studi Independen, Kampus Mengajar, Pertukaran Mahasiswa Merdeka (PMM), Riset, dan Proyek Kemanusiaan.\n2. **20 SKS Equivalence Matrix**: Kaprodi maps MBKM partner competencies to internal course equivalents (Mata Kuliah Konversi).\n3. **Grade Transfer & Transcript Integration**: Transferred grades are marked with a distinct MBKM indicator on transcripts while contributing to the cumulative GPA (IPK).",
+      "enabled": true
+    },
+    {
+      "name": "EDOM (Evaluasi Dosen Oleh Mahasiswa) Analytics & Quality Assurance",
+      "category": "quality-assurance",
+      "content": "### EDOM (Evaluasi Dosen Oleh Mahasiswa) Analytics & Quality Assurance\nStudent feedback mechanism driving continuous academic improvement:\n1. **Evaluation Timing**: Activated at the end of each semester before KHS grade publication.\n2. **Mandatory Prerequisite**: Students must complete EDOM questionnaires before viewing their semester grades (KHS), ensuring 95%+ completion rates.\n3. **Anonymity & Aggregation**: Individual responses are strictly anonymous. Lecturers and Deans only receive aggregated Likert-scale averages, radar charts, and categorized feedback.",
+      "enabled": true
+    },
+    {
+      "name": "Student Academic Standing, Retention Risk & Early Warning System (AKM)",
+      "category": "academic-monitoring",
+      "content": "### Student Academic Standing, Retention Risk & Early Warning System (AKM)\nProactive identification of students at risk of academic failure or dropout:\n1. **Aktivitas Kuliah Mahasiswa (AKM)**: Computes semester GPA (IPS), cumulative GPA (IPK), total credits earned, and attendance percentage.\n2. **Early Warning Indicators**: Flags students with GPA < 2.00 for two consecutive semesters or attendance < 75%.\n3. **Automated DPA Alerts**: Sends real-time dashboard notifications to Academic Advisors (Dosen Pembimbing Akademik) to schedule counseling sessions before semester cutoff.",
+      "enabled": true
+    },
+    {
+      "name": "Asynchronous Job Queues for Bulk PDF Transcript & Ledger Generation",
+      "category": "queue-architecture",
+      "content": "### Asynchronous Job Queues for Bulk PDF Transcript & Ledger Generation\nOffloading intensive document compilation from web request lifecycles:\n1. **Heavy Operations**: Batch transcript PDF compilation, semester grade ledgers (Daftar Nilai Kuliah), and student ID cards.\n2. **Redis Queue Architecture**:\n   - Jobs are queued into dedicated workers: `queue:transcripts`, `queue:feeder`, and `queue:default`.\n   - Utilizes headless Chromium / DomPDF with resource limits to prevent worker memory exhaustion.\n3. **User Notification**: Delivers download links via real-time WebSocket notifications upon job completion.",
+      "enabled": true
+    },
+    {
+      "name": "RESTful Web Service API (/api/v1) & Bearer Sanctum Service Accounts",
+      "category": "api-integration",
+      "content": "### RESTful Web Service API (/api/v1) & Bearer Sanctum Service Accounts\nSecure programmatic interface for campus mobile applications and external systems:\n1. **Sanctum Service Accounts (`admin_ws`)**: Non-interactive API accounts authenticating via cryptographically signed Bearer tokens with strictly scoped capabilities.\n2. **Standardized JSON Schema**: Standard API responses featuring `success`, `message`, `data`, `meta` (pagination), and `errors` payloads.\n3. **Rate Limiting & Throttle**: Configured with token bucket rate limiters (60 requests/minute for mobile apps, 300 requests/minute for server integrations).",
+      "enabled": true
+    },
+    {
+      "name": "KKN & LPPM Community Service Plotting & Evaluation Engine",
+      "category": "community-service",
+      "content": "### KKN & LPPM Community Service Plotting & Evaluation Engine\nManaging university community outreach programs:\n1. **Location & Quota Management**: Defining target regencies, subdistricts, village posts, and capacity quotas.\n2. **Interdisciplinary Student Plotting**: Automated distribution ensuring balanced gender, faculty, and study program representation per village post.\n3. **Lecturer Field Supervisor (DPL)**: Facilitates online monitoring, logbook review, and community service grade submission directly from the field.",
+      "enabled": true
+    },
+    {
+      "name": "PostgreSQL Migration & Zero-Downtime Data Seeding Protocols",
+      "category": "database-migration",
+      "content": "### PostgreSQL Migration & Zero-Downtime Data Seeding Protocols\nSafe database schema evolution in 24/7 academic production environments:\n1. **Non-Destructive Alterations**: Add columns with `nullable()` or safe defaults; never drop active columns without a phased two-sprint deprecation.\n2. **Index Creation Without Lock**: Heavy production indexes must be created with `CONCURRENTLY` to avoid locking read/write operations.\n3. **Seeders & Initial Bootstrap**: `php artisan siakad:bootstrap-admin` establishes initial master credentials without overwriting production records.",
+      "enabled": true
+    },
+    {
+      "name": "Institutional Multi-Tenant / Branch Campus Scoping Protocols",
+      "category": "multi-campus",
+      "content": "### Institutional Multi-Tenant / Branch Campus Scoping Protocols\nArchitectural separation for universities with multiple regional campuses (Kampus Utama, Kampus B, PSDKU):\n1. **Scoped Data Models**: Master entities (Rooms, Schedules, Student Cohorts) carry foreign key `kampus_id`.\n2. **Global Global Scopes in Eloquent**: Automatically filters query results based on the logged-in operator's assigned campus jurisdiction.\n3. **Consolidated Executive Reporting**: Pimpinan Universitas retains global visibility across all campus branches through high-level executive dashboards.",
+      "enabled": true
+    }
+  ]
+}

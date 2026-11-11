@@ -605,7 +605,7 @@
             </header>
             @include('partials.flash-notice')
             <main class="simak-content">@yield('content')</main>
-            <footer class="site-footer">© {{ date('Y') }} {{ $siteConfiguration['institution_name'] }} · SIAKAD (Sistem Informasi Akademik) · <a class="profile-link" href="https://smartkampus.id/" target="_blank" rel="noopener noreferrer">siakad smartkampus.id</a></footer>
+            <footer class="site-footer">&copy; {{ date('Y') }} ASEAN University International. All Rights Reserved.</footer>
         </div>
     </div>
     @if ($currentUser->role !== 'admin')

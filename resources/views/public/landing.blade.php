@@ -18,7 +18,31 @@
     <link rel="canonical" href="{{ url()->current() }}">
     <link rel="icon" type="image/png" href="{{ $siteConfiguration['logo_url'] }}">
     <title>{{ $landingData['pageTitle'] }} | siakad smartkampus.id</title>
-    <style>:root { --brand-primary: {{ $siteConfiguration['primary_color'] }}; --brand-primary-foreground: {{ $siteConfiguration['primary_foreground'] }}; }</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand: #0A2E52;
+            --brand-2: #12467A;
+            --brand-3: #071E38;
+            --gold: #C9962E;
+            --gold-2: #AC7F22;
+            --gold-soft: #F0DFB4;
+            --cream: #FBF8F1;
+            --paper: #FFFFFF;
+            --ink: #152232;
+            --muted: #5C6B7D;
+            --line: rgba(10, 46, 82, .14);
+            --line-soft: rgba(10, 46, 82, .08);
+            --radius: 6px;
+            --maxw: 1240px;
+            --serif: "Fraunces", Georgia, serif;
+            --sans: "Karla", Helvetica, Arial, sans-serif;
+            --brand-primary: {{ $siteConfiguration['primary_color'] }};
+            --brand-primary-foreground: {{ $siteConfiguration['primary_foreground'] }};
+        }
+    </style>
     @vite('resources/js/public-landing.jsx')
 </head>
 <body class="public-site">
@@ -29,28 +53,86 @@
     </div>
     <div id="public-landing" data-page-type="{{ $pageType }}">
         <div class="public-page" data-landing-fallback>
-            <header class="public-header">
-                <a class="public-brand" href="{{ route('public.home') }}"><img src="{{ $siteConfiguration['logo_url'] }}" alt=""><span><strong>{{ $siteConfiguration['app_name'] }}</strong><small>{{ $siteConfiguration['app_full_name'] }}</small></span></a>
-                <nav class="public-nav" aria-label="Navigasi utama"><a href="{{ route('public.home') }}">Dashboard</a><a href="{{ route('public.faculties.index') }}">Fakultas</a><a href="{{ route('public.programs.index') }}">Program Studi</a></nav>
-                <div class="public-header-actions">
-                    <details class="public-fallback-menu">
-                        <summary aria-label="Buka menu"><span></span><span></span><span></span></summary>
-                        <nav aria-label="Navigasi utama"><a href="{{ route('public.home') }}">Dashboard</a><a href="{{ route('public.faculties.index') }}">Fakultas</a><a href="{{ route('public.programs.index') }}">Program Studi</a></nav>
-                    </details>
-                    <a class="login-button" href="{{ route('login') }}">Login SIAKAD <span aria-hidden="true">↗</span></a>
+            <div class="util">
+                <div class="wrap">
+                    <ul>
+                        <li><a href="mailto:admin@aui.university">&#9993; admin@aui.university</a></li>
+                        <li class="sep">|</li>
+                        <li><a href="tel:+60165680906">&#9742; +60 165 680 906</a></li>
+                        <li class="sep">|</li>
+                        <li><a href="{{ route('login') }}">Portal AUI (Students)</a></li>
+                    </ul>
+                    <ul>
+                        <li><a href="{{ route('public.faculties.index') }}">Fakultas</a></li>
+                        <li><a href="{{ route('public.programs.index') }}">Program Studi</a></li>
+                        <li><a href="{{ route('login') }}">Login SIAKAD</a></li>
+                    </ul>
+                </div>
+            </div>
+            <header class="public-header hdr">
+                <div class="wrap">
+                    <a class="public-brand logo" href="{{ route('public.home') }}"><img src="{{ $siteConfiguration['logo_url'] }}" alt=""><span><strong>{{ $siteConfiguration['app_name'] }}</strong><small>{{ $siteConfiguration['app_full_name'] }}</small></span></a>
+                    <nav class="public-nav nav" aria-label="Navigasi utama">
+                        <a href="{{ route('public.home') }}" class="is-active">Home</a>
+                        <a href="{{ route('public.about') }}">About</a>
+                        <a href="{{ route('public.structure') }}">Structure</a>
+                        <a href="{{ route('public.admissions') }}">Admissions</a>
+                        <a href="{{ route('public.academic') }}">Academic</a>
+                        <a href="{{ route('public.accreditation') }}">Accreditation</a>
+                    </nav>
+                    <div class="public-header-actions hdr-cta">
+                        <details class="public-fallback-menu">
+                            <summary aria-label="Buka menu"><span></span><span></span><span></span></summary>
+                            <nav aria-label="Navigasi utama">
+                                <a href="{{ route('public.home') }}">Home</a>
+                                <a href="{{ route('public.about') }}">About</a>
+                                <a href="{{ route('public.structure') }}">Structure</a>
+                                <a href="{{ route('public.admissions') }}">Admissions</a>
+                                <a href="{{ route('public.academic') }}">Academic</a>
+                                <a href="{{ route('public.accreditation') }}">Accreditation</a>
+                            </nav>
+                        </details>
+                        <a class="login-button btn btn-gold" href="{{ route('login') }}">Login SIAKAD <span aria-hidden="true">&#8599;</span></a>
+                    </div>
                 </div>
             </header>
             @if ($pageType === 'home')
                 <section class="hero" aria-label="SIAKAD - Sistem Informasi Akademik">
-                    <div class="hero-slide is-active" style="background-image: url('{{ $siteConfiguration['hero_images'][0] }}')"></div><div class="hero-shade"></div>
-                    <div class="hero-copy"><p class="hero-eyebrow"><span></span>{{ $siteConfiguration['app_full_name'] }}</p><h1>{{ $siteConfiguration['motto'] }}</h1><div class="hero-actions"><a class="hero-primary" href="#dashboard">Jelajahi dashboard <span aria-hidden="true">↓</span></a><a class="hero-secondary" href="{{ route('public.faculties.index') }}">Lihat fakultas</a></div></div>
+                    <div class="hero-slide is-active" style="background-image: url('{{ $siteConfiguration['hero_images'][0] ?? '/img/Perayaan%20Wisuda%20di%20Bawah%20Menara%20Kota.png' }}')"></div>
+                    <div class="hero-shade"></div>
+                    <div class="wrap">
+                        <div class="hero-copy">
+                            <p class="hero-eyebrow eyebrow"><span></span>{{ $siteConfiguration['app_full_name'] }}</p>
+                            <h1>{{ $siteConfiguration['motto'] }}</h1>
+                            <div class="hero-actions hero-btns">
+                                <a class="hero-primary btn btn-gold" href="#dashboard">Jelajahi dashboard <span aria-hidden="true">&#8595;</span></a>
+                                <a class="hero-secondary btn btn-ghost" href="{{ route('public.faculties.index') }}">Lihat fakultas</a>
+                            </div>
+                        </div>
+                    </div>
                 </section>
             @else
-                <div class="inner-hero"><div class="inner-hero-backdrop" style="--inner-hero-image: url('{{ $siteConfiguration['hero_images'][0] }}')"></div><div class="inner-hero-copy"><span>{{ $siteConfiguration['app_full_name'] }}</span><h1>{{ $landingData['pageTitle'] }}</h1><p>{{ $landingData['scopeName'] }}</p></div></div>
+                <div class="inner-hero"><div class="inner-hero-backdrop" style="--inner-hero-image: url('{{ $siteConfiguration['hero_images'][0] ?? '/img/Perayaan%20Wisuda%20di%20Bawah%20Menara%20Kota.png' }}')"></div><div class="inner-hero-copy"><span>{{ $siteConfiguration['app_full_name'] }}</span><h1>{{ $landingData['pageTitle'] }}</h1><p>{{ $landingData['scopeName'] }}</p></div></div>
             @endif
-            <main id="dashboard" class="landing-main"><div class="dashboard-loading" role="status" aria-live="polite"><span class="dashboard-loading-flash" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><strong>Memuat ringkasan akademik…</strong></div></main>
-                    <footer class="public-footer"><div class="public-footer-inner"><span class="footer-copyright">© {{ date('Y') }} {{ $siteConfiguration['institution_name'] }} · SIAKAD · <a href="https://smartkampus.id/" target="_blank" rel="noopener noreferrer">siakad smartkampus.id</a></span></div></footer>
+            <main id="dashboard" class="landing-main">
+                <div class="dashboard-loading" role="status" aria-live="polite">
+                    <span class="dashboard-loading-flash" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+                    <strong>Memuat ringkasan akademik&hellip;</strong>
                 </div>
+            </main>
+            <footer class="public-footer ftr">
+                <div class="wrap">
+                    <div class="public-footer-inner ftr-btm">
+                        <span class="footer-copyright">&copy; {{ date('Y') }} ASEAN University International. All Rights Reserved.</span>
+                        <ul>
+                            <li><a href="{{ route('public.privacy') }}">Privacy Policy</a></li>
+                            <li><a href="{{ route('public.terms') }}">Terms of Use</a></li>
+                            <li><a href="{{ route('public.accessibility') }}">Accessibility Statement</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
+        </div>
     </div>
     <script id="public-landing-data" type="application/json">{!! json_encode($landingData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) !!}</script>
 </body>

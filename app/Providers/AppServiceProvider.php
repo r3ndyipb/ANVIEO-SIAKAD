@@ -60,6 +60,24 @@ class AppServiceProvider extends ServiceProvider
             return new LegacyUserProvider($config['connection']);
         });
 
+        \Illuminate\Database\Query\Builder::macro('whereLike', function ($column, $value) {
+            /** @var \Illuminate\Database\Query\Builder $this */
+            $driver = $this->getConnection()->getDriverName();
+            if ($driver === 'pgsql') {
+                return $this->where($column, 'ilike', $value);
+            }
+            return $this->where($column, 'like', $value);
+        });
+
+        \Illuminate\Database\Query\Builder::macro('orWhereLike', function ($column, $value) {
+            /** @var \Illuminate\Database\Query\Builder $this */
+            $driver = $this->getConnection()->getDriverName();
+            if ($driver === 'pgsql') {
+                return $this->orWhere($column, 'ilike', $value);
+            }
+            return $this->orWhere($column, 'like', $value);
+        });
+
         RateLimiter::for('login', function (Request $request): array {
             $identifier = mb_strtolower(trim((string) $request->input('login', '')));
             $retryMessage = static function (Request $request, array $headers) {

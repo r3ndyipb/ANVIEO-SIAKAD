@@ -1,1 +1,1 @@
-siakad_main_schema.sql
+siakad_main_schema_pgsql.sql

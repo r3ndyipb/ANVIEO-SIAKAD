@@ -77,7 +77,10 @@ class InstitutionSettings
             'primary_color' => $primaryColor,
             'primary_foreground' => $this->primaryForeground($primaryColor),
             'logo_url' => $logoUrl,
-            'preloader_logo_url' => $this->publicImageUrl($settings?->preloader_logo_path, $logoUrl),
+            'preloader_logo_url' => $this->publicImageUrl(
+                $settings?->preloader_logo_path,
+                file_exists(public_path('images/landing/icon.png')) ? asset('images/landing/icon.png') : $logoUrl
+            ),
             'hero_images' => $heroImages,
         ];
     }

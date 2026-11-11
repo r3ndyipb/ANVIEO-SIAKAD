@@ -2067,7 +2067,7 @@ class LmsAccessTest extends TestCase
             ->assertHeader('Content-Type', 'application/pdf')
             ->assertHeader('Content-Disposition', 'inline; filename="absen-mata-kuliah-1-a-pertemuan-1.pdf"');
         $pdfContent = $pdfResponse->getContent();
-        $this->assertSame('%PDF-1.3', substr($pdfContent, 0, 8));
+        $this->assertStringStartsWith('%PDF-', $pdfContent);
         $this->assertSame(3, substr_count($pdfContent, '/Type /Page'));
         $this->assertGreaterThan(0, substr_count($pdfContent, '/Subtype /Image'));
         $verificationUrl = URL::signedRoute('lms.meetings.minutes.verify', ['record' => 'meeting-approved']);

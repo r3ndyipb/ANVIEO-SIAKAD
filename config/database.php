@@ -58,11 +58,24 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                (defined('Pdo\\Mysql::ATTR_SSL_CA') ? \Pdo\Mysql::ATTR_SSL_CA : \PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 
-        'simak_main' => [
+        'simak_main' => env('SIMAK_DB_DRIVER', env('DB_CONNECTION', 'mysql')) === 'pgsql' ? [
+            'driver' => 'pgsql',
+            'url' => env('SIMAK_DB_URL'),
+            'host' => env('SIMAK_DB_HOST', '127.0.0.1'),
+            'port' => env('SIMAK_DB_PORT', '5432'),
+            'database' => env('SIMAK_DB_DATABASE', 'siakad'),
+            'username' => env('SIMAK_DB_USERNAME', 'postgres'),
+            'password' => env('SIMAK_DB_PASSWORD', ''),
+            'charset' => env('SIMAK_DB_CHARSET', 'utf8'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => env('SIMAK_DB_SEARCH_PATH', 'public'),
+            'sslmode' => env('SIMAK_DB_SSLMODE', 'prefer'),
+        ] : [
             'driver' => 'mysql',
             'url' => env('SIMAK_DB_URL'),
             'host' => env('SIMAK_DB_HOST'),
@@ -98,7 +111,7 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                (defined('Pdo\\Mysql::ATTR_SSL_CA') ? \Pdo\Mysql::ATTR_SSL_CA : \PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 

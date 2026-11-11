@@ -1,0 +1,80 @@
+name: SIAKAD CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: PHP 8.4 Tests (PostgreSQL 16)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: db_simak_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: secret_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_pgsql, pgsql, zip, gd, bcmath, pcntl
+          coverage: none
+
+      - name: Copy Environment
+        run: cp .env.example .env
+
+      - name: Install Composer Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Generate Application Key
+        run: php artisan key:generate
+
+      - name: Run Schema Migrations
+        env:
+          DB_CONNECTION: pgsql
+          SIMAK_DB_DRIVER: pgsql
+          SIMAK_DB_HOST: 127.0.0.1
+          SIMAK_DB_PORT: 5432
+          SIMAK_DB_DATABASE: db_simak_test
+          SIMAK_DB_USERNAME: postgres
+          SIMAK_DB_PASSWORD: secret_password
+        run: php artisan migrate --database=simak_main --force
+
+      - name: Verify PostgreSQL Sequences
+        env:
+          DB_CONNECTION: pgsql
+          SIMAK_DB_DRIVER: pgsql
+          SIMAK_DB_HOST: 127.0.0.1
+          SIMAK_DB_PORT: 5432
+          SIMAK_DB_DATABASE: db_simak_test
+          SIMAK_DB_USERNAME: postgres
+          SIMAK_DB_PASSWORD: secret_password
+        run: php artisan siakad:reset-sequences
+
+      - name: Execute Automated Test Suite
+        env:
+          DB_CONNECTION: pgsql
+          SIMAK_DB_DRIVER: pgsql
+          SIMAK_DB_HOST: 127.0.0.1
+          SIMAK_DB_PORT: 5432
+          SIMAK_DB_DATABASE: db_simak_test
+          SIMAK_DB_USERNAME: postgres
+          SIMAK_DB_PASSWORD: secret_password
+        run: php artisan test

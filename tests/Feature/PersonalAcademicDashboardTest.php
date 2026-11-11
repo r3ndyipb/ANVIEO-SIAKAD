@@ -67,6 +67,7 @@ class PersonalAcademicDashboardTest extends TestCase
         Schema::connection('simak_main')->create('s1m4k_masterprodi', function (Blueprint $table): void {
             $table->string('id_prodi')->primary();
             $table->string('nama_program_studi');
+            $table->string('nama_jenjang_pendidikan')->nullable();
             $table->string('status')->nullable();
         });
         Schema::connection('simak_main')->create('s1m4k_masterdosen', function (Blueprint $table): void {

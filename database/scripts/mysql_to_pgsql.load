@@ -1,0 +1,36 @@
+-- ==============================================================================
+-- PGLOADER CONFIGURATION: MIGRASI DATABASE SIAKAD (MYSQL -> POSTGRESQL 16)
+-- Penggunaan:
+--   pgloader database/scripts/mysql_to_pgsql.load
+-- ==============================================================================
+
+LOAD DATABASE
+     FROM mysql://user_simak:password_simak@127.0.0.1:3306/db_simak_mysql
+     INTO postgresql://postgres:Kerasakti123@127.0.0.1:5432/db_simak
+
+ WITH include drop, create tables, no truncate,
+      create indexes, reset sequences, foreign keys,
+      batch rows = 5000, batch size = 32MB, prefetch rows = 5000,
+      workers = 4, concurrency = 2
+
+ SET MySQL PARAMETERS
+      net_read_timeout  = '120',
+      net_write_timeout = '120'
+
+ SET PostgreSQL PARAMETERS
+      maintenance_work_mem = '512MB',
+      work_mem = '64MB',
+      search_path = 'public'
+
+ CAST type datetime to timestamptz drop default drop not null using zero-dates-to-null,
+      type date drop not null drop default using zero-dates-to-null,
+      type tinyint to smallint,
+      type mediumtext to text,
+      type longtext to text
+
+ BEFORE LOAD DO
+      $$ ALTER SCHEMA public RENAME TO public_backup_before_migration; $$,
+      $$ CREATE SCHEMA public; $$
+
+ AFTER LOAD DO
+      $$ ANALYZE; $$;

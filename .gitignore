@@ -24,3 +24,12 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# OS & Build Binaries
+.DS_Store
+*.DS_Store
+composer.phar
+
+# Local Templates & Reference Workspace
+/CONTOH-TEMPLATE/
+

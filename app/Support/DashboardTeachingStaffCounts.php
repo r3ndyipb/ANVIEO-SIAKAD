@@ -76,9 +76,9 @@ class DashboardTeachingStaffCounts
 
             foreach ($lecturers as $id => $lecturer) {
                 $name = LecturerName::format(
-                    $lecturer->nama_dosen,
-                    $lecturer->gelar_depan,
-                    $lecturer->gelar_belakang,
+                    $lecturer->nama_dosen ?? null,
+                    $lecturer->gelar_depan ?? null,
+                    $lecturer->gelar_belakang ?? null,
                 );
                 $peopleById->put($id, (object) [
                     'nidn' => $lecturer->nidn,

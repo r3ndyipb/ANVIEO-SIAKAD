@@ -3,20 +3,30 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\PublicLandingController;
+use App\Services\InstitutionSettings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    public function create(Request $request): Response
+    public function create(Request $request): View
     {
-        $request->session()->flash('open_login', true);
+        $siteConfiguration = app(InstitutionSettings::class)->forDisplay();
+        $sessionErrors = $request->session()->get('errors');
+        $loginErrors = $sessionErrors ? $sessionErrors->getBag('default')->toArray() : [];
 
-        return app(PublicLandingController::class)->home($request);
+        return view('auth.login', [
+            'siteConfiguration' => $siteConfiguration,
+            'landingData' => [
+                'openLogin' => true,
+                'pageTitle' => 'Masuk Portal SIAKAD',
+                'loginErrors' => $loginErrors,
+            ],
+        ]);
     }
 
     public function store(Request $request): RedirectResponse

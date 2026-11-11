@@ -401,6 +401,7 @@ class ApiWebServiceTest extends TestCase
             $table->string('namatahun')->nullable();
             $table->string('tahun');
             $table->string('status')->nullable();
+            $table->string('status_sp')->nullable();
         });
         Schema::connection('simak_main')->create('s1m4k_mastermk', function (Blueprint $table): void {
             $table->string('id_matkul')->primary();

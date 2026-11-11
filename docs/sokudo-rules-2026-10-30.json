@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "kind": "sokudo-rules",
+  "exported_at": "2026-11-11T16:40:00.000000+07:00",
+  "workspace_id": "7cc4a749-80c8-40ba-86a8-a61d7b97e45e",
+  "count": 16,
+  "rules": [
+    {
+      "name": "KRS War Concurrency & Row-Level Locking Mandate",
+      "category": "concurrency",
+      "definition": "All course class seat enrollment mutations must be wrapped in a database transaction and execute an explicit `SELECT ... FOR UPDATE` lock on `t_jadwal_kuliah` prior to evaluating capacity and inserting the KRS record. Overbooking is strictly forbidden.",
+      "enabled": true
+    },
+    {
+      "name": "Zero N+1 Query Policy in Academic Portals",
+      "category": "performance",
+      "definition": "All Eloquent queries in controllers and API endpoints must explicitly declare eager loading relationships via `with()` or `loadMissing()`. Lazy loading is strictly prohibited in development builds via `Model::preventLazyLoading()`.",
+      "enabled": true
+    },
+    {
+      "name": "Strict Multi-Role RBAC & Departmental Data Scoping",
+      "category": "security-rbac",
+      "definition": "Access control must be enforced at both route middleware and controller query levels. Program study operators (`userprodi`, `usertu`) must never access or modify records outside their assigned `prodi_id`.",
+      "enabled": true
+    },
+    {
+      "name": "Immutable Grade Locking & Audit Trigger Verification",
+      "category": "academic-integrity",
+      "definition": "Once gradebooks are submitted and approved, their status must transition to `LOCKED`. Any subsequent modification requires formal administrative approval and must be recorded by the PostgreSQL `simak_audit_log` trigger.",
+      "enabled": true
+    },
+    {
+      "name": "PDDIKTI Neo Feeder Atomic Batching & Error Rollback",
+      "category": "pddikti-compliance",
+      "definition": "All feeder synchronization jobs must execute in checkpointed batches with local validation pre-checks. If an external API batch fails, the local sync state must roll back gracefully to the last known valid checkpoint.",
+      "enabled": true
+    },
+    {
+      "name": "Financial Clearance Precondition for Academic Actions",
+      "category": "financial-guardrail",
+      "definition": "Students cannot enroll in KRS, register for final thesis defense, or print official examination cards unless their semester tuition (UKT/IPI) status is verified as `SETTLEMENT` by the billing system.",
+      "enabled": true
+    },
+    {
+      "name": "OBE CPL-CPMK Mathematical Sum Consistency (100% Weight)",
+      "category": "obe-curriculum",
+      "definition": "Assessment component weightings mapped to CPMK within any course syllabus (RPS) must sum to exactly 100%. The system must reject curricula with incomplete or mathematically mismatched assessment weights.",
+      "enabled": true
+    },
+    {
+      "name": "Declarative Table Partitioning for High-Volume Records",
+      "category": "database-architecture",
+      "definition": "High-volume operational tables including `t_presensi_perkuliahan` and `simak_audit_log` must be partitioned declaratively by semester or calendar year in PostgreSQL to preserve sub-second query performance.",
+      "enabled": true
+    },
+    {
+      "name": "WCAG 2.1 AA Accessibility & Color Contrast in Academic UI",
+      "category": "uiux-accessibility",
+      "definition": "All academic interfaces, data tables, buttons, and alert badges must maintain a minimum color contrast ratio of 4.5:1 against their backgrounds and provide full keyboard navigation support in both Light and Dark modes.",
+      "enabled": true
+    },
+    {
+      "name": "Diátaxis Quadrant Separation in Technical Writing",
+      "category": "documentation-diataxis",
+      "definition": "Technical documentation must strictly segregate content into Tutorials (learning), How-To Guides (tasks), Reference (information), and Explanation (conceptual) without mixing instructional styles within a single document.",
+      "enabled": true
+    },
+    {
+      "name": "Service-Action-Controller Architecture & Thin Controller Rule",
+      "category": "backend-architecture",
+      "definition": "Laravel controllers must remain thin, limited to request validation and response delegation. All business logic, transaction boundaries, and calculations must reside in dedicated Service and Action classes.",
+      "enabled": true
+    },
+    {
+      "name": "Asynchronous Queueing for Heavy PDF/Excel Generation",
+      "category": "queue-processing",
+      "definition": "Bulk PDF transcript compilation, grade ledger generation, and PDDIKTI exports must never run synchronously within HTTP request cycles; they must be dispatched to Redis background queues.",
+      "enabled": true
+    },
+    {
+      "name": "Zero Plaintext Credentials & Sensitive Data Masking",
+      "category": "data-privacy",
+      "definition": "API tokens, payment gateway server keys, and database credentials must never be committed to repository code. Student personal identification numbers (NIK) and phone numbers must be masked in compliance with UU PDP.",
+      "enabled": true
+    },
+    {
+      "name": "Safe Non-Destructive PostgreSQL Migrations",
+      "category": "database-migration",
+      "definition": "Database migrations must never execute destructive `DROP COLUMN` or `DROP TABLE` operations on production schemas without a documented two-stage deprecation cycle and tested rollback methods.",
+      "enabled": true
+    },
+    {
+      "name": "E-Skripsi Plagiarism & Defense Prerequisite Gatekeeping",
+      "category": "academic-clearance",
+      "definition": "Undergraduate and postgraduate students cannot be scheduled for final thesis defense without passing minimum credit requirements (min 144 SKS), zero grade E, and verified Turnitin plagiarism similarity under 20%.",
+      "enabled": true
+    },
+    {
+      "name": "REST API Bearer Token Authentication & Rate Limiting",
+      "category": "api-security",
+      "definition": "All external API endpoints under `/api/v1` must require authenticated Sanctum Bearer tokens with fine-grained ability scopes and enforce token bucket rate limiting to prevent denial-of-service attempts.",
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: siakad-app:latest
+    container_name: siakad_laravel_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+      - ./docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    ports:
+      - "8081:8000"
+      - "5174:5173"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      DB_CONNECTION: pgsql
+      DB_HOST: host.docker.internal
+      DB_PORT: 5432
+      DB_DATABASE: db_simak
+      DB_USERNAME: postgres
+      DB_PASSWORD: Kerasakti123
+      SIMAK_DB_DRIVER: pgsql
+      SIMAK_DB_HOST: host.docker.internal
+      SIMAK_DB_PORT: 5432
+      SIMAK_DB_DATABASE: db_simak
+      SIMAK_DB_USERNAME: postgres
+      SIMAK_DB_PASSWORD: Kerasakti123
+    command: >
+      sh -c "php artisan serve --host=0.0.0.0 --port=8000"

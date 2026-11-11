@@ -56,6 +56,17 @@ Route::get('/fakultas', [PublicLandingController::class, 'faculties'])->name('pu
 Route::get('/fakultas/{faculty}', [PublicLandingController::class, 'faculty'])->name('public.faculties.show');
 Route::get('/prodi', [PublicLandingController::class, 'programs'])->name('public.programs.index');
 Route::get('/prodi/{program}', [PublicLandingController::class, 'program'])->name('public.programs.show');
+Route::get('/privacy', [PublicLandingController::class, 'privacy'])->name('public.privacy');
+Route::get('/terms', [PublicLandingController::class, 'terms'])->name('public.terms');
+Route::get('/accessibility', [PublicLandingController::class, 'accessibility'])->name('public.accessibility');
+Route::get('/about', [PublicLandingController::class, 'about'])->name('public.about');
+Route::get('/structure', [PublicLandingController::class, 'structure'])->name('public.structure');
+Route::get('/admissions', [PublicLandingController::class, 'admissions'])->name('public.admissions');
+Route::get('/academic', [PublicLandingController::class, 'academic'])->name('public.academic');
+Route::get('/accreditation', [PublicLandingController::class, 'accreditation'])->name('public.accreditation');
+Route::get('/payment-information', [PublicLandingController::class, 'payment'])->name('public.payment');
+Route::redirect('/payment', '/payment-information');
+Route::get('/contact', [PublicLandingController::class, 'contact'])->name('public.contact');
 Route::get('/dashboard-data/{pageType}/{identifier?}', [PublicLandingController::class, 'data'])
     ->middleware('throttle:30,1')
     ->name('public.dashboard-data');
