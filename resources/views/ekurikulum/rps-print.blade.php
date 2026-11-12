@@ -7,9 +7,13 @@
     <style>
         @page { size: A4; margin: 15mm; }
         body { color: #17212b; font: 11px Arial, sans-serif; line-height: 1.45; margin: 0 auto; max-width: 900px; }
+        .print-header { display: flex; align-items: center; gap: 18px; margin-bottom: 20px; border-bottom: 2px solid #0A2E52; padding-bottom: 12px; }
+        .institution-logo { width: 68px; height: 68px; object-fit: contain; flex-shrink: 0; }
+        .print-header-text { flex: 1; }
+        .print-header-text h1 { font-size: 18px; margin: 0 0 4px; text-align: left; color: #0A2E52; }
+        .print-header-text p { margin: 2px 0; text-align: left; }
+        .print-institution-name { font-weight: bold; color: #C9962E; }
         h1, h2, h3 { margin: 0 0 8px; }
-        h1 { font-size: 19px; text-align: center; }
-        .institution-logo { display: block; width: 56px; height: 56px; margin: 0 auto 10px; object-fit: contain; }
         h2 { border-bottom: 1px solid #445; font-size: 14px; margin-top: 22px; padding-bottom: 4px; }
         h3 { font-size: 12px; margin-top: 14px; }
         p { margin: 4px 0; }
@@ -24,9 +28,14 @@
 </head>
 <body>
     <div class="actions"><button type="button" onclick="window.print()">Cetak / Simpan sebagai PDF</button></div>
-    <img class="institution-logo" src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}">
-    <h1>RENCANA PEMBELAJARAN SEMESTER</h1>
-    <p style="text-align:center">{{ $curriculumRecord->nama_program_studi }} · {{ $curriculumRecord->nama_kur }}</p>
+    <div class="print-header">
+        <img class="institution-logo" src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}" onerror="this.onerror=null; this.src='{{ asset('images/landing/default-campus-logo.png') }}';">
+        <div class="print-header-text">
+            <h1>RENCANA PEMBELAJARAN SEMESTER</h1>
+            <p>{{ $curriculumRecord->nama_program_studi }} · {{ $curriculumRecord->nama_kur }}</p>
+            <p class="print-institution-name">{{ mb_strtoupper($siteConfiguration['institution_name']) }}</p>
+        </div>
+    </div>
 
     <h2>Identitas Mata Kuliah</h2>
     <table class="identity">

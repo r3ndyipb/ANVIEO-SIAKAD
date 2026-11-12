@@ -31,54 +31,80 @@
         <form method="POST" action="{{ route('system-settings.branding') }}" enctype="multipart/form-data">
             @csrf @method('PUT')
             
-            @if ($mottoSupported)
+            <div class="system-settings-form-grid">
+                {{-- Kolom 1 Baris 1: Motto --}}
                 <div class="system-settings-field">
-                    <label for="institution-motto">Motto perguruan tinggi</label>
-                    <input id="institution-motto" name="motto" value="{{ old('motto', $site->motto ?? $siteConfiguration['motto']) }}" maxlength="255" placeholder="Contoh: Berilmu, berakhlak, dan berdaya saing">
+                    <label for="institution-motto">Motto Perguruan Tinggi</label>
+                    @if ($mottoSupported)
+                        <input id="institution-motto" name="motto" value="{{ old('motto', $site->motto ?? $siteConfiguration['motto']) }}" maxlength="255" placeholder="Contoh: Berilmu, berakhlak, dan berdaya saing">
+                    @else
+                        <input id="institution-motto" value="{{ $siteConfiguration['motto'] }}" disabled>
+                        <small class="system-settings-help">Motto default: {{ $siteConfiguration['motto'] }}.</small>
+                    @endif
                 </div>
-            @else
-                <p class="system-settings-help">Motto default: {{ $siteConfiguration['motto'] }}. Untuk menyimpan motto kustom, jalankan SQL upgrade motto terlebih dahulu.</p>
-            @endif
 
-            <div class="system-settings-field">
-                <label for="ministry-name">Nama kementerian pada dokumen cetak</label>
-                <input id="ministry-name" name="ministry_name" value="{{ old('ministry_name', $site->ministry_name ?? $siteConfiguration['ministry_name']) }}" maxlength="255" placeholder="Contoh: Kementerian Pendidikan Tinggi, Sains, dan Teknologi" required>
+                {{-- Kolom 2 Baris 1: Nama Kementerian --}}
+                <div class="system-settings-field">
+                    <label for="ministry-name">Nama Kementerian pada Dokumen Cetak</label>
+                    <input id="ministry-name" name="ministry_name" value="{{ old('ministry_name', $site->ministry_name ?? $siteConfiguration['ministry_name']) }}" maxlength="255" placeholder="Contoh: Kementerian Pendidikan Tinggi, Sains, dan Teknologi" required>
+                </div>
+
+                {{-- Kolom 1 Baris 2: Warna Utama Aplikasi --}}
+                <div class="system-settings-field">
+                    <label for="primary-color">Warna Utama Aplikasi</label>
+                    @if ($primaryColorSupported)
+                        <div class="system-settings-color-row">
+                            <input id="primary-color" type="color" name="primary_color" value="{{ old('primary_color', $siteConfiguration['primary_color']) }}" required>
+                            <span class="system-settings-color-badge" id="primary-color-badge">{{ old('primary_color', $siteConfiguration['primary_color']) }}</span>
+                        </div>
+                        <small class="system-settings-help">Pilih warna identitas kampus untuk tombol, navigasi, aksen, dan landing page.</small>
+                    @else
+                        <p class="system-settings-help">Color picker belum tersedia pada database ini.</p>
+                    @endif
+                </div>
+
+                {{-- Kolom 2 Baris 2: Info Nama Institusi Aktif --}}
+                <div class="system-settings-field">
+                    <label>Institusi Terdaftar (Master PT)</label>
+                    <div class="system-settings-readonly-info">
+                        <span data-lucide="graduation-cap" style="width: 20px; height: 20px; color: var(--gold); flex-shrink: 0;"></span>
+                        <span>{{ $siteConfiguration['institution_name'] }}</span>
+                    </div>
+                    <small class="system-settings-help">Nama institusi disinkronkan secara terpusat dari Master Perguruan Tinggi.</small>
+                </div>
+
+                {{-- Kolom 1 Baris 3: Logo Aplikasi (Icon di Kiri, Input di Kanan) --}}
+                <div class="system-settings-upload-card">
+                    <label class="system-settings-upload-label" for="logo">Logo Aplikasi (Navbar & Laporan)</label>
+                    <div class="system-settings-upload-layout">
+                        <div class="system-settings-icon-left" title="Pratinjau Logo Aplikasi Saat Ini">
+                            <img class="system-settings-preview" src="{{ $siteConfiguration['logo_url'] }}" alt="Logo saat ini" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';">
+                        </div>
+                        <div class="system-settings-upload-controls">
+                            <input id="logo" type="file" name="logo" accept=".jpg,.jpeg,.png,.webp">
+                            <small class="system-settings-help">JPG, PNG, atau WebP; maks. 5 MB. Ditampilkan pada navbar dan dokumen laporan.</small>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Kolom 2 Baris 3: Logo Preloader (Icon di Kiri, Input di Kanan) --}}
+                <div class="system-settings-upload-card">
+                    <label class="system-settings-upload-label" for="preloader-logo">Logo Preloader & Favicon</label>
+                    <div class="system-settings-upload-layout">
+                        <div class="system-settings-icon-left" title="Pratinjau Logo Preloader Saat Ini">
+                            <img class="system-settings-preview" src="{{ $siteConfiguration['preloader_logo_url'] }}" alt="Logo preloader saat ini" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';">
+                        </div>
+                        <div class="system-settings-upload-controls">
+                            <input id="preloader-logo" type="file" name="preloader_logo" accept=".jpg,.jpeg,.png,.webp">
+                            <small class="system-settings-help">JPG, PNG, atau WebP; maks. 5 MB. Ditampilkan pada loading animasi portal dan favicon.</small>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            @if ($primaryColorSupported)
-                <div class="system-settings-field">
-                    <label for="primary-color">Warna utama aplikasi</label>
-                    <div class="system-settings-color-row">
-                        <input id="primary-color" type="color" name="primary_color" value="{{ old('primary_color', $siteConfiguration['primary_color']) }}" required>
-                        <span class="system-settings-color-badge" id="primary-color-badge">{{ old('primary_color', $siteConfiguration['primary_color']) }}</span>
-                    </div>
-                    <small class="system-settings-help">Pilih warna identitas kampus. Warna diterapkan pada tombol utama, navigasi, aksen, dan landing page.</small>
-                </div>
-            @else
-                <p class="system-settings-help">Color picker belum tersedia pada database ini. Jalankan database/manual/simak_site_settings_primary_color.sql, lalu muat ulang halaman.</p>
-            @endif
-
-            <div class="system-settings-row">
-                <div class="system-settings-field">
-                    <label for="logo">Logo aplikasi</label>
-                    <div class="system-settings-preview-wrap">
-                        <img class="system-settings-preview" src="{{ $siteConfiguration['logo_url'] }}" alt="Logo saat ini" onerror="this.onerror=null; this.src='{{ asset('images/landing/default-campus-logo.png') }}';">
-                    </div>
-                    <input id="logo" type="file" name="logo" accept=".jpg,.jpeg,.png,.webp">
-                    <small class="system-settings-help">JPG, PNG, atau WebP; maksimal 5 MB. Jika belum diunggah, logo akademik default akan digunakan.</small>
-                </div>
-
-                <div class="system-settings-field">
-                    <label for="preloader-logo">Logo preloader</label>
-                    <div class="system-settings-preview-wrap">
-                        <img class="system-settings-preview" src="{{ $siteConfiguration['preloader_logo_url'] }}" alt="Logo preloader saat ini" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';">
-                    </div>
-                    <input id="preloader-logo" type="file" name="preloader_logo" accept=".jpg,.jpeg,.png,.webp">
-                    <small class="system-settings-help">Jika tidak diunggah, preloader menggunakan logo aplikasi.</small>
-                </div>
+            <div class="system-settings-form-actions">
+                <button class="button button-primary" type="submit"><span data-lucide="save"></span> Simpan Identitas & Branding</button>
             </div>
-
-            <button class="button button-primary" type="submit" style="margin-top:8px"><span data-lucide="save"></span> Simpan identitas</button>
         </form>
     </div>
 

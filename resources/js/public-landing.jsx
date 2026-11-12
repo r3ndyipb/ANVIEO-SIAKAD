@@ -975,23 +975,24 @@ function PublicLanding({ root, data }) {
 	}, [data?.dataUrl]);
 
 	useEffect(() => {
-		if (data?.logoUrl) {
+		const faviconUrl = data?.preloaderLogoUrl || data?.logoUrl;
+		if (faviconUrl) {
 			let link = document.querySelector("link[rel*='icon']");
 			if (!link) {
 				link = document.createElement('link');
 				link.rel = 'icon';
 				document.head.appendChild(link);
 			}
-			link.href = data.logoUrl;
+			link.href = faviconUrl;
 		}
-	}, [data?.logoUrl]);
+	}, [data?.preloaderLogoUrl, data?.logoUrl]);
 
 	const pageData = dashboard ? { ...data, ...dashboard } : null;
 
 	return (
 		<div className="public-page">
 			<UtilityBar onNavigate={navigateView} />
-			<Header currentView={currentView} onNavigate={navigateView} logoUrl={data?.logoUrl} />
+			<Header currentView={currentView} onNavigate={navigateView} logoUrl={data?.preloaderLogoUrl || data?.logoUrl} />
 
 			{currentView === 'home' && <HomeView onNavigate={navigateView} portalData={pageData || data} />}
 			{currentView === 'detail' && <AcademicDetailView onNavigate={navigateView} />}

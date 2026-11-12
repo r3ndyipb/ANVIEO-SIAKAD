@@ -8,7 +8,18 @@
     @if ($errors->any())<div class="calendar-modal-error" role="alert">{{ $errors->first() }}</div>@endif
     @if (session('error'))<div class="alert alert-danger" role="alert">{{ session('error') }}</div>@endif
     @if (session('status'))<div class="alert alert-success" role="status">{{ session('status') }}</div>@endif
-    <form class="kkn-filter" method="GET" action="{{ route('kkn.proposals.index') }}"><label for="kkn-proposal-year">Periode KKN</label><select id="kkn-proposal-year" name="tahun" data-searchable-select required><option value="">Pilih periode</option>@foreach ($periods as $item)<option value="{{ $item->tahun }}" @selected($period && (string) $period->tahun === (string) $item->tahun)>{{ $item->nama_periode }} ({{ $item->tahun }})</option>@endforeach</select><button class="button button-primary" type="submit">Tampilkan</button></form>
+    <form class="kkn-filter" method="GET" action="{{ route('kkn.proposals.index') }}">
+        <div>
+            <label for="kkn-proposal-year">Periode KKN</label>
+            <select id="kkn-proposal-year" name="tahun" data-searchable-select required>
+                <option value="">Pilih periode</option>
+                @foreach ($periods as $item)
+                    <option value="{{ $item->tahun }}" @selected($period && (string) $period->tahun === (string) $item->tahun)>{{ $item->nama_periode }} ({{ $item->tahun }})</option>
+                @endforeach
+            </select>
+        </div>
+        <button class="button button-primary" type="submit">Tampilkan</button>
+    </form>
     @if ($period && $canPropose)<p class="kkn-actions"><button class="button button-primary" type="button" data-dialog-open="kkn-proposal-create-dialog"><span data-lucide="plus"></span> Tambah usulan</button><span class="kkn-muted">Pendaftaran dibuka {{ $period->tanggal_mulai }} sampai {{ $period->tanggal_akhir }}.</span></p>@endif
     @if ($period && ! $canPropose)<div class="module-alert" role="status"><p>Masa pengusulan ditutup. Pengusulan hanya dapat dilakukan pada tanggal yang ditetapkan untuk periode aktif.</p></div>@endif
     @if ($rows)

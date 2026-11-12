@@ -23,7 +23,7 @@
 <body>
 <main>
     <header>
-        <img src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}">
+        <img src="{{ $siteConfiguration['preloader_logo_url'] ?? $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';">
         <h1>{{ $valid ? 'Dokumen Terverifikasi' : 'Dokumen Tidak Valid' }}</h1>
         <p>{{ $valid ? 'Dokumen ini terdaftar pada sistem '.$siteConfiguration['institution_name'].'.' : 'Kode QR tidak dikenali atau dokumen tidak terdaftar.' }}</p>
     </header>

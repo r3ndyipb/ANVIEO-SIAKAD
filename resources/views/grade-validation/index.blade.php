@@ -6,8 +6,10 @@
 @section('content')
     <div class="page-heading"><div><p class="eyebrow">Akademik</p><h1>Validasi Nilai Mahasiswa</h1><p class="subtitle">Cari data KHS dan transkrip mahasiswa sesuai status akademik legacy.</p></div></div>
     <form class="grade-validation-filter" method="GET" action="{{ route('grade-validation.index') }}">
-        <label for="grade-validation-search">NPM atau nama mahasiswa</label>
-        <input id="grade-validation-search" type="search" name="search" value="{{ $search }}" placeholder="Masukkan NPM atau nama">
+        <div>
+            <label for="grade-validation-search">NPM atau nama mahasiswa</label>
+            <input id="grade-validation-search" type="search" name="search" value="{{ $search }}" placeholder="Masukkan NPM atau nama">
+        </div>
         <button class="button button-primary" type="submit"><span data-lucide="search"></span> Cari</button>
     </form>
     <p class="grade-validation-status-note">Status yang ditampilkan: Aktif, Cuti, Lulus, Nonaktif, Drop Out, dan Kampus Merdeka.</p>

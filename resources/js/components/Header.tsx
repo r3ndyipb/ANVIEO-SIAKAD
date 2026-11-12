@@ -327,11 +327,16 @@ export default function Header({ currentView = 'home', onNavigate, logoUrl }: He
           onClick={(e) => handleLinkClick(e, 'home')}
         >
           <img
-            src={logoUrl || '/images/landing/default-campus-logo.png'}
+            src={logoUrl || '/images/landing/icon.png'}
             alt="Logo ASEAN University International"
             className="brand-logo-img"
             width={48}
             height={48}
+            onError={(e) => {
+              const target = e.currentTarget;
+              target.onerror = null;
+              target.src = '/images/landing/icon.png';
+            }}
           />
           <div className="brand-text">
             <span className="brand-title">

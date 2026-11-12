@@ -88,15 +88,9 @@ class TranscriptController extends Controller
         $report = $this->transcriptReport($student);
         $pdf = $this->newPdf();
         $text = fn (string $value): string => $this->pdfText($value);
-        $imageDir = public_path('images/kkn');
-
-        foreach ([
-            [$imageDir.'/dikbud.jpg', 2],
-            [app(InstitutionSettings::class)->logoFilePath(), 17],
-        ] as [$image, $x]) {
-            if (is_file($image)) {
-                $pdf->Image($image, $x, 0.5, 2, 2);
-            }
+        $logoPath = app(InstitutionSettings::class)->logoFilePath();
+        if (is_file($logoPath)) {
+            $pdf->Image($logoPath, 2, 0.5, 2, 2);
         }
 
         $pdf->SetFont('Arial', 'B', 10);
@@ -145,7 +139,8 @@ class TranscriptController extends Controller
         $pdf->Cell(2, 0.6, number_format($report['ipk'], 2), 0, 1, 'R');
         $pdf->Ln(0.5);
         $pdf->SetFont('Arial', '', 9);
-        $pdf->Cell(19, 0.5, $text('Ternate, '.now()->format('d/m/Y')), 0, 1, 'R');
+        $cityName = app(InstitutionSettings::class)->cityName();
+        $pdf->Cell(19, 0.5, $text($cityName.', '.now()->format('d/m/Y')), 0, 1, 'R');
         $pdf->Cell(8, 0.5, $text('Dekan'), 0, 0, 'C');
         $pdf->Cell(3, 0.5, '', 0, 0);
         $pdf->Cell(8, 0.5, $text('Ketua Program Studi'), 0, 1, 'C');
@@ -280,11 +275,12 @@ class TranscriptController extends Controller
         $text = fn (string $value): string => $this->pdfText($value);
         $logoPath = app(InstitutionSettings::class)->logoFilePath();
         if (is_file($logoPath)) {
-            $pdf->Image($logoPath, 9.5, 0.3, 2, 2);
-            $pdf->SetY(2.5);
+            $pdf->Image($logoPath, 2, 0.5, 2, 2);
         }
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(19, 0.5, $text(mb_strtoupper(app(InstitutionSettings::class)->institutionName())), 0, 1, 'C');
         $pdf->SetFont('Arial', 'B', 12);
-        $pdf->Cell(19, 0.7, $text('CEK MATA KULIAH'), 0, 1, 'C');
+        $pdf->Cell(19, 0.6, $text('CEK MATA KULIAH'), 0, 1, 'C');
         $pdf->SetFont('Arial', '', 9);
         $pdf->Cell(19, 0.6, $text($student->nim.' - '.$student->nama_mahasiswa), 0, 1, 'C');
         $pdf->Ln();

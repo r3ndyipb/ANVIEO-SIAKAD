@@ -3,6 +3,12 @@
 @section('title', 'Ruang Bimbingan | SIAKAD')
 @section('topbar_title', 'Ruang Bimbingan Skripsi')
 
+@push('styles')
+    <style>
+        .thesis-chat-messages { height: min(58vh, 620px); overflow-y: auto; }
+    </style>
+@endpush
+
 @section('content')
     <div class="page-heading">
         <div><p class="eyebrow">{{ $thesis->nama_program_studi }}</p><h1>{{ $thesis->nama_mahasiswa }}</h1>

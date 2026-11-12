@@ -22,22 +22,24 @@
     </div>
 
     <form class="camaba-filters" method="GET" action="{{ route('camaba-verification.index') }}">
-        <label for="camaba-period">Periode masuk
+        <div>
+            <label for="camaba-period">Periode masuk</label>
             <select id="camaba-period" name="period" data-searchable-select="filter" required>
                 <option value="">Pilih periode</option>
                 @foreach ($periods as $item)
                     <option value="{{ $item }}" @selected($period === (string) $item)>{{ $item }}</option>
                 @endforeach
             </select>
-        </label>
-        <label for="camaba-program">Program studi
+        </div>
+        <div>
+            <label for="camaba-program">Program studi</label>
             <select id="camaba-program" name="program" data-searchable-select="filter">
                 <option value="">Semua program studi</option>
                 @foreach ($programs as $program)
                     <option value="{{ $program->id_prodi }}" @selected($selectedProgram === (string) $program->id_prodi)>{{ $program->nama_program_studi }}{{ $program->nama_jenjang_pendidikan ? ' ('.$program->nama_jenjang_pendidikan.')' : '' }}</option>
                 @endforeach
             </select>
-        </label>
+        </div>
         <button class="button button-secondary" type="submit"><span data-lucide="search"></span> Tampilkan</button>
     </form>
 

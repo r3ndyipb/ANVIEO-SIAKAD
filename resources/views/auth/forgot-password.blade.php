@@ -38,7 +38,7 @@
 <body class="{{ session()->has('status') || $errors->any() ? 'has-flash' : '' }}">
     @include('partials.flash-notice')
     <main>
-        <div class="brand"><img src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}"><span>{{ $siteConfiguration['app_name'] }}</span></div>
+        <div class="brand"><img src="{{ $siteConfiguration['preloader_logo_url'] ?? $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';"><span>{{ $siteConfiguration['app_name'] }}</span></div>
         <h1>Lupa password?</h1>
         <p>Masukkan username, NIM, NIDN, atau kode asisten. Jika akun memiliki email terdaftar, instruksi reset akan dikirim.</p>
         <form method="POST" action="{{ route('password.email') }}">

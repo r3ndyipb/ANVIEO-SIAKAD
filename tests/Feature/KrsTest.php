@@ -906,7 +906,7 @@ class KrsTest extends TestCase
         $this->get(route('document-verification.show', $verificationCode))
             ->assertOk()
             ->assertSee('Verifikasi Dokumen Valid')
-            ->assertSee('images/landing/default-campus-logo.png')
+            ->assertSee(app(\App\Services\InstitutionSettings::class)->forDisplay()['logo_url'])
             ->assertSee('Mahasiswa Satu')
             ->assertSee('Dosen PA Lama')
             ->assertSee('Ketua Prodi');

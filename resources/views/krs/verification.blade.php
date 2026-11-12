@@ -18,7 +18,7 @@
 </head>
 <body>
     <main>
-        <img class="institution-logo" src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}">
+        <img class="institution-logo" src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}" onerror="this.onerror=null; this.src='{{ asset('images/landing/default-campus-logo.png') }}';">
         <div class="mark" aria-hidden="true">{{ $valid ? '✓' : '×' }}</div>
         <h1>{{ $valid ? 'Verifikasi Dokumen Valid' : 'Dokumen Tidak Valid' }}</h1>
         @if ($valid)

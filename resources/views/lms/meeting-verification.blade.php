@@ -15,7 +15,7 @@
 </head>
 <body>
     <main>
-        <img class="institution-logo" src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}">
+        <img class="institution-logo" src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}" onerror="this.onerror=null; this.src='{{ asset('images/landing/default-campus-logo.png') }}';">
         <p class="valid">Dokumen terdaftar dan valid</p>
         <h1>Berita Acara Perkuliahan</h1>
         <p>Dokumen ini diterbitkan oleh sistem SIAKAD {{ $siteConfiguration['institution_name'] }}.</p>

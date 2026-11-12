@@ -38,7 +38,7 @@ Dokumen ini memuat daftar akun uji coba (*seed data*) untuk berbagai peran dan t
 
 Akun-akun di atas telah dikaitkan dengan master data berikut:
 
-- **Perguruan Tinggi**: Universitas SIAKAD (ID: `PT-001`, Kode: `001001`)
+- **Perguruan Tinggi**: ASEAN University International (AUI) (ID: `PT-001`, Kode: `001001`)
 - **Fakultas**: Fakultas Sains dan Teknologi (ID: `FK-01`, Kode: `FT`)
 - **Program Studi**: Teknik Informatika - S1 (ID: `PRODI-TI`, Kode: `55201`)
 - **Tahun Akademik Aktif**: 2026/2027 Ganjil (ID: `20261`, Status: `Y` / Aktif)

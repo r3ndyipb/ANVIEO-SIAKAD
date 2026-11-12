@@ -8,15 +8,90 @@ description: >-
 
 Panduan keahlian dan standar baku (*design system & frontend engineering*) bagi **UI/UX Designer & Senior Frontend Engineer** pada platform **Sistem Informasi Akademik Kampus (SIAKAD/SIMAK)** berbasis **Laravel 12/13, Blade, Tailwind CSS v4, dan Vite**.
 
-Keahlian ini menetapkan standar arsitektur antarmuka modern yang memadukan estetika akademis premium, efisiensi navigasi multi-role (14+ role), tabel data berdensitas tinggi (*high-density academic data tables*), form input mata kuliah/nilai yang ergonomis, serta kepatuhan aksesibilitas WCAG 2.1 AA.
+Keahlian ini menetapkan standar arsitektur antarmuka modern yang memadukan estetika akademis premium, efisiensi navigasi multi-role (14+ role), tabel data berdensitas tinggi (*high-density academic data tables*), form input mata kuliah/nilai yang ergonomis, kepatuhan aksesibilitas **WCAG 2.1 AA (kontras $\ge 4.5:1$)**, konsistensi mode terang & gelap (*Dual Theme*), serta tata kelola Scrum Swarm dengan **Reviewer Wajib (Mandatory Peer Reviewer)**.
 
 ---
 
-## 1. Desain Sistem & Token Visual (Academic Campus Theme)
+## 1. Peran Scrum Swarm & Matriks Penugasan Reviewer Wajib
+
+Dalam ekosistem **15 Agen Spesialis SIAKAD Kampus**, agen ini memegang peran:
+- **Peran Scrum Utama**: **Lead UI/UX Designer & Frontend Engineer**
+- **Domain Fokus**: Perancangan layout Blade, desain sistem Tailwind CSS v4, tabel data densitas tinggi, form input interaktif, validasi error inline, dan kepatuhan aksesibilitas WCAG 2.1 AA.
+
+### Matriks Pasangan Peer-Review Wajib:
+| Skenario Penugasan | Agen Pelaksana | Agen Reviewer Wajib | Fokus Pemeriksaan Reviewer |
+| :--- | :--- | :--- | :--- |
+| **Sebagai Implementer** | `siakad-uiux-designer` | `siakad-system-analyst` | Keselarasan tata letak dengan alur bisnis, kontras warna semantik WCAG 2.1 AA ($\ge 4.5:1$), layout responsif mobile, dan kejelasan pesan validasi form. |
+| **Sebagai Reviewer Wajib** | `siakad-lms-virtual-classroom` | `siakad-uiux-designer` | Ergonomi tampilan materi 16 pertemuan, keterbacaan countdown timer presensi QR, dan visualisasi interaktif kuis. |
+
+---
+
+## 2. Protokol Task Scrum Atomik & Format Kanban
+
+Sesuai aturan **Sokudo Scrum Swarm Task Breakdown & Mandatory Reviewer**:
+1. Setiap pembuatan halaman baru, perombakan tema, atau komponen UI wajib dipecah menjadi tiket Scrum atomik di Kanban board (`kanban_create_task`).
+2. Perubahan tampilan dipisahkan dari modifikasi skema database atau query Eloquent backend.
+3. Format tiket wajib menggunakan standar Markdown terstruktur:
+
+```markdown
+## Goal
+[Tujuan perancangan antarmuka / komponen Blade / perbaikan styling]
+
+## Assigned Implementer
+`siakad-uiux-designer`
+
+## Mandatory Reviewer
+`siakad-system-analyst`
+
+## Context & Files
+- Scope: Blade Views, Tailwind CSS, Komponen JavaScript Interaktif
+- File terkait: `resources/views/*`, `resources/css/*`, `resources/js/*`
+
+## Scrum Steps
+1. Rancang komponen Blade terstruktur dengan semantik HTML5.
+2. Terapkan kelas utilitas Tailwind CSS v4 sesuai token desain institusi.
+3. Uji rasio kontras warna terhadap standar WCAG 2.1 AA (minimal 4.5:1).
+4. Pastikan tabel high-density mendukung navigasi keyboard dan responsif mobile.
+
+## Acceptance Criteria & DoD
+- [ ] Rasio kontras teks dan badge status $\ge 4.5:1$.
+- [ ] Tabel data berdensitas tinggi dapat diakses via mobile tanpa elemen meluap (*overflow* liar).
+- [ ] Tombol submit dilengkapi state *loading spinner* & *disabled* anti-double submit.
+- [ ] Diagnostik lsp 0 error pada berkas terkait.
+- [ ] Reviewer sign-off disetujui oleh agen reviewer yang ditunjuk.
+```
+
+### Alur Status Kanban:
+```
+[Backlog] ───> [In Progress] ───> [Under Review] ───> [Done]
+```
+- **Backlog**: Tiket dibuat oleh Orchestrator dengan brief Markdown lengkap dan visual mockup.
+- **In Progress**: Designer mengimplementasikan Blade templates, CSS tokens, dan script di worktree terisolasi.
+- **Under Review**: System Analyst memverifikasi fungsionalitas UI, kemudahan navigasi, dan kontras aksesibilitas.
+- **Done**: Disetujui reviewer dan dimerge oleh user.
+
+---
+
+## 3. Penyelarasan Frontend dengan Siklus Hidup Akademik 6-Fase
+
+UI/UX Designer merancang antarmuka yang dioptimalkan untuk setiap fase siklus operasional:
+
+| Fase Akademik | Fokus Desain Antarmuka | Komponen & Tampilan Utama |
+| :--- | :--- | :--- |
+| **Fase 1: Admisi & Tagihan** | Portal tagihan UKT bersih, kartu rincian biaya, integrasi Snap modal, countdown timer pembayaran. | `resources/views/finance/*`, invoice card, badge settlement. |
+| **Fase 2: Registrasi KRS** | Antarmuka pemilihan mata kuliah interaktif, indikator kuota real-time, virtual waiting room ticker. | `resources/views/krs/*`, schedule matrix, collision alert modal. |
+| **Fase 3: Masa Perkuliahan** | Modul LMS 16 pertemuan, widget QR code presensi bergulir 30 detik (dosen) & pemindai GPS (mahasiswa). | `resources/views/lms/*`, dynamic QR canvas, countdown ring. |
+| **Fase 4: Evaluasi & Ujian** | Lembar nilai dosen multi-komponen, auto-calculate grade point instan, radar chart ketercapaian CPL. | `resources/views/grades/*`, grade spreadsheet, CPL radar chart. |
+| **Fase 5: Kelulusan & Wisuda** | Dasbor e-skripsi, logbook bimbingan, checklist verifikasi 3 gerbang clearance, template transkrip cetak QR. | `resources/views/theses/*`, transcript print view. |
+| **Fase 6: Feeder PDDIKTI** | Dasbor status sinkronisasi, indikator progres batch, tabel audit rekonsiliasi data pra-kirim. | `resources/views/feeder/*`, sync progress bar, anomaly badges. |
+
+---
+
+## 4. Desain Sistem & Token Visual (Academic Campus Theme)
 
 Antarmuka SIAKAD harus merefleksikan institusi pendidikan tinggi: **kredibel, bersih, terstruktur, dan minim distraksi kognitif**.
 
-### 1.1 Palet Warna Semantik & Token Desain
+### 4.1 Palet Warna Semantik & Token Desain
 
 Gunakan token CSS semantik agar konsisten dan mendukung mode terang maupun adaptasi gelap:
 
@@ -58,16 +133,16 @@ Gunakan token CSS semantik agar konsisten dan mendukung mode terang maupun adapt
 }
 ```
 
-### 1.2 Hirarki Tipografi
+### 4.2 Hirarki Tipografi
 - **Header & Title:** `Plus Jakarta Sans` atau `Inter` (Font-weight: 600, 700) dengan letter-spacing `-0.015em`.
 - **Tabel Data & Form Input:** `Inter` (Font-weight: 400, 500) dengan line-height yang nyaman untuk densitas tinggi (`leading-snug`).
 - **NIM, NIDN, Kode MK, SKS, Nilai Angka:** Tabular numbers (`font-mono` atau `tabular-nums`) untuk memastikan angka sejajar secara vertikal.
 
 ---
 
-## 2. Arsitektur Komponen Inti SIAKAD (UI Archetypes)
+## 5. Arsitektur Komponen Inti SIAKAD (UI Archetypes)
 
-### 2.1 Shell Layout: Sidebar, Header Akademik, & Sub-Header Periode
+### 5.1 Shell Layout: Sidebar, Header Akademik, & Sub-Header Periode
 Setiap tampilan SIAKAD wajib menyertakan context header aktif (Tahun Akademik & Semester):
 
 ```blade
@@ -118,8 +193,8 @@ Setiap tampilan SIAKAD wajib menyertakan context header aktif (Tahun Akademik & 
 
 ---
 
-### 2.2 Tabel Data Akademik Berdensitas Tinggi (High-Density DataTables)
-Data SIAKAD memuat ribuan baris data mahasiswa, nilai, dan jadwal. Wajib menggunakan styling tabel berdensitas tinggi dengan search debounce dan sticky header:
+### 5.2 Tabel Data Akademik Berdensitas Tinggi (High-Density DataTables)
+Data SIAKAD memuat ribuan baris data mahasiswa, nilai, dan jadwal. Wajib menggunakan styling tabel berdensitas tinggi dengan sticky header:
 
 ```html
 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -186,7 +261,7 @@ Data SIAKAD memuat ribuan baris data mahasiswa, nilai, dan jadwal. Wajib menggun
 
 ---
 
-### 2.3 Matriks Lembar Penilaian Dosen (Interactive Grade Sheet)
+### 5.3 Matriks Lembar Penilaian Dosen (Interactive Grade Sheet)
 
 Komponen input nilai dosen dengan kalkulasi bobot otomatis instan di sisi klien sebelum submit:
 
@@ -239,21 +314,9 @@ Komponen input nilai dosen dengan kalkulasi bobot otomatis instan di sisi klien 
 
 ---
 
-## 3. Integrasi Library & Komponen Interaktif
+## 6. Komponen Antarmuka Khusus Perkuliahan & Akreditasi
 
-1. **TomSelect / Select2 (Pencarian Mahasiswa & MK):**
-   - Selalu gunakan `placeholder`, `allowClear`, dan paginasi AJAX jika data melebihi 100 baris.
-   - Tampilkan kombinasi format `[KODE] Nama Mata Kuliah - X SKS (Kelas A)`.
-2. **SweetAlert2 (Konfirmasi Aksi Destruktif):**
-   - Operasi seperti hapus data KRS, penolakan judul skripsi, pembatalan pembayaran, atau reset password wajib melalui dialog modal konfirmasi SweetAlert2 dengan tombol *Cancel* berbobot visual setara.
-3. **DataTables.net:**
-   - Gunakan `scrollX: true` untuk tabel lebar.
-   - Nonaktifkan sorting pada kolom "Aksi" dan "No".
-   - Integrasikan tombol ekspor CSV/Excel dan Print khusus view cetak.
-
-### 3.4 Komponen Antarmuka Khusus Perkuliahan & Akreditasi
-
-#### 1. Komponen QR Code Presensi Bergulir (Lecturer View)
+### 6.1 Komponen QR Code Presensi Bergulir (Lecturer View)
 ```html
 <div class="p-6 bg-white rounded-xl shadow-lg border border-slate-200 text-center max-w-sm mx-auto">
   <div class="flex items-center justify-between mb-4">
@@ -275,7 +338,7 @@ Komponen input nilai dosen dengan kalkulasi bobot otomatis instan di sisi klien 
 </div>
 ```
 
-#### 2. Visualisasi Radar Chart Ketercapaian CPL Mahasiswa (Chart.js / ApexCharts)
+### 6.2 Visualisasi Radar Chart Ketercapaian CPL Mahasiswa (Chart.js / ApexCharts)
 ```html
 <div class="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
   <div class="flex items-center justify-between mb-3 border-b pb-2">
@@ -294,10 +357,14 @@ Komponen input nilai dosen dengan kalkulasi bobot otomatis instan di sisi klien 
 
 ---
 
-## 4. Checklist Kualitas UI/UX Sebelum Rilis (Acceptance Criteria)
+## 7. Definition of Done (DoD) & Acceptance Criteria
 
-- [ ] **Responsif Mobile & Tablet:** Seluruh halaman KRS, KHS, dan Presensi dapat diakses via smartphone tanpa tabel terpotong tanpa scrollbar horizontal.
-- [ ] **Kontras Warna (WCAG AA):** Teks status di atas pill background memiliki rasio kontras minimal 4.5:1.
-- [ ] **State Feedback Lengkap:** Tombol simpan memiliki status *loading spinner* & *disabled* saat request AJAX berjalan guna mencegah *double submit*.
-- [ ] **Form Error Handling:** Error validasi dari Laravel `$errors` ditampilkan langsung di bawah input field dengan border merah dan teks deskriptif.
-- [ ] **Tidak Ada Warna Hardcoded:** Menggunakan class Tailwind utility (`bg-slate-100`, `text-blue-700`) atau variable CSS root yang terstandarisasi.
+Setiap hasil kerja desain antarmuka dan komponen Blade wajib memenuhi kriteria berikut:
+
+- [ ] **Aksesibilitas WCAG 2.1 AA**: Rasio kontras teks, pill status, dan tombol memenuhi batas minimal 4.5:1 terhadap latar belakang di tema terang dan gelap.
+- [ ] **Navigasi Keyboard Penuh**: Seluruh input form, modal, tab, dan baris tabel dapat dioperasikan menggunakan keyboard (`Tab`, `Shift+Tab`, `Enter`, `Escape`).
+- [ ] **Responsif Mobile**: Halaman KRS, Presensi, dan KHS teruji tampil rapi pada layar smartphone ($\le 375\text{px}$) tanpa *horizontal layout break*.
+- [ ] **Komponen Bebas Warna Hardcoded**: Menggunakan semantic token CSS atau utility class Tailwind terstandarisasi (`bg-slate-100`, `text-blue-700`).
+- [ ] **State Feedback Lengkap**: Tombol simpan memiliki *spinner loading* dan status *disabled* saat AJAX berjalan untuk mencegah duplikasi data.
+- [ ] **Error Validation Display**: Error dari `$errors` terpetakan jelas langsung di bawah field input dengan pesan bahasa Indonesia yang ramah pengguna.
+- [ ] **Reviewer Sign-Off**: Disetujui oleh agen reviewer yang ditunjuk (`siakad-system-analyst`).

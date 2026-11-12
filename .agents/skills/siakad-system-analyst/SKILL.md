@@ -8,11 +8,86 @@ description: >-
 
 Panduan keahlian dan spesifikasi arsitektur fungsional bagi **Senior System Analyst & Academic Solution Architect** pada platform **Sistem Informasi Akademik Kampus (SIAKAD/SIMAK)**.
 
-Keahlian ini menetapkan standar pemodelan logika bisnis akademik, matriks hak akses multi-role (14+ peran), diagram alur proses bisnis (BPMN), aturan validasi akademik (aturan SKS, prasyarat, OBE), penanganan kasus khusus (*edge cases* seperti cuti, transfer, MBKM 20 SKS), mesin ujian skripsi/tesis, rekonsiliasi pembayaran Midtrans, pemantauan status retensi AKM, serta kontrak spesifikasi API dan pemetaan entitas ke **PDDIKTI Neo Feeder**.
+Keahlian ini menetapkan standar pemodelan logika bisnis akademik, matriks hak akses multi-role (14+ peran), diagram alur proses bisnis (BPMN), aturan validasi akademik (aturan SKS, prasyarat, OBE), penanganan kasus khusus (*edge cases* seperti cuti, transfer, MBKM 20 SKS), mesin ujian skripsi/tesis, rekonsiliasi pembayaran Midtrans, pemantauan status retensi AKM, kontrak spesifikasi API, serta pemetaan entitas ke **PDDIKTI Neo Feeder** dalam model kolaborasi **Sokudo Scrum Swarm**.
 
 ---
 
-## 1. Domain Model & Arsitektur Bisnis SIAKAD
+## 1. Peran Scrum Swarm & Matriks Penugasan Reviewer Wajib
+
+Dalam ekosistem **15 Agen Spesialis SIAKAD Kampus**, agen ini memegang peran:
+- **Peran Scrum Utama**: **Product Owner / Solution Architect**
+- **Domain Fokus**: Spesifikasi persyaratan fungsional/non-fungsional (FR/NFR), diagram BPMN, pemetaan hak akses 14+ peran (RBAC), data contracts, dan spesifikasi API OpenAPI 3.1.
+
+### Matriks Pasangan Peer-Review Wajib:
+| Skenario Penugasan | Agen Pelaksana | Agen Reviewer Wajib | Fokus Pemeriksaan Reviewer |
+| :--- | :--- | :--- | :--- |
+| **Sebagai Implementer** | `siakad-system-analyst` | `siakad-c2-orchestrator`<br>`siakad-security-compliance-auditor` | Keselarasan arsitektur modul, isolasi data prodi (`prodi_id`), penutupan celah eskalasi privilese/IDOR, dan kelayakan kontrak API. |
+| **Sebagai Reviewer Wajib (1)** | `siakad-uiux-designer` | `siakad-system-analyst` | Keselarasan tata letak UI dengan logika bisnis, WCAG 2.1 AA (kontras $\ge 4.5:1$), pesan error form, dan konsistensi status akademik. |
+| **Sebagai Reviewer Wajib (2)** | `siakad-obe-curriculum-specialist` | `siakad-system-analyst` | Integritas matematis bobot asesmen tepat 100.00%, struktur CPL-CPMK-SubCPMK, dan kelengkapan rubrik RPS. |
+
+---
+
+## 2. Protokol Task Scrum Atomik & Format Kanban
+
+Sesuai aturan **Sokudo Scrum Swarm Task Breakdown & Mandatory Reviewer**:
+1. Setiap analisis kebutuhan atau perubahan proses bisnis wajib dipecah menjadi tiket Scrum atomik di Kanban board (`kanban_create_task`).
+2. Tiket analisis berfokus pada kejelasan spesifikasi sebelum diimplementasikan oleh agen backend/frontend/database.
+3. Format tiket wajib menggunakan standar Markdown terstruktur:
+
+```markdown
+## Goal
+[Tujuan spesifikasi proses bisnis / pemetaan entitas / aturan validasi]
+
+## Assigned Implementer
+`siakad-system-analyst`
+
+## Mandatory Reviewer
+`siakad-c2-orchestrator` / `siakad-security-compliance-auditor`
+
+## Context & Files
+- Scope dokumen: FR/NFR, BPMN, Kamus Data, API Contract
+- File terkait: `app/Http/Requests/*`, `routes/web.php`, `database/migrations/*`
+
+## Scrum Steps
+1. Identifikasi use case dan pemangku kepentingan (role).
+2. Definisikan happy path dan seluruh alur alternatif/eksepsi.
+3. Susun data dictionary dan spesifikasi API OpenAPI 3.1.
+4. Verifikasi isolasi data scoping dan aturan validasi.
+
+## Acceptance Criteria & DoD
+- [ ] Dokumen FR/NFR mendefinisikan skenario sukses dan gagal secara kuantitatif.
+- [ ] Matriks RBAC membatasi akses peran secara programatis tanpa celah IDOR.
+- [ ] Pemetaan entitas selaras dengan arsitektur tabel PDDIKTI Neo Feeder.
+- [ ] Reviewer sign-off disetujui oleh agen reviewer yang ditunjuk.
+```
+
+### Alur Status Kanban:
+```
+[Backlog] ───> [In Progress] ───> [Under Review] ───> [Done]
+```
+- **Backlog**: Tiket analisis dibuat oleh Orchestrator dengan brief Markdown lengkap.
+- **In Progress**: System Analyst menyusun spesifikasi fungsional, diagram alur, dan kontrak data.
+- **Under Review**: Reviewer memeriksa kelayakan logika bisnis, isolasi keamanan, dan keselarasan arsitektur.
+- **Done**: Disetujui reviewer dan diverifikasi selesai.
+
+---
+
+## 3. Penyelarasan Siklus Hidup Akademik 6-Fase (6-Phase Lifecycle Alignment)
+
+System Analyst mengawal aturan bisnis di seluruh fase siklus operasional perguruan tinggi:
+
+| Fase Akademik | Fokus Analisis Sistem | Entitas & Kontrak Data Kunci |
+| :--- | :--- | :--- |
+| **Fase 1: Admisi & Tagihan** | Penentuan tarif UKT/IPI per kluster, alur pembayaran Midtrans, dan financial clearance gate. | `student_billings`, `payment_transactions`, flag `is_financial_cleared`. |
+| **Fase 2: Registrasi KRS** | Aturan batas SKS berdasarkan IPS lalu, validasi prasyarat MK, collision detection waktu/ruang/dosen. | `krs`, `krs_details`, `class_schedules`, exception `ClassCapacityExceededException`. |
+| **Fase 3: Masa Perkuliahan** | Struktur 16 pertemuan, validasi radius GPS dan rotasi TOTP 30s presensi, batas minimal 75% kehadiran. | `course_meetings`, `attendances`, threshold hadir UAS $\ge 75\%$. |
+| **Fase 4: Evaluasi & Ujian** | Pemetaan komponen nilai ke CPMK, normalisasi bobot 100%, kurva nilai (A-E), status `LOCKED`. | `course_grades`, `obe_cpmk`, trigger `simak_audit_log`. |
+| **Fase 5: Kelulusan & Wisuda** | Gerbang yudisium (144 SKS, Turnitin < 20%, bebas perpus/keuangan), rubrik sidang, penomoran PIN/SKPI. | `theses`, `graduation_clearances`, SK Yudisium. |
+| **Fase 6: Feeder PDDIKTI** | Pemetaan skema lokal ke tabel Neo Feeder WS, filter pra-validasi (NIK, SKS, IPK), checkpoint sync. | `feeder_sync_checkpoints`, `mahasiswa_pt`, `nilai_perkuliahan`, `akm`. |
+
+---
+
+## 4. Domain Model & Arsitektur Bisnis SIAKAD
 
 Sistem Informasi Akademik mengintegrasikan siklus hidup akademik mahasiswa dari proses penerimaan mahasiswa baru (PMB) hingga alumni:
 
@@ -32,7 +107,7 @@ Sistem Informasi Akademik mengintegrasikan siklus hidup akademik mahasiswa dari 
 
 ---
 
-## 2. Matriks Otorisasi & Kontrol Akses Multi-Role (RBAC)
+## 5. Matriks Otorisasi & Kontrol Akses Multi-Role (RBAC)
 
 SIAKAD mendukung sedikitnya **14 peran pengguna** dengan batas wewenang yang terisolasi ketat:
 
@@ -58,9 +133,9 @@ Akun dengan peran `kaprodi` atau staf tata usaha prodi (`usertu`) **terisolasi k
 
 ---
 
-## 3. Logika Bisnis & Diagram Alur Kerja (Workflow Specifications)
+## 6. Logika Bisnis & Diagram Alur Kerja (Workflow Specifications)
 
-### 3.1 Alur Registrasi KRS & Validasi Prasyarat Beban Studi
+### 6.1 Alur Registrasi KRS & Validasi Prasyarat Beban Studi
 
 ```
 [Mahasiswa Login] ──> [Cek Status Keuangan (is_financial_cleared == true)]
@@ -96,7 +171,7 @@ Akun dengan peran `kaprodi` atau staf tata usaha prodi (`usertu`) **terisolasi k
 
 ---
 
-### 3.2 Alur Konversi Nilai & Ekuivalensi 20 SKS MBKM (Kampus Merdeka)
+### 6.2 Alur Konversi Nilai & Ekuivalensi 20 SKS MBKM (Kampus Merdeka)
 
 Program Merdeka Belajar Kampus Merdeka (Magang Bersertifikat, Studi Independen, Kampus Mengajar, PMM, dll.):
 
@@ -126,7 +201,7 @@ Program Merdeka Belajar Kampus Merdeka (Magang Bersertifikat, Studi Independen, 
 
 ---
 
-### 3.3 Alur Penilaian Sidang Tugas Akhir (E-Skripsi & Tesis)
+### 6.3 Alur Penilaian Sidang Tugas Akhir (E-Skripsi & Tesis)
 
 1. **Komposisi Dewan Penguji:** 1 Ketua Penguji, 1 Sekretaris Penguji, dan 1-2 Anggota Penguji (Pembimbing).
 2. **Pengisian Rubrik Sidang:** Tiap penguji mengisi lembar rubrik digital independen di portal dosen.
@@ -136,7 +211,7 @@ Program Merdeka Belajar Kampus Merdeka (Magang Bersertifikat, Studi Independen, 
 
 ---
 
-### 3.4 Alur Rekonsiliasi Webhook Pembayaran Midtrans (State Machine)
+### 6.4 Alur Rekonsiliasi Webhook Pembayaran Midtrans (State Machine)
 
 ```
 [Invoice Created] ──> [Status: PENDING] (Generate Snap Token / VA / QRIS)
@@ -147,6 +222,8 @@ Program Merdeka Belajar Kampus Merdeka (Magang Bersertifikat, Studi Independen, 
                     │                               │
                     ▼                               ▼
           [Status: SETTLEMENT]              [Status: EXPIRED / FAILED]
+                    │                               │
+                    ▼                               ▼
           - Log transaction ID              - Batalkan invoice
           - Set is_financial_cleared=true   - Mahasiswa harus re-generate
           - Unblock KRS portal
@@ -154,24 +231,24 @@ Program Merdeka Belajar Kampus Merdeka (Magang Bersertifikat, Studi Independen, 
 
 ---
 
-## 4. Penanganan Kasus Khusus (Edge Cases & Exception Logic)
+## 7. Penanganan Kasus Khusus (Edge Cases & Exception Logic)
 
-### 4.1 Cuti Akademik vs Non-Aktif
+### 7.1 Cuti Akademik vs Non-Aktif
 - **Cuti Akademik Resmi:** Mahasiswa mengajukan via portal $\rightarrow$ diverifikasi BAAK $\rightarrow$ diterbitkan SK Rektor. Tagihan UKT disesuaikan (biasanya 0% atau biaya administrasi cuti), status di PDDIKTI tercatat `C` (Cuti), masa studi tidak bertambah.
 - **Mahasiswa Non-Aktif (Mangkir):** Tidak registrasi ulang dan tidak mengajukan cuti resmi selama 2 semester berturut-turut $\rightarrow$ sistem mengirim peringatan SP1, SP2 $\rightarrow$ rekomendasi otomatis berstatus `Drop Out (DO)`.
 
-### 4.2 Mahasiswa Mengulang Mata Kuliah
+### 7.2 Mahasiswa Mengulang Mata Kuliah
 - Jika mahasiswa mengambil ulang mata kuliah yang sudah pernah ditempuh:
   - Kebijakan Umum: Sistem mengambil **Nilai Tertinggi (Best Grade)** atau **Nilai Terakhir (Latest Grade)** sesuai ketetapan statuta kampus.
   - SKS tidak dihitung ganda pada kalkulasi SKS Kumulatif Transkrip.
 
-### 4.3 Pemantauan Retensi & Early Warning System (AKM)
+### 7.3 Pemantauan Retensi & Early Warning System (AKM)
 - Sistem menghitung IPS, IPK, dan akumulasi SKS per semester (Aktivitas Kuliah Mahasiswa).
 - Mahasiswa dengan IPK $< 2.00$ selama dua semester berturut-turut otomatis diberi penanda *Academic Warning* dan DPA menerima notifikasi peringatan bimbingan wajib.
 
 ---
 
-## 5. Kontrak Integrasi PDDIKTI Neo Feeder
+## 8. Kontrak Integrasi PDDIKTI Neo Feeder
 
 Setiap data transaksional di SIAKAD harus memiliki pemetaan langsung ke arsitektur tabel Neo Feeder Kemendiktisaintek:
 
@@ -188,10 +265,14 @@ Setiap data transaksional di SIAKAD harus memiliki pemetaan langsung ke arsitekt
 
 ---
 
-## 6. Checklist Kualitas Analisis Sistem (System Analyst Sign-Off)
+## 9. Definition of Done (DoD) & Acceptance Criteria
 
-- [ ] **Kelengkapan Dokumen FR / NFR:** Seluruh use case memiliki skenario utama (*happy path*) dan skenario alternatif/gagal.
-- [ ] **Validasi RBAC:** Tidak ada celah *privilege escalation* (misal: mahasiswa merekayasa ID dosen untuk approve KRS sendiri).
-- [ ] **Integritas Aturan Akademik:** Validasi batas SKS, prasyarat kelulusan MK, dan syarat kehadiran terdefinisi secara kuantitatif.
-- [ ] **Kamus Data Standar:** Seluruh kolom database memiliki tipe data, batasan *nullable*, nilai default, dan referensi *foreign key*.
-- [ ] **Kesiapan Feeder:** Entitas data yang dirancang tidak menyebabkan *schema mismatch* saat disinkronisasikan ke PDDIKTI Neo Feeder.
+Setiap hasil kerja analisis sistem wajib memenuhi kriteria berikut sebelum disahkan:
+
+- [ ] **Kelengkapan Dokumen FR / NFR**: Seluruh use case memiliki skenario utama (*happy path*) dan skenario alternatif/gagal yang terukur secara kuantitatif.
+- [ ] **Validasi Matriks RBAC**: Memastikan isolasi data multi-role 14+ peran tertutup rapat tanpa celah IDOR atau eskalasi privilese.
+- [ ] **Data Scoping Prodi**: Aturan isolasi data operator (`kaprodi`, `usertu`) terkunci eksklusif pada `prodi_id` bersangkutan.
+- [ ] **Konsistensi Formula Akademik**: Perhitungan IPS/IPK, aturan prasyarat MK, batas SKS, dan normalisasi bobot OBE 100% tervalidasi secara matematis.
+- [ ] **Kamus Data & API Contract**: Setiap endpoint dan tabel terpetakan lengkap dengan tipe data, nullability, constraint, dan skema OpenAPI 3.1.
+- [ ] **Kesesuaian Feeder**: Entitas data dirancang kompatibel 100% dengan skema kamus data Kemendiktisaintek Neo Feeder WS.
+- [ ] **Reviewer Sign-Off**: Disetujui oleh agen reviewer yang ditunjuk (`siakad-c2-orchestrator` / `siakad-security-compliance-auditor`).

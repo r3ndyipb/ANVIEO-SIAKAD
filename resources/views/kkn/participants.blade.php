@@ -7,7 +7,18 @@
     <div class="page-heading"><div><p class="eyebrow">Kuliah Kerja Nyata</p><h1>Peserta dan Ploting KKN</h1><p class="subtitle">Tempatkan peserta yang lolos verifikasi ke lokasi yang tersedia.</p></div></div>
     @if ($errors->any())<div class="calendar-modal-error" role="alert">{{ $errors->first() }}</div>@endif
     @if (session('status'))<div class="alert alert-success" role="status">{{ session('status') }}</div>@endif
-    <form class="kkn-filter" method="GET" action="{{ route('kkn.participants.index') }}"><label for="kkn-participant-year">Periode KKN</label><select id="kkn-participant-year" name="tahun" data-searchable-select required><option value="">Pilih periode</option>@foreach ($periods as $item)<option value="{{ $item->tahun }}" @selected($period && (string) $period->tahun === (string) $item->tahun)>{{ $item->nama_periode }} ({{ $item->tahun }})</option>@endforeach</select><button class="button button-primary" type="submit">Tampilkan</button></form>
+    <form class="kkn-filter" method="GET" action="{{ route('kkn.participants.index') }}">
+        <div>
+            <label for="kkn-participant-year">Periode KKN</label>
+            <select id="kkn-participant-year" name="tahun" data-searchable-select required>
+                <option value="">Pilih periode</option>
+                @foreach ($periods as $item)
+                    <option value="{{ $item->tahun }}" @selected($period && (string) $period->tahun === (string) $item->tahun)>{{ $item->nama_periode }} ({{ $item->tahun }})</option>
+                @endforeach
+            </select>
+        </div>
+        <button class="button button-primary" type="submit">Tampilkan</button>
+    </form>
     @if ($period)
         <div class="kkn-actions">
             @if ($user->role === 'lppm')<form method="POST" action="{{ route('kkn.participants.random-plot') }}" data-confirm-action>@csrf<input type="hidden" name="tahun" value="{{ $period->tahun }}"><button class="button button-primary" type="submit"><span data-lucide="shuffle"></span> Ploting lokasi acak</button></form>@endif

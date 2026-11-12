@@ -266,6 +266,7 @@ class PublicLandingController extends Controller
                 'appFullName' => $siteConfiguration['app_full_name'],
                 'motto' => $siteConfiguration['motto'],
                 'logoUrl' => $siteConfiguration['logo_url'],
+                'preloaderLogoUrl' => $siteConfiguration['preloader_logo_url'],
                 'heroImages' => $siteConfiguration['hero_images'],
             ],
         ])->withCookie(cookie(

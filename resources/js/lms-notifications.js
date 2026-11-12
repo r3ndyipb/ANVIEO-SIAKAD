@@ -4,7 +4,7 @@ const showLmsNotification = (notification) => {
 	const translate = (text) => window.simakTranslate?.(text) || text;
 	Swal.fire({
 		toast: true,
-		position: 'top-end',
+		position: 'bottom-end',
 		icon: notification.icon,
 		title: translate(notification.title),
 		text: translate(notification.text),
@@ -13,7 +13,7 @@ const showLmsNotification = (notification) => {
 		denyButtonText: translate('Tidak'),
 		showConfirmButton: false,
 		timer: 4500,
-		timerProgressBar: true,
+		timerProgressBar: false,
 	});
 };
 

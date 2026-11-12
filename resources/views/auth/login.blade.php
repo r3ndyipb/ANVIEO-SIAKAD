@@ -52,7 +52,7 @@
                     <!-- Brand Logo & Badge Group -->
                     <div style="display: flex; align-items: center; gap: 14px;">
                         <a href="{{ route('public.home') }}" class="portal-auth-brand-group brand-header-logo" aria-label="ASEAN University International — Home">
-                            <img id="portal-brand-logo" src="{{ $siteConfiguration['logo_url'] }}" alt="Logo ASEAN University International" class="brand-logo-img portal-brand-logo" width="40" height="40" style="height: 40px; width: auto; max-height: 44px; object-fit: contain; display: block; flex-shrink: 0;">
+                            <img id="portal-brand-logo" src="{{ $siteConfiguration['preloader_logo_url'] ?? $siteConfiguration['logo_url'] }}" alt="Logo ASEAN University International" class="brand-logo-img portal-brand-logo" width="40" height="40" style="height: 40px; width: auto; max-height: 44px; object-fit: contain; display: block; flex-shrink: 0;" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';">
                             <div class="brand-text portal-brand-text">
                                 <span class="brand-title portal-brand-title">
                                     <span class="sr-only">ASEAN UNIVERSITU </span>

@@ -1,3 +1,7 @@
+@php
+    /** @var array<string, mixed> $siteConfiguration */
+    $siteConfiguration = $siteConfiguration ?? app(\App\Services\InstitutionSettings::class)->forDisplay();
+@endphp
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}" data-theme="light">
 <head>
@@ -52,24 +56,41 @@
             --brand-primary-foreground: {{ $siteConfiguration['primary_foreground'] }};
         }
         /* Specific page components styling in line with AUI design system */
-        .dt-container { color: var(--bx-ink); font: inherit; font-size: 11px; }
-        .dt-layout-row { display: flex; align-items: center; gap: 12px; margin: 0 0 12px !important; }
+        .dt-container { display: flex !important; flex-direction: column !important; width: 100% !important; color: var(--bx-ink); font: inherit; font-size: 11px; }
+        .dt-container > div.dt-layout-row:not(.dt-layout-table):first-child { display: flex !important; align-items: center !important; justify-content: space-between !important; flex-wrap: wrap !important; gap: 12px 16px !important; padding: 14px 18px !important; margin: 0 !important; border-bottom: 1px solid var(--bx-border) !important; background: var(--bx-surface) !important; box-sizing: border-box !important; width: 100% !important; }
+        .dt-container > div.dt-layout-row:not(.dt-layout-table):first-child .dt-layout-cell.dt-layout-start { display: flex !important; align-items: center !important; flex-wrap: wrap !important; gap: 10px !important; margin-right: auto !important; }
+        .dt-container > div.dt-layout-row:not(.dt-layout-table):first-child .dt-layout-cell.dt-layout-end { display: flex !important; align-items: center !important; justify-content: flex-end !important; flex-wrap: wrap !important; gap: 10px !important; margin-left: auto !important; }
         .dt-layout-cell { min-width: 0; }
-        .dt-container .dt-search, .dt-container .dt-length { display: flex; align-items: center; gap: 8px; color: var(--bx-muted); font-size: 10px; }
-        .dt-container .dt-search input, .dt-container .dt-length select { min-height: 34px; margin: 0; padding: 0 10px; border: 1px solid var(--bx-border); border-radius: 6px; background: var(--bx-surface); color: var(--bx-ink); font: inherit; font-size: 11px; outline: none; }
-        .dt-container .dt-search input:focus, .dt-container .dt-length select:focus { border-color: var(--gold); }
-        .dt-container .dt-search input { width: min(270px, 42vw); }
-        .dt-buttons { display: flex; flex-wrap: wrap; gap: 7px; }
-        .dt-container .dt-button.dt-export-button { display: inline-flex; min-height: 34px; align-items: center; gap: 7px; padding: 0 11px; border: 1px solid var(--bx-border); border-radius: 6px; background: var(--bx-surface); color: var(--brand); font: inherit; font-size: 10px; font-weight: 700; box-shadow: none; cursor: pointer; transition: all .15s ease; }
+        .dt-container .dt-search, .dt-container .dt-length { display: flex; align-items: center; gap: 8px; color: var(--bx-muted); font-size: 11px; font-weight: 600; }
+        .dt-container .dt-search input, .dt-container .dt-length select { min-height: 36px; margin: 0; padding: 0 12px; border: 1px solid var(--bx-border); border-radius: 6px; background: var(--bx-surface); color: var(--bx-ink); font: inherit; font-size: 11px; outline: none; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+        .dt-container .dt-search input:focus, .dt-container .dt-length select:focus { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold-soft); }
+        .dt-container .dt-search input { width: min(280px, 45vw); }
+        .dt-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+        .dt-container .dt-button.dt-export-button { display: inline-flex; min-height: 36px; align-items: center; gap: 7px; padding: 0 13px; border: 1px solid var(--bx-border); border-radius: 6px; background: var(--bx-surface); color: var(--brand); font: inherit; font-size: 11px; font-weight: 700; box-shadow: none; cursor: pointer; transition: all .15s ease; }
         .dt-container .dt-button.dt-export-button:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-soft); }
         [data-theme="dark"] .dt-container .dt-button.dt-export-button { color: var(--gold); }
         .dt-export-button svg { width: 14px; height: 14px; }
-        .dt-container .dt-info { padding-top: 0; color: var(--bx-muted); font-size: 10px; }
+        .dt-container > div.dt-layout-row.dt-layout-table { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; border: none !important; overflow-x: auto !important; }
+        .dt-container > div.dt-layout-row.dt-layout-table > div.dt-layout-cell { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+        .dt-container table.dataTable { width: 100% !important; margin: 0 !important; border-collapse: collapse !important; }
+        .dt-container > div.dt-layout-row:not(.dt-layout-table):not(:first-child):last-child,
+        .dt-container > div.dt-layout-row:not(.dt-layout-table):last-child:not(:first-child) { display: flex !important; align-items: center !important; justify-content: space-between !important; flex-wrap: wrap !important; gap: 12px 16px !important; padding: 12px 18px !important; margin: 0 !important; border-top: 1px solid var(--bx-border) !important; background: var(--bx-surface) !important; box-sizing: border-box !important; width: 100% !important; }
+        .dt-container > div.dt-layout-row:not(.dt-layout-table):not(:first-child):last-child .dt-layout-cell.dt-layout-start { display: flex !important; align-items: center !important; gap: 10px !important; margin-right: auto !important; }
+        .dt-container > div.dt-layout-row:not(.dt-layout-table):not(:first-child):last-child .dt-layout-cell.dt-layout-end { display: flex !important; align-items: center !important; justify-content: flex-end !important; gap: 10px !important; margin-left: auto !important; }
+        .dt-container .dt-info { padding-top: 0; color: var(--bx-muted); font-size: 11px; }
         .dt-container .dt-paging .dt-paging-button { min-width: 30px; min-height: 28px; margin-left: 4px; padding: 0 8px; border: 1px solid var(--bx-border); border-radius: 5px; background: var(--bx-surface); color: var(--bx-ink) !important; font-size: 10px; box-shadow: none; cursor: pointer; }
         .dt-container .dt-paging .dt-paging-button.current { border-color: var(--gold); background: var(--gold-soft); color: var(--gold-2) !important; font-weight: 700; }
         [data-theme="dark"] .dt-container .dt-paging .dt-paging-button.current { color: var(--gold) !important; }
         .table-wrap table.dataTable thead th { border-bottom: 1px solid var(--bx-border); background: var(--bx-bg); color: var(--bx-muted); font-size: 10px; text-transform: uppercase; }
         .table-wrap table.dataTable tbody td { border-bottom: 1px solid var(--bx-border); color: var(--bx-ink); }
+        .schedule-toolbar, .transcript-toolbar, .khs-toolbar, .transfer-toolbar, .transfer-course-toolbar { display: flex !important; align-items: center !important; flex-wrap: wrap !important; gap: 10px !important; margin: 14px 0 !important; }
+        .table-wrap > form, form.table-wrap, section.table-wrap, details.table-wrap, .table-wrap[role="status"] { padding: 16px 18px !important; box-sizing: border-box !important; }
+        @media (max-width: 640px) {
+            .dt-container > div.dt-layout-row:not(.dt-layout-table):first-child { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; padding: 12px 14px !important; }
+            .dt-container > div.dt-layout-row:not(.dt-layout-table):first-child .dt-layout-cell.dt-layout-start,
+            .dt-container > div.dt-layout-row:not(.dt-layout-table):first-child .dt-layout-cell.dt-layout-end { width: 100% !important; justify-content: flex-start !important; margin: 0 !important; }
+            .dt-container .dt-search, .dt-container .dt-search input { width: 100% !important; }
+        }
         .table-icon-button { display: inline-grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--bx-border); border-radius: 6px; background: var(--bx-surface); color: var(--bx-ink); text-decoration: none; cursor: pointer; transition: all .15s ease; }
         .table-icon-button:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
         .table-icon-button.activate { border-color: var(--success); color: var(--success); background: var(--success-bg); }
@@ -162,16 +183,71 @@
         $isItemActive = static function (array $item) use (&$isItemActive): bool {
             $route = (string) ($item['route'] ?? '');
             if ($route !== '') {
+                // 1. Exact route match
                 if (request()->routeIs($route)) {
                     return true;
                 }
+
+                // 2. Wildcard route pattern match
                 if (str_ends_with($route, '.index')) {
                     $prefix = substr($route, 0, -6);
-                    if (request()->routeIs($prefix . '.*')) {
+                    if (request()->routeIs($prefix . '.*') || request()->routeIs($prefix)) {
+                        return true;
+                    }
+                } else {
+                    if (request()->routeIs($route . '.*')) {
                         return true;
                     }
                 }
+
+                // 3. Exact URL path and path prefix matching via named route resolution
+                if (\Illuminate\Support\Facades\Route::has($route)) {
+                    try {
+                        $targetUrl = route($route, [], false);
+                        $targetPath = trim((string) parse_url($targetUrl, PHP_URL_PATH), '/');
+                        $currentPath = trim(request()->path(), '/');
+
+                        if ($targetPath !== '' && $targetPath !== '/') {
+                            if ($currentPath === $targetPath || str_starts_with($currentPath, $targetPath . '/')) {
+                                return true;
+                            }
+                        } elseif (($targetPath === '' || $targetPath === '/') && ($currentPath === '' || $currentPath === 'dashboard')) {
+                            if ($route === 'dashboard') {
+                                return true;
+                            }
+                        }
+                    } catch (\Throwable) {}
+                }
+
+                // 4. Contextual action and resource subpage matching
+                if ($route === 'lms.materials.index' && (request()->is('lms/materi*') || (request()->routeIs('lms.show') && str_contains(request()->path(), 'materi')))) return true;
+                if ($route === 'lms.meetings.index' && (request()->is('lms/pertemuan*') || (request()->routeIs('lms.show') && str_contains(request()->path(), 'pertemuan')))) return true;
+                if ($route === 'lms.tasks.index' && (request()->is('lms/tugas*') || (request()->routeIs('lms.show') && str_contains(request()->path(), 'tugas')))) return true;
+                if ($route === 'lms.questions.index' && (request()->is('lms/bank-soal*') || (request()->routeIs('lms.show') && str_contains(request()->path(), 'bank-soal')))) return true;
+                if ($route === 'lms.discussions.index' && (request()->is('lms/diskusi*') || (request()->routeIs('lms.show') && str_contains(request()->path(), 'diskusi')))) return true;
+                if ($route === 'lms.materials.index' && request()->routeIs('lms.materials.*')) return true;
+                if ($route === 'lms.meetings.index' && (request()->routeIs('lms.attendance.*') || request()->routeIs('lms.meetings.*') || request()->routeIs('lms.exams.*'))) return true;
+
+                if ($route === 'theses.titles.validation.index' && (request()->is('e-skripsi/validasi-judul*') || request()->is('e-skripsi/usulan-judul*'))) return true;
+                if ($route === 'theses.assignments.index' && request()->is('e-skripsi/penugasan-dosen*')) return true;
+                if ($route === 'theses.bimbingan.index' && request()->is('e-skripsi/bimbingan*')) return true;
+                if ($route === 'theses.exams.index' && request()->is('e-skripsi/ujian*')) return true;
+                if ($route === 'theses.upload.index' && request()->is('e-skripsi/upload*')) return true;
+                if ($route === 'theses.dashboard' && request()->is('e-skripsi/dashboard*')) return true;
+
+                if ($route === 'graduate_theses.titles.validation.index' && (request()->is('e-tesis-disertasi/validasi-judul*') || request()->is('e-tesis-disertasi/usulan-judul*'))) return true;
+                if ($route === 'graduate_theses.assignments.index' && request()->is('e-tesis-disertasi/penugasan-dosen*')) return true;
+                if ($route === 'graduate_theses.bimbingan.index' && request()->is('e-tesis-disertasi/bimbingan*')) return true;
+                if ($route === 'graduate_theses.exams.index' && request()->is('e-tesis-disertasi/ujian*')) return true;
+                if ($route === 'graduate_theses.upload.index' && request()->is('e-tesis-disertasi/upload*')) return true;
+                if ($route === 'graduate_theses.dashboard' && request()->is('e-tesis-disertasi/dashboard*')) return true;
+
+                if ($route === 'academic-dashboard.index' && (request()->is('dashboard-akademik*') || request()->is('academic-dashboard*'))) return true;
+                if ($route === 'lms-dashboard.index' && (request()->is('dashboard-lms*') || request()->is('lms-dashboard*'))) return true;
+                if ($route === 'finance.dashboard' && request()->is('keuangan/dashboard*')) return true;
+                if (in_array($route, ['student-payments.index', 'finance.manual-bills.index', 'finance.ukt.index'], true) && request()->is('tagihan-mahasiswa*')) return true;
             }
+
             $children = !empty($item['items']) && is_array($item['items'])
                 ? $item['items']
                 : (!empty($item['children']) && is_array($item['children']) ? $item['children'] : []);
@@ -216,30 +292,6 @@
                 default => ['badge' => 'Modul', 'icon' => 'folder', 'roles' => 'ALL,ADMIN,BAAK'],
             };
         };
-
-        try {
-            $sidebarFaculties = \Illuminate\Support\Facades\DB::connection('simak_main')
-                ->table('s1m4k_masterprodi as p')
-                ->leftJoin('s1m4k_masterfakultas as f', 'p.id_fakultas', '=', 'f.id_fakultas')
-                ->select([
-                    'p.id_prodi',
-                    'p.nama_program_studi',
-                    'p.nama_jenjang_pendidikan',
-                    'f.id_fakultas',
-                    'f.nama_fakultas',
-                ])
-                ->where('p.status', 'A')
-                ->whereNotNull('p.nama_program_studi')
-                ->whereRaw("TRIM(p.nama_program_studi) <> ''")
-                ->orderBy('f.nama_fakultas')
-                ->orderBy('p.nama_program_studi')
-                ->get()
-                ->groupBy(function ($item) {
-                    return $item->nama_fakultas ?: 'Fakultas Lainnya';
-                });
-        } catch (\Throwable $e) {
-            $sidebarFaculties = collect();
-        }
     @endphp
 
     <div class="portal-app-layout" id="simak-shell">
@@ -377,7 +429,7 @@
                             <div class="portal-dropdown-divider"></div>
 
                             <div class="portal-dropdown-footer">
-                                <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                                <form method="POST" action="{{ route('logout') }}" style="margin: 0;" data-page-loader-skip>
                                     @csrf
                                     <button class="portal-dropdown-logout-btn" type="submit">
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -417,42 +469,6 @@
                         </button>
                     </div>
 
-                    <!-- Program Studi Selector Filter (Connected to DB & Persistent) -->
-                    <div class="tree-prodi-selector-wrap">
-                        <div class="tree-filter-label">
-                            <span>Program Studi</span>
-                            <span class="tree-prodi-active-pill" id="prodi-filter-pill">SEMUA PRODI</span>
-                        </div>
-                        <div class="tree-select-box">
-                            <select class="tree-prodi-select" id="tree-prodi-select" aria-label="Filter berdasarkan Program Studi">
-                                <option value="ALL">Semua Program Studi (Universitas)</option>
-                                @if (isset($sidebarFaculties) && $sidebarFaculties->isNotEmpty())
-                                    @foreach ($sidebarFaculties as $facultyName => $prodis)
-                                        <optgroup label="{{ $facultyName }}">
-                                            @foreach ($prodis as $p)
-                                                <option value="{{ $p->id_prodi }}">
-                                                    {{ $p->nama_jenjang_pendidikan ? $p->nama_jenjang_pendidikan.' - ' : '' }}{{ $p->nama_program_studi }}
-                                                </option>
-                                            @endforeach
-                                        </optgroup>
-                                    @endforeach
-                                @else
-                                    <optgroup label="Faculty of Engineering & Technology (FET)">
-                                        <option value="PRODI-ET-S1">S1 - Bachelor of Computer Science</option>
-                                        <option value="PRODI-ET-S2">S2 - Master of Artificial Intelligence & CS</option>
-                                    </optgroup>
-                                    <optgroup label="Faculty of Business & Economics (FBE)">
-                                        <option value="PRODI-BE-S1">S1 - Bachelor of Management</option>
-                                        <option value="PRODI-BE-S2">S2 - Master of Business Administration (MBA)</option>
-                                    </optgroup>
-                                @endif
-                            </select>
-                            <span class="tree-select-chevron">
-                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-                            </span>
-                        </div>
-                    </div>
-
                     <!-- Actions Toolbar: Expand / Collapse All & Reset -->
                     <div class="tree-actions-toolbar">
                         <div style="display: flex; gap: 4px;">
@@ -489,6 +505,28 @@
                                         break;
                                     }
                                 }
+
+                                // Domain category fallback matching by current URL path
+                                if (!$hasActiveDescendant) {
+                                    $hasActiveDescendant = match($groupLabel) {
+                                        'E-Skripsi' => request()->is('e-skripsi*'),
+                                        'E-Tesis & Disertasi' => request()->is('e-tesis-disertasi*'),
+                                        'LMS Virtual Class' => request()->is('lms*') && !request()->is('dashboard-lms*'),
+                                        'Data Master' => request()->is('master-data*'),
+                                        'Akademik' => request()->is('class-schedules*') || request()->is('krs*') || request()->is('khs*') || request()->is('transcripts*') || request()->is('re-enrollment*') || request()->is('academic-calendars*') || request()->is('monitoring-krs*') || request()->is('grade-management*') || request()->is('course-*') || request()->is('student-akm*') || request()->is('student-activities*') || request()->is('activity-teaching*') || request()->is('student-status*') || request()->is('mbkm-transfers*') || request()->is('class-transfers*') || request()->is('course-removals*'),
+                                        'Semester Pendek' => request()->is('short-semester-*'),
+                                        'Keuangan' => request()->is('keuangan*') || request()->is('tagihan-mahasiswa*'),
+                                        'Kuliah Kerja Nyata (KKN)' => request()->is('kkn*'),
+                                        'Validasi Nilai' => request()->is('validasi-nilai*'),
+                                        'Data Wisuda', 'Wisuda' => request()->is('graduation-*') || request()->is('periode-wisuda*') || request()->is('peserta-wisuda*') || request()->is('wisuda*'),
+                                        'Administrasi & Tools' => request()->is('settings*') || request()->is('activity-logs*') || request()->is('verifikasi-camaba*') || request()->is('cek-akm-feeder*') || request()->is('administration*') || request()->is('feeder-*') || request()->is('survey-edom*'),
+                                        'Evaluasi' => request()->is('survey-edom*'),
+                                        'Layanan Mahasiswa' => request()->is('tagihan-mahasiswa*') || request()->is('wisuda-mahasiswa*') || request()->is('kkn/mahasiswa*'),
+                                        'Dashboard' => request()->routeIs('dashboard') || (request()->is('dashboard*') && !request()->is('dashboard-*') && !request()->is('e-skripsi/*') && !request()->is('e-tesis-disertasi/*')),
+                                        default => false,
+                                    };
+                                }
+
                                 // "ketika menu aktif di hirarki yang sedang di buka menu nya harus nya terbuka"
                                 // Hirarki yang memiliki menu aktif otomatis terbuka; hirarki lain tetap tertutup secara default.
                                 $isGroupOpen = $hasActiveDescendant;
@@ -550,14 +588,8 @@
                                             $itemRoute = (string) ($item['route'] ?? '');
                                             $hasChildren = (!empty($item['items']) && is_array($item['items'])) || (!empty($item['children']) && is_array($item['children']));
                                             $childList = !empty($item['items']) && is_array($item['items']) ? $item['items'] : (!empty($item['children']) && is_array($item['children']) ? $item['children'] : []);
-                                            $isItemActiveCurrent = false;
-                                            if ($itemRoute !== '') {
-                                                $isItemActiveCurrent = request()->routeIs($itemRoute);
-                                                if (!$isItemActiveCurrent && str_ends_with($itemRoute, '.index')) {
-                                                    $isItemActiveCurrent = request()->routeIs(substr($itemRoute, 0, -6) . '.*');
-                                                }
-                                            }
-                                            $isSubBranchActive = $isItemActive($item);
+                                            $isItemActiveCurrent = $isItemActive($item);
+                                            $isSubBranchActive = $isItemActiveCurrent;
                                             $subItemId = $groupId.'-sub-'.$itemIndex;
                                         @endphp
 
@@ -585,14 +617,8 @@
                                                             $leafRoute = (string) ($leaf['route'] ?? '');
                                                             $hasLeafChildren = (!empty($leaf['items']) && is_array($leaf['items'])) || (!empty($leaf['children']) && is_array($leaf['children']));
                                                             $leafChildList = !empty($leaf['items']) && is_array($leaf['items']) ? $leaf['items'] : (!empty($leaf['children']) && is_array($leaf['children']) ? $leaf['children'] : []);
-                                                            $isLeafActive = false;
-                                                            if ($leafRoute !== '') {
-                                                                $isLeafActive = request()->routeIs($leafRoute);
-                                                                if (!$isLeafActive && str_ends_with($leafRoute, '.index')) {
-                                                                    $isLeafActive = request()->routeIs(substr($leafRoute, 0, -6) . '.*');
-                                                                }
-                                                            }
-                                                            $isLeafBranchActive = $isItemActive($leaf);
+                                                            $isLeafActive = $isItemActive($leaf);
+                                                            $isLeafBranchActive = $isLeafActive;
                                                             $leafItemId = $subItemId.'-leaf-'.$leafIndex;
                                                         @endphp
 
@@ -618,13 +644,7 @@
                                                                         @php
                                                                             $deepRoute = (string) ($deepLeaf['route'] ?? '');
                                                                             $deepLabel = (string) ($deepLeaf['label'] ?? '');
-                                                                            $isDeepActive = false;
-                                                                            if ($deepRoute !== '') {
-                                                                                $isDeepActive = request()->routeIs($deepRoute);
-                                                                                if (!$isDeepActive && str_ends_with($deepRoute, '.index')) {
-                                                                                    $isDeepActive = request()->routeIs(substr($deepRoute, 0, -6) . '.*');
-                                                                                }
-                                                                            }
+                                                                            $isDeepActive = $isItemActive($deepLeaf);
                                                                         @endphp
                                                                         <!-- Level 4 Final Leaf (NO children -> navigates to page!) -->
                                                                         <a href="{{ $deepRoute !== '' ? route($deepRoute) : '#' }}" class="tree-leaf-link {{ $isDeepActive ? 'active' : '' }}" {!! $isDeepActive ? 'aria-current="page"' : '' !!} data-item-title="{{ strtolower($deepLabel) }}">
@@ -737,8 +757,6 @@
             const moonIcon = themeToggleBtn?.querySelector('.moon-icon');
             const searchInput = document.getElementById('tree-search-input');
             const searchClearBtn = document.getElementById('tree-search-clear');
-            const prodiSelect = document.getElementById('tree-prodi-select');
-            const prodiPill = document.getElementById('prodi-filter-pill');
             const btnExpandAll = document.getElementById('btn-expand-all');
             const btnCollapseAll = document.getElementById('btn-collapse-all');
             const btnResetFilters = document.getElementById('btn-reset-filters');
@@ -868,21 +886,89 @@
 
             // Auto-expand full hierarchy leading to active menu item
             const autoExpandActiveHierarchy = () => {
-                const activeLeaf = treeRoot?.querySelector('a.tree-sub-link.active, a.tree-leaf-link.active, a[aria-current="page"]');
-                if (!activeLeaf) return;
+                let activeLeaf = treeRoot?.querySelector('a.tree-sub-link.active, a.tree-leaf-link.active, a[aria-current="page"]');
 
-                let current = activeLeaf.parentElement;
-                while (current && current !== treeRoot) {
-                    if (current.classList.contains('tree-sub-group')) {
-                        expandSubGroup(current);
-                    } else if (current.classList.contains('tree-domain-group')) {
-                        expandDomainGroup(current);
+                if (!activeLeaf) {
+                    const currentPath = window.location.pathname.replace(/\/+$/, '');
+                    const currentHref = window.location.href;
+                    const savedHref = (sessionStorage.getItem('simak_last_menu_href') || '').replace(/^https?:\/\/[^\/]+/, '').replace(/\/+$/, '');
+                    const allLinks = Array.from(treeRoot?.querySelectorAll('a.tree-sub-link, a.tree-leaf-link') || []);
+
+                    // 1. Try exact pathname or full href match
+                    activeLeaf = allLinks.find((a) => {
+                        const aPath = (a.getAttribute('href') || '').replace(/^https?:\/\/[^\/]+/, '').replace(/\/+$/, '');
+                        return (aPath !== '' && aPath === currentPath) || a.href === currentHref;
+                    });
+
+                    // 2. Try saved href from previous user click
+                    if (!activeLeaf && savedHref && savedHref !== '/' && savedHref !== '') {
+                        activeLeaf = allLinks.find((a) => {
+                            const aPath = (a.getAttribute('href') || '').replace(/^https?:\/\/[^\/]+/, '').replace(/\/+$/, '');
+                            return aPath === savedHref;
+                        });
                     }
-                    current = current.parentElement;
+
+                    // 3. Try longest prefix match on pathname (e.g. /lms/materi/123 -> matches /lms/materi)
+                    if (!activeLeaf && currentPath !== '' && currentPath !== '/') {
+                        let bestMatch = null;
+                        let bestLen = 0;
+                        allLinks.forEach((a) => {
+                            const aPath = (a.getAttribute('href') || '').replace(/^https?:\/\/[^\/]+/, '').replace(/\/+$/, '');
+                            if (aPath && aPath !== '/' && aPath !== '#') {
+                                if (currentPath === aPath || currentPath.startsWith(aPath + '/')) {
+                                    if (aPath.length > bestLen) {
+                                        bestLen = aPath.length;
+                                        bestMatch = a;
+                                    }
+                                }
+                            }
+                        });
+                        activeLeaf = bestMatch;
+                    }
+
+                    if (activeLeaf) {
+                        activeLeaf.classList.add('active');
+                        activeLeaf.setAttribute('aria-current', 'page');
+                    }
+                }
+
+                // Identify the active domain group
+                let activeDomainGroup = activeLeaf?.closest('.tree-domain-group');
+
+                // Fallback: If no leaf matched, find any domain group already rendered as open by Blade
+                if (!activeDomainGroup) {
+                    treeGroups.forEach((g) => {
+                        const subList = g.querySelector(':scope > .tree-sub-list');
+                        if (subList && !subList.classList.contains('is-collapsed')) {
+                            activeDomainGroup = g;
+                        }
+                    });
+                }
+
+                // Fallback: Check saved group ID from click
+                if (!activeDomainGroup) {
+                    const savedGroupId = sessionStorage.getItem('simak_last_menu_group_id');
+                    if (savedGroupId) {
+                        activeDomainGroup = document.getElementById(savedGroupId);
+                    }
+                }
+
+                // Expand hierarchy up from active leaf
+                if (activeLeaf) {
+                    let current = activeLeaf.parentElement;
+                    while (current && current !== treeRoot) {
+                        if (current.classList.contains('tree-sub-group')) {
+                            expandSubGroup(current);
+                        } else if (current.classList.contains('tree-domain-group')) {
+                            expandDomainGroup(current);
+                        }
+                        current = current.parentElement;
+                    }
+                } else if (activeDomainGroup) {
+                    expandDomainGroup(activeDomainGroup);
                 }
 
                 // Ensure other non-active Level 1 domain groups are collapsed
-                const activeDomainGroup = activeLeaf.closest('.tree-domain-group');
                 if (activeDomainGroup) {
                     treeGroups.forEach((g) => {
                         if (g !== activeDomainGroup) {
@@ -894,7 +980,7 @@
                 // Smooth scroll active item into view
                 try {
                     setTimeout(() => {
-                        activeLeaf.scrollIntoView({ block: 'nearest' });
+                        activeLeaf?.scrollIntoView({ block: 'nearest' });
                     }, 60);
                 } catch (e) {}
             };
@@ -908,6 +994,15 @@
                 // 1. Leaf link click (child terakhir) -> open page (standard link navigation)
                 const leafLink = target.closest('a.tree-sub-link, a.tree-leaf-link');
                 if (leafLink) {
+                    try {
+                        const href = leafLink.getAttribute('href') || leafLink.href || '';
+                        sessionStorage.setItem('simak_last_menu_href', href);
+                        const group = leafLink.closest('.tree-domain-group');
+                        if (group && group.id) {
+                            sessionStorage.setItem('simak_last_menu_group_id', group.id);
+                        }
+                    } catch (err) {}
+
                     if (window.innerWidth <= 1024) {
                         sidebar.classList.remove('mobile-open');
                     }
@@ -1086,57 +1181,7 @@
                 searchInput?.focus();
             });
 
-            // 4. Program Studi Selector Interactivity & Persistence
-            const updateProdiUI = (selectedVal) => {
-                if (!prodiSelect) return;
-                prodiSelect.value = selectedVal;
-                const opt = prodiSelect.options[prodiSelect.selectedIndex];
-                const text = opt ? opt.text.trim() : '';
-
-                if (prodiPill) {
-                    if (selectedVal === 'ALL' || !selectedVal) {
-                        prodiPill.textContent = 'SEMUA PRODI';
-                    } else {
-                        const cleanText = text.replace(/^(S\d)\s*-\s*/, '$1: ');
-                        prodiPill.textContent = cleanText.length > 18 ? cleanText.substring(0, 18) + '…' : cleanText;
-                    }
-                }
-
-                // Filter dashboard DTPS table rows if present on page
-                const dtpsRows = document.querySelectorAll('tbody tr[data-prodi-id]');
-                if (dtpsRows.length > 0) {
-                    dtpsRows.forEach((row) => {
-                        const rowProdiId = row.getAttribute('data-prodi-id');
-                        if (selectedVal === 'ALL' || !selectedVal || rowProdiId === selectedVal) {
-                            row.style.display = '';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
-                }
-
-                // Dispatch event so any page script can listen to prodi change
-                window.dispatchEvent(new CustomEvent('simak:prodi-changed', {
-                    detail: { prodiId: selectedVal, prodiName: text }
-                }));
-            };
-
-            // Restore stored prodi selection on load
-            const storedProdi = localStorage.getItem('simak_selected_prodi') || 'ALL';
-            if (storedProdi && prodiSelect) {
-                const exists = Array.from(prodiSelect.options).some(o => o.value === storedProdi);
-                if (exists) {
-                    updateProdiUI(storedProdi);
-                }
-            }
-
-            prodiSelect?.addEventListener('change', () => {
-                const val = prodiSelect.value;
-                localStorage.setItem('simak_selected_prodi', val);
-                updateProdiUI(val);
-            });
-
-            // 5. Expand / Collapse All & Reset
+            // 4. Expand / Collapse All & Reset
             btnExpandAll?.addEventListener('click', () => {
                 treeGroups.forEach((group) => {
                     expandDomainGroup(group);
@@ -1154,9 +1199,6 @@
 
             btnResetFilters?.addEventListener('click', () => {
                 if (searchInput) searchInput.value = '';
-                if (prodiSelect) prodiSelect.value = 'ALL';
-                localStorage.setItem('simak_selected_prodi', 'ALL');
-                updateProdiUI('ALL');
                 filterTree();
             });
 

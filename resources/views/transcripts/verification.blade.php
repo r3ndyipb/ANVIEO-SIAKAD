@@ -27,7 +27,7 @@
 <body>
 <main>
     <header class="{{ $valid ? 'valid' : 'invalid' }}">
-        <img src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}">
+        <img src="{{ $siteConfiguration['preloader_logo_url'] ?? $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';">
         <h1>{{ $valid ? 'Transkrip Nilai Terverifikasi' : 'Transkrip Nilai Tidak Valid' }}</h1>
         <p>{{ $valid ? 'Dokumen transkrip ini terdaftar pada sistem '.$siteConfiguration['institution_name'].'.' : 'Kode QR tidak dikenali atau data penanda tangan tidak cocok.' }}</p>
     </header>

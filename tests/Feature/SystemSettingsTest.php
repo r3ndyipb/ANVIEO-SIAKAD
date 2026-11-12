@@ -262,8 +262,8 @@ class SystemSettingsTest extends TestCase
 
         $settings = app(InstitutionSettings::class)->forDisplay();
 
-        $this->assertSame('Perguruan Tinggi', $settings['institution_name']);
-        $this->assertSame('SIAKAD Perguruan Tinggi', $settings['app_name']);
+        $this->assertSame('ASEAN University International', $settings['institution_name']);
+        $this->assertSame('SIAKAD ASEAN University International', $settings['app_name']);
         $this->assertSame('SIAKAD (Sistem Informasi Akademik)', $settings['app_full_name']);
         $this->assertSame('Motto Perguruan Tinggi', $settings['motto']);
         $this->assertStringEndsWith('/images/landing/default-campus-logo.png', $settings['logo_url']);

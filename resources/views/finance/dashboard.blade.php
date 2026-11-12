@@ -12,21 +12,22 @@
     </div>
     @if (auth()->user()?->role === 'keuangan')
         <section class="finance-dashboard-welcome" aria-labelledby="finance-dashboard-welcome-title">
-            <p>Dashboard Keuangan</p>
+            <p class="eyebrow">Dashboard Keuangan</p>
             <h2 id="finance-dashboard-welcome-title">Selamat datang, {{ auth()->user()->name ?: auth()->user()->login }}.</h2>
-            <span>Ringkasan pembayaran dan layanan keuangan {{ $siteConfiguration['institution_name'] }}.</span>
+            <p class="subtitle">Ringkasan pembayaran dan layanan keuangan {{ $siteConfiguration['institution_name'] }}.</p>
         </section>
     @endif
     <div class="finance-dashboard">
         @if ($periods->isNotEmpty())
             <form class="finance-dashboard-filter" method="GET" action="{{ route('finance.dashboard') }}">
-                <label>Periode uang kuliah
-                    <select name="tahun" data-searchable-select="filter">
+                <div>
+                    <label for="finance-dashboard-period">Periode uang kuliah</label>
+                    <select id="finance-dashboard-period" name="tahun" data-searchable-select="filter">
                         @foreach ($periods as $period)
                             <option value="{{ $period->tahun }}" @selected($selectedYear === (string) $period->tahun)>{{ $period->nama_periode }} ({{ $period->tahun }})</option>
                         @endforeach
                     </select>
-                </label>
+                </div>
                 <button class="button button-primary" type="submit">Tampilkan</button>
             </form>
         @endif

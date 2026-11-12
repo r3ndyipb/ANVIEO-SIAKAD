@@ -159,7 +159,8 @@ class LmsController extends Controller
         $pdf->Ln(0.25);
         $pdf->SetFont('Times', '', 9);
         $pdf->SetX(22);
-        $pdf->Cell(11, 0.45, $this->pdfText('Ternate, '.$printDate), 0, 1, 'R');
+        $cityName = app(\App\Services\InstitutionSettings::class)->cityName();
+        $pdf->Cell(11, 0.45, $this->pdfText($cityName.', '.$printDate), 0, 1, 'R');
         $qrY = $pdf->GetY() + 0.1;
         try {
             $pdf->Image($qrPath, 29, $qrY, 2.4, 2.4, 'PNG');
@@ -3325,10 +3326,9 @@ class LmsController extends Controller
 
     private function lmsAttendanceHeading(\FPDF $pdf, object $schedule, string $title): void
     {
-        foreach ([[public_path('images/kkn/dikbud.jpg'), 6], [app(\App\Services\InstitutionSettings::class)->logoFilePath(), 27]] as [$image, $x]) {
-            if (is_file($image)) {
-                $pdf->Image($image, $x, 0.5, 2, 2);
-            }
+        $logoPath = app(\App\Services\InstitutionSettings::class)->logoFilePath();
+        if (is_file($logoPath)) {
+            $pdf->Image($logoPath, 3, 0.5, 2, 2);
         }
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(33, 0.5, $this->pdfText($title.' '.mb_strtoupper((string) $schedule->namatahun)), 0, 1, 'C');

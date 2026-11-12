@@ -53,7 +53,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $thesis->nim }}<small class="subtext">{{ $thesis->nama_mahasiswa }}</small></td>
                                     <td>{{ $thesis->judul }}</td><td>{{ $thesis->pembimbing_names }}</td><td>{{ $thesis->penguji_names }}</td>
-                                    <td>{{ $thesis->last_message_at ?: 'Belum ada' }}@if ($thesis->unread)<span class="thesis-unread-badge">Pesan baru</span>@endif</td>
+                                    <td>{{ $thesis->last_message_at ?: 'Belum ada' }}@if ($thesis->unread)<span class="thesis-unread-badge" style="background: #dc2626;">Pesan baru</span>@endif</td>
                                     <td>{{ $statusLabels[(int) $thesis->status] ?? 'Status tidak diketahui' }}</td>
                                     <td><a class="button button-small" href="{{ route('theses.bimbingan.show', $thesis->id) }}">Bimbingan</a></td>
                                 </tr>
@@ -74,7 +74,7 @@
                     <td>{{ $thesis->nim }}<small class="subtext">{{ $thesis->nama_mahasiswa }}</small></td>
                     <td>{{ $thesis->judul }}</td>
                     <td>{{ $thesis->pembimbing_names }}</td><td>{{ $thesis->penguji_names }}</td>
-                    <td>{{ $thesis->last_message_at ?: 'Belum ada' }}@if ($thesis->unread)<span class="thesis-unread-badge">Pesan baru</span>@endif</td>
+                    <td>{{ $thesis->last_message_at ?: 'Belum ada' }}@if ($thesis->unread)<span class="thesis-unread-badge" style="background: #dc2626;">Pesan baru</span>@endif</td>
                     <td>{{ $statusLabels[(int) $thesis->status] ?? 'Status tidak diketahui' }}</td>
                     <td><a class="button button-small" href="{{ route('theses.bimbingan.show', $thesis->id) }}">Bimbingan</a></td>
                 </tr>

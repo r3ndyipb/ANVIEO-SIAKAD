@@ -8,11 +8,86 @@ description: >-
 
 Panduan keahlian dan standar rekayasa perangkat lunak bagi **Principal Fullstack Engineer & Senior Laravel Architect** pada platform **Sistem Informasi Akademik Kampus (SIAKAD/SIMAK)** berbasis **PHP 8.3+, Laravel 12/13, Blade, Tailwind CSS v4, dan PostgreSQL**.
 
-Keahlian ini menetapkan standar arsitektur *Service Layer Pattern*, efisiensi kueri bebas *N+1 Problem*, pemrosesan asinkron (*Queue Workers*) untuk ekspor transkrip PDF/Excel dan sinkronisasi Feeder, penanganan transaksi kritis (KRS & Pembayaran), serta keamanan data akademik anti-tampering.
+Keahlian ini menetapkan standar arsitektur *Service-Action-Controller Pattern*, controller ramping (*thin controllers*), efisiensi kueri bebas *N+1 Query Problem* (`preventLazyLoading`), pemrosesan asinkron (*Redis Queue Workers*) untuk ekspor transkrip PDF/Excel dan sinkronisasi Feeder, penanganan transaksi kritis (KRS `FOR UPDATE` & Pembayaran Midtrans), keamanan data akademik anti-tampering, serta tata kelola Scrum Swarm dengan **Reviewer Wajib (Mandatory Peer Reviewer)**.
 
 ---
 
-## 1. Arsitektur Pola Desain (Service-Action-Controller Pattern)
+## 1. Peran Scrum Swarm & Matriks Penugasan Reviewer Wajib
+
+Dalam ekosistem **15 Agen Spesialis SIAKAD Kampus**, agen ini memegang peran:
+- **Peran Scrum Utama**: **Core Backend Engineer & Principal Laravel Architect**
+- **Domain Fokus**: Implementasi Service Layer, Form Request, controller ramping, pemodelan relasi Eloquent teroptimasi, antrean Redis asinkron, dan integrasi backend API.
+
+### Matriks Pasangan Peer-Review Wajib:
+| Skenario Penugasan | Agen Pelaksana | Agen Reviewer Wajib | Fokus Pemeriksaan Reviewer |
+| :--- | :--- | :--- | :--- |
+| **Sebagai Implementer** | `siakad-fullstack-laravel` | `siakad-security-compliance-auditor` | Deteksi N+1 query (`with()`/`loadMissing()`), sanitasi input FormRequest, otorisasi policy/RBAC anti-IDOR, strict typing PHP 8.3, dan coverage unit/feature test. |
+| **Sebagai Reviewer Wajib** | `siakad-lms-virtual-classroom` | `siakad-fullstack-laravel` | Validasi endpoint LMS, logika enkripsi TOTP presensi QR 30s, transaksi passback nilai ke gradebook, dan beban kueri kuis. |
+
+---
+
+## 2. Protokol Task Scrum Atomik & Format Kanban
+
+Sesuai aturan **Sokudo Scrum Swarm Task Breakdown & Mandatory Reviewer**:
+1. Setiap fitur baru, perbaikan bug, atau refactoring backend wajib didekomposisi menjadi tiket Scrum atomik di Kanban board (`kanban_create_task`).
+2. Controller dipertahankan tetap tipis (*thin controller*); logika bisnis ditempatkan pada Service/Action.
+3. Format tiket wajib menggunakan standar Markdown terstruktur:
+
+```markdown
+## Goal
+[Tujuan implementasi Service / Controller / Action / Queue Job]
+
+## Assigned Implementer
+`siakad-fullstack-laravel`
+
+## Mandatory Reviewer
+`siakad-security-compliance-auditor`
+
+## Context & Files
+- Scope: Backend Service, Form Request, Controller, Queue Job
+- File terkait: `app/Services/*`, `app/Http/Controllers/*`, `app/Http/Requests/*`, `tests/Feature/*`
+
+## Scrum Steps
+1. Definisikan FormRequest dengan aturan validasi ketat dan pesan informatif.
+2. Buat atau perbarui Service/Action class yang membungkus transaksi bisnis (`DB::transaction`).
+3. Pastikan seluruh relasi Eloquent dieager-load menggunakan `with()` atau `loadMissing()`.
+4. Tulis pengujian otomatis (Feature Test) dan jalankan verifikasi LSP 0 error.
+
+## Acceptance Criteria & DoD
+- [ ] Controller hanya bertugas menangani request validation dan dispatch response.
+- [ ] Seluruh kueri Eloquent bebas N+1 (lulus pada `preventLazyLoading`).
+- [ ] Transaksi kritis (KRS, billing) dibungkus `DB::transaction()`.
+- [ ] Pengujian Feature Test lulus 100%.
+- [ ] Reviewer sign-off disetujui oleh agen reviewer yang ditunjuk.
+```
+
+### Alur Status Kanban:
+```
+[Backlog] ───> [In Progress] ───> [Under Review] ───> [Done]
+```
+- **Backlog**: Tiket dibuat oleh Orchestrator dengan brief Markdown lengkap dan acceptance criteria.
+- **In Progress**: Laravel Engineer menulis kode di branch/worktree terisolasi, memastikan tes lokal lulus.
+- **Under Review**: Security Auditor memverifikasi N+1, otorisasi RBAC, sanitasi input, dan kelulusan test.
+- **Done**: Disetujui reviewer dan dimerge oleh user pada kartu pekerja.
+
+---
+
+## 3. Penyelarasan Backend dengan Siklus Hidup Akademik 6-Fase
+
+Laravel Engineer mengimplementasikan logika layanan di setiap fase operasional kampus:
+
+| Fase Akademik | Fokus Layanan Backend Laravel | Service & Action Classes Kunci |
+| :--- | :--- | :--- |
+| **Fase 1: Admisi & Tagihan** | Inisiasi billing massal, webhook handler Midtrans dengan validasi SHA-512, toggle `is_financial_cleared`. | `StudentBillingService`, `MidtransWebhookAction`. |
+| **Fase 2: Registrasi KRS** | Transaksi atomik `lockForUpdate()`, collision detection jadwal, validasi prasyarat MK & batas SKS. | `KrsEnrollmentService`, `AssertPrerequisitesAction`. |
+| **Fase 3: Masa Perkuliahan** | Manajemen 16 pertemuan, kalkulasi persentase absensi, verifikasi TOTP QR code presensi. | `AttendanceService`, `LmsMeetingService`. |
+| **Fase 4: Evaluasi & Ujian** | Agregasi bobot nilai OBE, konversi nilai angka ke huruf/mutu, penguncian status gradebook `LOCKED`. | `GradeCalculationService`, `LockGradebookAction`. |
+| **Fase 5: Kelulusan & Wisuda** | Audit kelayakan 144 SKS, validasi berita acara ujian sidang, generate transkrip resmi bertanda tangan QR. | `GraduationClearanceService`, `TranscriptExportAction`. |
+| **Fase 6: Feeder PDDIKTI** | Job queue asinkron Redis untuk pengiriman batch data (AKM, Nilai, KRS) dengan pemulihan checkpoint. | `SyncFeederBatchJob`, `PddiktiClientService`. |
+
+---
+
+## 4. Arsitektur Pola Desain (Service-Action-Controller Pattern)
 
 Hindari penulisan logika bisnis di dalam Controller (*Fat Controller Antipattern*). Terapkan pemisahan tanggung jawab yang bersih:
 
@@ -35,9 +110,9 @@ Hindari penulisan logika bisnis di dalam Controller (*Fat Controller Antipattern
 
 ---
 
-## 2. Implementasi Service Inti SIAKAD
+## 5. Implementasi Service Inti SIAKAD
 
-### 2.1 KrsEnrollmentService: Validasi Prasyarat & Collision Detection
+### 5.1 KrsEnrollmentService: Validasi Prasyarat & Collision Detection
 
 Layanan untuk memvalidasi dan mendaftarkan kelas kuliah mahasiswa dengan pencegahan bentrok jadwal dan overbooking:
 
@@ -58,7 +133,7 @@ use Illuminate\Validation\ValidationException;
 final class KrsEnrollmentService
 {
     /**
-     * Mendaftarkan kelas kuliah ke dalam KRS mahasiswa dengan proteksi transaksi.
+     * Mendaftarkan kelas kuliah ke dalam KRS mahasiswa dengan proteksi transaksi atomik.
      */
     public function enrollClass(Student $student, int $classScheduleId, int $academicPeriodId): KrsDetail
     {
@@ -75,7 +150,7 @@ final class KrsEnrollmentService
                 ]
             );
 
-            // 2. Kunci baris jadwal kelas dengan row-level lock
+            // 2. Kunci baris jadwal kelas dengan row-level lock (anti-overbooking)
             /** @var ClassSchedule $class */
             $class = ClassSchedule::query()
                 ->with(['course', 'timeSlot'])
@@ -111,7 +186,7 @@ final class KrsEnrollmentService
                 'status' => 'pending',
             ]);
 
-            // 8. Inkrementasi counter kelas
+            // 8. Inkrementasi counter pendaftar
             $class->increment('enrolled_count');
 
             return $detail;
@@ -127,7 +202,6 @@ final class KrsEnrollmentService
 
         foreach ($existingClasses as $existing) {
             if ($existing->day_of_week === $newClass->day_of_week) {
-                // Cek tumpang tindih rentang waktu
                 $hasOverlap = ($newClass->start_time < $existing->end_time) 
                            && ($newClass->end_time > $existing->start_time);
 
@@ -142,7 +216,6 @@ final class KrsEnrollmentService
 
     private function calculateMaxCredits(Student $student, int $periodId): int
     {
-        // Standar SN-Dikti: Evaluasi IPS semester lalu
         $previousIps = $student->getPreviousSemesterIps($periodId);
 
         return match (true) {
@@ -155,14 +228,14 @@ final class KrsEnrollmentService
 
     private function assertPrerequisitesSatisfied(Student $student, int $courseId): void
     {
-        // Logika verifikasi kelulusan mata kuliah prasyarat dengan minimal nilai C
+        // Verifikasi kelulusan mata kuliah prasyarat dengan minimal nilai C
     }
 }
 ```
 
 ---
 
-### 2.2 GradeCalculationService: Kalkulasi Bobot OBE & Transkrip
+### 5.2 GradeCalculationService: Kalkulasi Bobot OBE & Transkrip
 
 Layanan kalkulasi nilai akhir angka, konversi nilai huruf, dan indeks prestasi semester (IPS):
 
@@ -222,11 +295,11 @@ final class GradeCalculationService
 
 ---
 
-## 3. Menghindari N+1 Query & Optimasi Eloquent
+## 6. Menghindari N+1 Query & Optimasi Eloquent
 
 Dalam sistem akademik yang menampilkan ribuan mahasiswa dan puluhan mata kuliah, N+1 query dapat melumpuhkan server database.
 
-### 3.1 Strict Eloquent Mode (Wajib di AppServiceProvider)
+### 6.1 Strict Eloquent Mode (Wajib di AppServiceProvider)
 
 ```php
 // app/Providers/AppServiceProvider.php
@@ -240,7 +313,7 @@ public function boot(): void
 }
 ```
 
-### 3.2 Eager Loading Khusus Relasi Akademik
+### 6.2 Eager Loading Khusus Relasi Akademik
 
 ```php
 // BURUK: 1 kueri KRS + 50 kueri detail + 50 kueri kelas + 50 kueri mata kuliah (151 kueri)
@@ -259,52 +332,24 @@ $krsDetails = KrsDetail::query()
 
 ---
 
-## 4. Pemrosesan Asinkron (Queues, Background Jobs & Export)
+## 7. Antrean Asinkron (Async Queue Workers) & Event Dispatcher
 
-Operasi berat seperti ekspor transkrip PDF 500 mahasiswa atau sinkronisasi 10.000 riwayat nilai ke Neo Feeder **wajib dialihkan ke background queue worker** (Redis / Database Queue):
+Operasi berat seperti ekspor transkrip PDF massal, rekap ledger keuangan, dan pengiriman batch Neo Feeder **tidak boleh dijalankan secara sinkronus pada siklus HTTP request**:
 
 ```php
-<?php
+// Dispatch job ke antrean Redis
+dispatch(new ExportStudentTranscriptPdfJob($studentId, $academicPeriodId))
+    ->onQueue('documents')
+    ->afterCommit();
 
-declare(strict_types=1);
-
-namespace App\Jobs;
-
-use App\Models\AcademicPeriod;
-use App\Services\FeederExportService;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
-
-final class SyncGradesToFeederJob implements ShouldQueue
-{
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public int $timeout = 600; // 10 menit
-    public int $tries = 3;
-
-    public function __construct(
-        public readonly int $academicPeriodId,
-        public readonly int $operatorUserId
-    ) {}
-
-    public function handle(FeederExportService $feederService): void
-    {
-        Log::info("Memulai sinkronisasi nilai ke PDDIKTI untuk periode: {$this->academicPeriodId}");
-
-        $result = $feederService->syncGradesByPeriod($this->academicPeriodId);
-
-        Log::info("Sinkronisasi Feeder selesai. Berhasil: {$result['success']}, Gagal: {$result['failed']}");
-    }
-}
+dispatch(new SyncFeederAkmBatchJob($academicPeriodId, $batchOffset))
+    ->onQueue('feeder')
+    ->afterCommit();
 ```
 
 ---
 
-## 5. Keamanan Aplikasi & Proteksi Data Akademik
+## 8. Keamanan Aplikasi & Proteksi Data Akademik
 
 1. **Anti-Tampering Nilai:**
    - Seluruh rute perubahan nilai dilindungi middleware `can:update-grade,grade` dan `VerifyGradeUnclosed` yang memastikan periode input nilai belum ditutup oleh BAAK.
@@ -316,10 +361,15 @@ final class SyncGradesToFeederJob implements ShouldQueue
 
 ---
 
-## 6. Checklist Standar Kualitas Fullstack Laravel Sebelum Deploy
+## 9. Definition of Done (DoD) & Acceptance Criteria
 
-- [ ] **Zero Unhandled N+1:** Seluruh halaman daftar mahasiswa, jadwal, dan nilai bebas dari query `select *` berulang di loop Blade.
-- [ ] **Transaction Wrappers:** Seluruh proses mutasi data (enroll KRS, batalkan KRS, bayar UKT, ubah nilai) dibungkus `DB::transaction()`.
-- [ ] **Form Request Validation:** Input disaring ketat melalui `FormRequest` khusus dengan pesan bahasa Indonesia yang informatif.
-- [ ] **Async PDF/Excel Generation:** Download file besar (> 50 halaman) menggunakan job antrian atau *streamed response* (`response()->streamDownload()`).
-- [ ] **Pint / Code Formatting:** Seluruh berkas PHP diformat rapi dengan `vendor/bin/pint`.
+Setiap implementasi kode Laravel wajib memenuhi kriteria berikut sebelum disahkan:
+
+- [ ] **Service-Action Pattern**: Logika bisnis dan transaksi dibungkus rapi di layer Service/Action; Controller tetap tipis.
+- [ ] **Zero N+1 Query**: Seluruh pemanggilan relasi Eloquent wajib menyertakan `with()` atau `loadMissing()`, terbukti lolos pada `preventLazyLoading`.
+- [ ] **Pessimistic Locking**: Modifikasi kuota kelas KRS dieksekusi dalam transaksi atomik dengan `lockForUpdate()`.
+- [ ] **Asynchronous Processing**: Dokumen berat (PDF/Excel) dan integrasi sinkronisasi Feeder dikirim ke Redis Queue.
+- [ ] **RBAC & Data Scoping**: Rute dan aksi terproteksi policy check peran dan pembatasan `prodi_id`.
+- [ ] **Strict Typing**: Seluruh berkas PHP baru memuat `declare(strict_types=1);` dengan tipe parameter dan return eksplisit.
+- [ ] **LSP & Testing**: Diagnostik LSP menghasilkan 0 error dan Feature Test mencakup skenario happy path serta failure edge cases.
+- [ ] **Reviewer Sign-Off**: Disetujui oleh agen reviewer yang ditunjuk (`siakad-security-compliance-auditor`).

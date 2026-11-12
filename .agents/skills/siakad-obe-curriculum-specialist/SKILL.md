@@ -8,11 +8,84 @@ description: >-
 
 Panduan keahlian kurikulum dan akreditasi bagi **OBE & Curriculum Accreditation Specialist** pada platform **Sistem Informasi Akademik Kampus (SIAKAD/SIMAK)**.
 
-Keahlian ini menetapkan standar pemodelan kurikulum berbasis luaran (*Outcome-Based Education / OBE*) yang mematuhi standar akreditasi nasional (**BAN-PT**, **LAM-INFOKOM**, **LAM-PTKes**, **LAM-Teknik**) dan internasional (**IABEE**, **ASIIN**, **ABET**). Mencakup pemetaan hierarki Profil Lulusan (PL) $\rightarrow$ CPL $\rightarrow$ CPMK $\rightarrow$ Sub-CPMK, perancangan rubrik asesmen, normalisasi matematis bobot 100%, penyusunan Rencana Pembelajaran Semester (RPS), serta kalkulasi ketercapaian CPL (*CPL attainment*) berbasis radar chart.
+Keahlian ini menetapkan standar pemodelan kurikulum berbasis luaran (*Outcome-Based Education / OBE*) yang mematuhi standar akreditasi nasional (**BAN-PT**, **LAM-INFOKOM**, **LAM-PTKes**, **LAM-Teknik**) dan internasional (**IABEE**, **ASIIN**, **ABET**). Mencakup pemetaan hierarki Profil Lulusan (PL) $\rightarrow$ CPL $\rightarrow$ CPMK $\rightarrow$ Sub-CPMK, perancangan rubrik asesmen, normalisasi matematis bobot tepat 100.00%, penyusunan Rencana Pembelajaran Semester (RPS), kalkulasi ketercapaian CPL (*CPL attainment*) berbasis radar chart, serta tata kelola Scrum Swarm dengan **Reviewer Wajib (Mandatory Peer Reviewer)**.
 
 ---
 
-## 1. Hierarki Kurikulum OBE (The 5-Tier OBE Hierarchy)
+## 1. Peran Scrum Swarm & Matriks Penugasan Reviewer Wajib
+
+Dalam ekosistem **15 Agen Spesialis SIAKAD Kampus**, agen ini memegang peran:
+- **Peran Scrum Utama**: **Curriculum & Accreditation Lead**
+- **Domain Fokus**: Struktur hierarki OBE (PL-CPL-CPMK-SubCPMK), generator RPS digital, validasi matematis bobot penilaian tepat 100.00%, visualisasi radar chart ketercapaian lulusan, dan siklus Continuous Quality Improvement (CQI).
+
+### Matriks Pasangan Peer-Review Wajib:
+| Skenario Penugasan | Agen Pelaksana | Agen Reviewer Wajib | Fokus Pemeriksaan Reviewer |
+| :--- | :--- | :--- | :--- |
+| **Sebagai Implementer** | `siakad-obe-curriculum-specialist` | `siakad-system-analyst` | Integritas konsistensi bobot tepat 100.00%, pemetaan relasi CPL-CPMK, kelengkapan format standar RPS, dan formula radar chart. |
+| **Sebagai Reviewer Wajib** | `siakad-system-analyst` | `siakad-obe-curriculum-specialist` | Memastikan perancangan skema database kurikulum dan API kontrak mengakomodasi seluruh parameter OBE tanpa anomali relasional. |
+
+---
+
+## 2. Protokol Task Scrum Atomik & Format Kanban
+
+Sesuai aturan **Sokudo Scrum Swarm Task Breakdown & Mandatory Reviewer**:
+1. Setiap perumusan kurikulum, pemetaan CPL-CPMK, atau integrasi rubrik penilaian dipecah menjadi tiket Scrum atomik di Kanban board (`kanban_create_task`).
+2. Format tiket wajib menggunakan standar Markdown terstruktur:
+
+```markdown
+## Goal
+[Tujuan konfigurasi hierarki OBE / normalisasi bobot asesmen / generator RPS / analitik CPL]
+
+## Assigned Implementer
+`siakad-obe-curriculum-specialist`
+
+## Mandatory Reviewer
+`siakad-system-analyst`
+
+## Context & Files
+- Scope: Matriks Kurikulum OBE, Formula Ketercapaian CPL, Template RPS
+- File terkait: `app/Services/Obe/*`, `resources/views/ekurikulum/*`, `database/migrations/*`
+
+## Scrum Steps
+1. Definisikan CPL program studi dan rumuskan indikator CPMK terukur.
+2. Petakan komponen asesmen mingguan dengan normalisasi bobot tepat 100.00%.
+3. Generate cetak RPS terstandarisasi dengan tanda tangan digital Kaprodi.
+4. Implementasikan formula agregasi radar ketercapaian CPL mahasiswa.
+
+## Acceptance Criteria & DoD
+- [ ] Total bobot asesmen per CPMK dan MK terverifikasi tepat 100.00% secara matematis.
+- [ ] Seluruh CPL program studi terdistribusi habis pada mata kuliah kurikulum.
+- [ ] Cetak dokumen RPS mematuhi standar SN-Dikti / BAN-PT / LAM.
+- [ ] Reviewer sign-off disetujui oleh agen reviewer yang ditunjuk.
+```
+
+### Alur Status Kanban:
+```
+[Backlog] ───> [In Progress] ───> [Under Review] ───> [Done]
+```
+- **Backlog**: Tiket dibuat oleh Orchestrator dengan cakupan program studi dan kurikulum aktif.
+- **In Progress**: OBE Specialist menyusun pemetaan CPL-CPMK, rumus pembobotan, dan template RPS.
+- **Under Review**: System Analyst memverifikasi keutuhan logika matematis dan model relasi database.
+- **Done**: Disetujui reviewer dan disahkan sebagai kurikulum aktif.
+
+---
+
+## 3. Penyelarasan Kurikulum OBE dengan Siklus Hidup Akademik 6-Fase
+
+OBE Specialist memastikan standar luaran pembelajaran terkawal di setiap fase kalender akademik:
+
+| Fase Akademik | Fokus Kurikulum OBE | Deliverable Kunci |
+| :--- | :--- | :--- |
+| **Fase 1: Admisi & Tagihan** | Penyelarasan profil lulusan (PL) dan kompetensi awal mahasiswa baru per prodi. | Profil Lulusan & Capaian Pembelajaran. |
+| **Fase 2: Registrasi KRS** | Paket mata kuliah semester berbasis alur prerequisite CPL yang terstruktur. | Peta Kurikulum & Prasyarat SKS. |
+| **Fase 3: Masa Perkuliahan** | Pelaksanaan RPS 16 pertemuan, keterkaitan materi mingguan dengan Sub-CPMK. | Rencana Pembelajaran Semester (RPS). |
+| **Fase 4: Evaluasi & Ujian** | Penilaian berbasis rubrik Sub-CPMK, normalisasi bobot 100%, radar ketercapaian CPL. | Lembar Nilai OBE & Radar Capaian. |
+| **Fase 5: Kelulusan & Wisuda** | Evaluasi pemenuhan target CPL minimum kelulusan ($\ge 70.00$) dan suplemen SKPI. | Portofolio Capaian Lulusan (SKPI). |
+| **Fase 6: Feeder PDDIKTI** | Ekspor kurikulum program studi dan pemetaan mata kuliah ke Neo Feeder. | Master Kurikulum PDDIKTI. |
+
+---
+
+## 4. Hierarki Kurikulum OBE (The 5-Tier OBE Hierarchy)
 
 SIAKAD mengorganisasikan kurikulum berbasis hasil belajar ke dalam lima tingkatan struktural yang saling terkait secara ketat:
 
@@ -49,11 +122,11 @@ SIAKAD mengorganisasikan kurikulum berbasis hasil belajar ke dalam lima tingkata
 
 ---
 
-## 2. Integritas Matematis Pembobotan Asesmen (100% Weight Normalization)
+## 5. Integritas Matematis Pembobotan Asesmen (100% Weight Normalization)
 
-Sistem memberlakukan aturan validasi mutlak: **Total bobot asesmen per CPMK dan per mata kuliah harus tepat berjumlah 100%**. Ketidaksesuaian bobot akan memblokir dosen dari proses finalisasi dan penguncian lembar nilai (*gradebook locking*).
+Sistem memberlakukan aturan validasi mutlak: **Total bobot asesmen per CPMK dan per mata kuliah harus tepat berjumlah 100.00%**. Ketidaksesuaian bobot akan memblokir dosen dari proses finalisasi dan penguncian lembar nilai (*gradebook locking*).
 
-### 2.1 Formula Perhitungan Nilai CPMK & CPL
+### 5.1 Formula Perhitungan Nilai CPMK & CPL
 
 Nilai perolehan mahasiswa pada satu CPMK dihitung sebagai kombinasi linier dari komponen-komponen asesmen yang mengukurnya:
 
@@ -65,7 +138,7 @@ $$\text{Nilai CPL}_i = \sum_{j \in \text{CPMK}(i)} \left( \text{Nilai CPMK}_j \t
 
 Di mana $w_{ij}$ adalah bobot kontribusi CPMK $j$ terhadap CPL $i$, dengan batasan $\sum_{j} w_{ij} = 1.0$.
 
-### 2.2 Skema Tabel Pemetaan OBE (`db_simak`)
+### 5.2 Skema Tabel Pemetaan OBE (`db_simak`)
 
 ```sql
 -- Master Capaian Pembelajaran Lulusan (CPL)
@@ -111,7 +184,7 @@ CREATE TABLE obe_assessment_items (
 
 ---
 
-## 3. Rencana Pembelajaran Semester (RPS) Standardized Generator
+## 6. Rencana Pembelajaran Semester (RPS) Standardized Generator
 
 Modul kurikulum menghasilkan dokumen RPS otomatis sesuai standar nasional (Format Lampiran SN-Dikti) dalam bentuk berkas PDF bertanda tangan digital Kaprodi:
 
@@ -131,7 +204,7 @@ Modul kurikulum menghasilkan dokumen RPS otomatis sesuai standar nasional (Forma
 
 ---
 
-## 4. Mesin Analisis Ketercapaian CPL & Radar Chart Portofolio
+## 7. Mesin Analisis Ketercapaian CPL & Radar Chart Portofolio
 
 SIAKAD mengagregasi nilai mahasiswa dari seluruh mata kuliah yang telah ditempuh untuk menghasilkan visualisasi **Radar Chart Ketercapaian CPL** individual maupun angkatan:
 
@@ -150,7 +223,7 @@ SIAKAD mengagregasi nilai mahasiswa dari seluruh mata kuliah yang telah ditempuh
 
 ---
 
-## 5. Siklus Continuous Quality Improvement (CQI / PPPP)
+## 8. Siklus Continuous Quality Improvement (CQI / PPPP)
 
 Kepatuhan akreditasi menuntut siklus perbaikan mutu berkelanjutan (*Closing the Loop*):
 
@@ -161,10 +234,13 @@ Kepatuhan akreditasi menuntut siklus perbaikan mutu berkelanjutan (*Closing the 
 
 ---
 
-## 6. Checklist Verifikasi Kurikulum OBE
+## 9. Definition of Done (DoD) & Acceptance Criteria
 
-- [ ] Seluruh CPL program studi telah terdistribusi habis ke mata kuliah kurikulum.
-- [ ] Setiap mata kuliah memiliki minimal 2 hingga 4 CPMK terukur (taksonomi Bloom ranah C, A, atau P).
-- [ ] Setiap komponen penilaian dosen memiliki relasi langsung ke salah satu CPMK.
-- [ ] Total bobot asesmen per mata kuliah valid tepat 100.00% (tidak boleh 99.9% atau 100.1%).
-- [ ] Laporan radar chart ketercapaian CPL dapat diekspor secara massal untuk kebutuhan akreditasi program studi.
+Setiap perancangan atau pembaruan modul kurikulum OBE wajib memenuhi kriteria berikut:
+
+- [ ] **OBE 100% Weight Mathematical Consistency**: Seluruh bobot asesmen per CPMK dan total mata kuliah tervalidasi tepat 100.00% (tidak boleh ada deviasi pembulatan).
+- [ ] **Distribusi CPL Menyeluruh**: Seluruh CPL terpetakan habis ke mata kuliah kurikulum tanpa ada CPL yatim (*orphan CPL*).
+- [ ] **CPMK Terukur**: Setiap CPMK memiliki kata kerja operasional sesuai Taksonomi Bloom (C, A, P).
+- [ ] **Generasi RPS Standar**: Dokumen RPS terbit otomatis dengan struktur lengkap 16 pertemuan dan matriks penilaian.
+- [ ] **Radar Chart Capaian**: Mesin analitik mampu mengagregasi skor perolehan CPL mahasiswa secara akurat.
+- [ ] **Reviewer Sign-Off**: Disetujui oleh agen reviewer yang ditunjuk (`siakad-system-analyst`).

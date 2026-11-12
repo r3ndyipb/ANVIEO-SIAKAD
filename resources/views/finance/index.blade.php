@@ -96,7 +96,16 @@
         </dialog>@endif
     @elseif ($module === 'categories')
         <form class="finance-filters" method="GET" action="{{ route('finance.categories.index') }}">
-            <label>Program studi<select name="prodi" data-searchable-select="filter"><option value="">Semua program studi</option><option value="none" @selected($selectedProgram === 'none')>Mahasiswa tanpa prodi</option>@foreach ($programs as $program)<option value="{{ $program->id_prodi }}" @selected($selectedProgram === $program->id_prodi)>{{ $program->nama_program_studi }} ({{ $program->nama_jenjang_pendidikan }})</option>@endforeach</select></label>
+            <div>
+                <label for="finance-category-program">Program studi</label>
+                <select id="finance-category-program" name="prodi" data-searchable-select="filter">
+                    <option value="">Semua program studi</option>
+                    <option value="none" @selected($selectedProgram === 'none')>Mahasiswa tanpa prodi</option>
+                    @foreach ($programs as $program)
+                        <option value="{{ $program->id_prodi }}" @selected($selectedProgram === $program->id_prodi)>{{ $program->nama_program_studi }} ({{ $program->nama_jenjang_pendidikan }})</option>
+                    @endforeach
+                </select>
+            </div>
             <button class="button button-primary" type="submit">Tampilkan</button>
         </form>
         <div class="module-alert finance-alert" role="note"><p>Daftar hanya menampilkan mahasiswa Aktif, Cuti, Non Aktif, dan MBKM. Unduh template Excel, isi NPM pada kolom B, kategori pada kolom C, dan nominal pada kolom D.</p></div>
@@ -125,9 +134,25 @@
     @elseif (in_array($module, ['ukt', 'ipi'], true))
         @if ($module === 'ukt')
             <form class="finance-filters" method="GET" action="{{ route('finance.'.$module.'.index') }}">
-                <label>Periode pembayaran<select name="tahun" data-searchable-select="filter"><option value="">Pilih periode</option>@foreach ($periods as $period)<option value="{{ $period->tahun }}" @selected(($filters['tahun'] ?? '') === $period->tahun)>{{ $period->nama_periode }} ({{ $period->tahun }})</option>@endforeach</select></label>
+                <div>
+                    <label for="finance-period-year">Periode pembayaran</label>
+                    <select id="finance-period-year" name="tahun" data-searchable-select="filter">
+                        <option value="">Pilih periode</option>
+                        @foreach ($periods as $period)
+                            <option value="{{ $period->tahun }}" @selected(($filters['tahun'] ?? '') === $period->tahun)>{{ $period->nama_periode }} ({{ $period->tahun }})</option>
+                        @endforeach
+                    </select>
+                </div>
                 @if (filled($filters['tahun'] ?? null))
-                <label>Fakultas<select name="id_fakultas" data-searchable-select="filter"><option value="">Semua fakultas</option>@foreach ($faculties as $faculty)<option value="{{ $faculty->id_fakultas }}" @selected(($filters['id_fakultas'] ?? '') === $faculty->id_fakultas)>{{ $faculty->nama_fakultas }}</option>@endforeach</select></label>
+                    <div>
+                        <label for="finance-faculty-select">Fakultas</label>
+                        <select id="finance-faculty-select" name="id_fakultas" data-searchable-select="filter">
+                            <option value="">Semua fakultas</option>
+                            @foreach ($faculties as $faculty)
+                                <option value="{{ $faculty->id_fakultas }}" @selected(($filters['id_fakultas'] ?? '') === $faculty->id_fakultas)>{{ $faculty->nama_fakultas }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 @endif
                 <button class="button button-primary" type="submit">Tampilkan</button>
             </form>

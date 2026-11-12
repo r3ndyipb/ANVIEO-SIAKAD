@@ -13,6 +13,7 @@ use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -177,29 +178,31 @@ class KrsController extends Controller
         try {
             $pdf = new \FPDF('P', 'cm', 'A4');
             $pdf->AddPage();
-            $imageDir = public_path('images/kkn');
-            foreach ([
-                [$imageDir.'/dikbud.jpg', 2.5],
-                [app(\App\Services\InstitutionSettings::class)->logoFilePath(), 17],
-            ] as [$imagePath, $x]) {
-                if (is_file($imagePath)) {
-                    $pdf->Image($imagePath, $x, 0.5, 2, 2);
-                }
+            $logoPath = app(\App\Services\InstitutionSettings::class)->logoFilePath();
+            if (is_file($logoPath)) {
+                $pdf->Image($logoPath, 1.2, 0.6, 2.2, 2.2);
             }
 
             $text = fn (string $value): string => iconv('UTF-8', 'ISO-8859-1//TRANSLIT//IGNORE', $value) ?: '';
-            $pdf->SetFont('Arial', 'B', 11);
-            foreach ([
-                ...app(\App\Services\InstitutionSettings::class)->ministryNameLines(),
-                mb_strtoupper(app(\App\Services\InstitutionSettings::class)->institutionName()),
-            ] as $line) {
-                $pdf->Cell(19.5, 0.5, $text($line), 0, 1, 'C');
+            $institutionName = mb_strtoupper(app(\App\Services\InstitutionSettings::class)->institutionName());
+            if (in_array($institutionName, ['UNIVERSITAS SIAKAD (AUI)', 'PERGURUAN TINGGI', 'UNIVERSITAS SIAKAD', ''], true)) {
+                $institutionName = 'ASEAN UNIVERSITY INTERNATIONAL';
             }
-            $pdf->Ln();
+
+            $pdf->SetY(0.7);
+            $pdf->SetFont('Arial', 'B', 12);
+            $pdf->Cell(19.5, 0.6, $text($institutionName), 0, 1, 'C');
+            $pdf->Ln(0.15);
+            $pdf->SetFont('Arial', 'B', 11);
             $pdf->Cell(19.5, 0.5, $text('Kartu Rencana Studi (KRS)'), 0, 1, 'C');
+            $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(19.5, 0.5, $text((string) ($calendar->namatahun ?: $calendar->tahun)), 0, 1, 'C');
-            $pdf->Line(1, 3.8, 20, 3.8);
-            $pdf->Ln();
+            $pdf->SetLineWidth(0.04);
+            $pdf->Line(1, 3.1, 20, 3.1);
+            $pdf->SetLineWidth(0.01);
+            $pdf->Line(1, 3.18, 20, 3.18);
+            $pdf->SetLineWidth(0.02);
+            $pdf->SetY(3.4);
 
             $pdf->SetFont('Times', '', 10);
             $this->pdfPair($pdf, $text, 'NPM', (string) $details->nim, 'IP Semester Lalu', number_format($ips, 2));
@@ -240,7 +243,8 @@ class KrsController extends Controller
             $pdf->Cell(19, 0.5, $text('Keterangan : B = Program Baru, U = Program Ulang'), 0, 1, 'L');
             $pdf->Ln(2);
 
-            $pdf->Cell(19, 0.5, $text('Ternate, '.now()->locale('id')->translatedFormat('d F Y')), 0, 1, 'R');
+            $cityName = app(\App\Services\InstitutionSettings::class)->cityName();
+            $pdf->Cell(19, 0.5, $text($cityName.', '.now()->locale('id')->translatedFormat('d F Y')), 0, 1, 'R');
             $pdf->Ln(0.5);
             $pdf->SetX(1);
             $pdf->Cell(6.5, 0.5, $text('Ketua Program Studi,'), 0, 0, 'C');

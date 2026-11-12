@@ -1366,6 +1366,8 @@ class ClassScheduleController extends Controller
             }
         }
 
+        $dayOrderExpression = "CASE LOWER(schedule.hari) WHEN 'senin' THEN 0 WHEN 'selasa' THEN 1 WHEN 'rabu' THEN 2 WHEN 'kamis' THEN 3 WHEN 'jumat' THEN 4 WHEN 'sabtu' THEN 5 WHEN 'ahad' THEN 6 ELSE 99 END";
+
         $rows = $query
             ->leftJoin('s1m4k_mastermk as course', 'schedule.id_matkul', '=', 'course.id_matkul')
             ->leftJoin('s1m4k_masterruang as room', 'schedule.id_ruang', '=', 'room.id_ruang')
@@ -1381,9 +1383,10 @@ class ClassScheduleController extends Controller
                 'course.kode_mata_kuliah', 'course.nama_mata_kuliah', 'course.semester', 'room.nama_ruang',
                 'program.nama_program_studi', 'program.nama_jenjang_pendidikan',
                 'calendar.namatahun', 'calendar.tahun',
+                DB::raw($dayOrderExpression . ' as day_order'),
             ])
             ->distinct()
-            ->orderByRaw("CASE LOWER(schedule.hari) WHEN 'senin' THEN 0 WHEN 'selasa' THEN 1 WHEN 'rabu' THEN 2 WHEN 'kamis' THEN 3 WHEN 'jumat' THEN 4 WHEN 'sabtu' THEN 5 WHEN 'ahad' THEN 6 ELSE 99 END")
+            ->orderBy('day_order')
             ->orderBy('schedule.jammulai');
 
         $rows = $paginate

@@ -8,11 +8,84 @@ description: >-
 
 Panduan keahlian penagihan akademik dan integrasi gerbang pembayaran bagi **Academic Billing & Midtrans Gateway Specialist** pada platform **Sistem Informasi Akademik Kampus (SIAKAD/SIMAK)**.
 
-Keahlian ini menetapkan standar teknis pembuatan tagihan massal UKT/IPI per kluster/tier sosio-ekonomi, integrasi API pembayaran **Midtrans Snap & Core API** (Virtual Account Bank, QRIS, Gerai Ritel), verifikasi keamanan *webhook callback* berbasis tanda tangan digital SHA-512, penanganan transaksi idempoten (*idempotency*), serta pembukaan blokir otomatis (*real-time academic clearance*) untuk registrasi KRS mahasiswa.
+Keahlian ini menetapkan standar teknis pembuatan tagihan massal UKT/IPI per kluster/tier sosio-ekonomi, integrasi API pembayaran **Midtrans Snap & Core API** (Virtual Account Bank, QRIS, Gerai Ritel), verifikasi keamanan *webhook callback* berbasis tanda tangan digital SHA-512, penanganan transaksi idempoten (*idempotency*), pembukaan blokir otomatis (*real-time academic clearance*) untuk registrasi KRS mahasiswa, serta tata kelola Scrum Swarm dengan **Reviewer Wajib (Mandatory Peer Reviewer)**.
 
 ---
 
-## 1. Arsitektur Penagihan & Pintu Gerbang Akademik (Financial Gatekeeping)
+## 1. Peran Scrum Swarm & Matriks Penugasan Reviewer Wajib
+
+Dalam ekosistem **15 Agen Spesialis SIAKAD Kampus**, agen ini memegang peran:
+- **Peran Scrum Utama**: **Financial Domain Specialist & Academic Billing Lead**
+- **Domain Fokus**: Manajemen tarif UKT/IPI, penerbitan tagihan massal per semester, integrasi gerbang pembayaran Midtrans Snap/Core API, verifikasi keamanan webhook SHA-512, rekonsiliasi kas bank harian, dan gerbang kelayakan finansial (*financial clearance gate*).
+
+### Matriks Pasangan Peer-Review Wajib:
+| Skenario Penugasan | Agen Pelaksana | Agen Reviewer Wajib | Fokus Pemeriksaan Reviewer |
+| :--- | :--- | :--- | :--- |
+| **Sebagai Implementer** | `siakad-finance-billing-auditor` | `siakad-security-compliance-auditor` | Verifikasi tanda tangan digital SHA-512 callback webhook, pencegahan race condition via `lockForUpdate()`, dan audit jejak transaksi anti-manipulasi. |
+| **Sebagai Reviewer Wajib** | `siakad-thesis-graduation-manager` | `siakad-finance-billing-auditor` | Verifikasi status bebas tunggakan biaya kuliah (saldo Rp 0,-) sebelum mahasiswa disahkan pada sidang yudisium. |
+
+---
+
+## 2. Protokol Task Scrum Atomik & Format Kanban
+
+Sesuai aturan **Sokudo Scrum Swarm Task Breakdown & Mandatory Reviewer**:
+1. Setiap fitur penagihan, konfigurasi jalur pembayaran, atau penanganan webhook didekomposisi menjadi tiket Scrum atomik di Kanban board (`kanban_create_task`).
+2. Format tiket wajib menggunakan standar Markdown terstruktur:
+
+```markdown
+## Goal
+[Tujuan integrasi tagihan / konfigurasi tier UKT / webhook handler / rekonsiliasi kas]
+
+## Assigned Implementer
+`siakad-finance-billing-auditor`
+
+## Mandatory Reviewer
+`siakad-security-compliance-auditor`
+
+## Context & Files
+- Scope: Billing Engine, Midtrans API Integration, Payment Webhook Callback
+- File terkait: `app/Services/Finance/*`, `app/Http/Controllers/Api/MidtransWebhookController.php`, `database/migrations/*`
+
+## Scrum Steps
+1. Definisikan struktur tagihan dan generate order_id unik.
+2. Integrasikan payload Midtrans Snap Token dan parameter VA bank.
+3. Terapkan validasi signature hash SHA-512 dan locking transaksi atomik.
+4. Update flag `is_financial_cleared = true` secara instan pasca settlement.
+
+## Acceptance Criteria & DoD
+- [ ] Signature SHA-512 tervalidasi sebelum payload diproses.
+- [ ] Transaksi beroperasi idempoten (kebal terhadap pengiriman webhook berulang).
+- [ ] Status lunas membuka akses KRS War seketika (< 500ms).
+- [ ] Reviewer sign-off disetujui oleh agen reviewer yang ditunjuk.
+```
+
+### Alur Status Kanban:
+```
+[Backlog] ───> [In Progress] ───> [Under Review] ───> [Done]
+```
+- **Backlog**: Tiket dibuat oleh Orchestrator dengan nominal tarif dan parameter gateway.
+- **In Progress**: Billing Specialist mengimplementasikan skema tagihan, controller callback, dan tes integrasi.
+- **Under Review**: Security Auditor memeriksa keamanan hashing, race conditions, dan integritas ledger.
+- **Done**: Disetujui reviewer dan diverifikasi pada sandbox gateway.
+
+---
+
+## 3. Penyelarasan Keuangan dengan Siklus Hidup Akademik 6-Fase
+
+Billing Specialist mengontrol gerbang kelayakan finansial di setiap tahapan kalender akademik:
+
+| Fase Akademik | Fokus Penagihan & Keuangan | Dampak Akademik |
+| :--- | :--- | :--- |
+| **Fase 1: Admisi & Tagihan** | Penetapan UKT (Kelompok 1-8) dan tagihan IPI mahasiswa baru, generate Virtual Account massal. | Syarat terbitnya NIM dan akun portal aktif. |
+| **Fase 2: Registrasi KRS** | Verifikasi pelunasan UKT semester berjalan, gatekeeper pembukaan akses KRS War. | Mahasiswa belum lunas diblokir dari KRS (`is_financial_cleared = false`). |
+| **Fase 3: Masa Perkuliahan** | Penagihan cicilan tahap 2 (skema dispensasi) sebelum ujian tengah semester. | Syarat cetak Kartu Peserta Ujian (KPU). |
+| **Fase 4: Evaluasi & Ujian** | Audit pelunasan biaya praktikum khusus / laboratorium sebelum nilai diumumkan. | Pembukaan tampilan KHS online mahasiswa. |
+| **Fase 5: Kelulusan & Wisuda** | Audit saldo akhir bebas tunggakan SPP/UKT, tagihan pendaftaran wisuda & toga. | Syarat mutlak pengesahan berkas Yudisium Dekanat. |
+| **Fase 6: Feeder PDDIKTI** | Rekonsiliasi pembiayaan beasiswa (KIP-K) untuk pelaporan data AKM Feeder. | Kesesuaian status pembiayaan di Pangkalan Data Dikti. |
+
+---
+
+## 4. Arsitektur Penagihan & Pintu Gerbang Akademik (Financial Gatekeeping)
 
 Pembayaran uang kuliah tunggal (UKT) berfungsi sebagai *gatekeeper* utama sebelum mahasiswa diizinkan mengakses pemilihan mata kuliah (KRS War):
 
@@ -45,7 +118,7 @@ Pembayaran uang kuliah tunggal (UKT) berfungsi sebagai *gatekeeper* utama sebelu
 
 ---
 
-## 2. Struktur Tagihan Kampus (UKT & IPI/SPI)
+## 5. Struktur Tagihan Kampus (UKT & IPI/SPI)
 
 SIAKAD membedakan jenis-jenis pos penagihan:
 1. **UKT (Uang Kuliah Tunggal)**: Tagihan rutin semesteran berjenjang (Kelompok 1 sampai Kelompok 8) berdasarkan verifikasi kemampuan ekonomi orang tua.
@@ -54,14 +127,14 @@ SIAKAD membedakan jenis-jenis pos penagihan:
 
 ---
 
-## 3. Integrasi Midtrans API & Verifikasi Webhook Callback
+## 6. Integrasi Midtrans API & Verifikasi Webhook Callback
 
-### 3.1 Verifikasi Tanda Tangan Digital SHA-512
+### 6.1 Verifikasi Tanda Tangan Digital SHA-512
 Setiap notifikasi webhook dari Midtrans wajib diverifikasi keasliannya guna mencegah serangan *fake payment injection*:
 
 $$\text{Signature} = \text{hash}(\text{'sha512'}, \text{order\_id} + \text{status\_code} + \text{gross\_amount} + \text{ServerKey})$$
 
-### 3.2 Implementasi Controller Idempoten Laravel
+### 6.2 Implementasi Controller Idempoten Laravel
 
 ```php
 namespace App\Http\Controllers\Api;
@@ -136,9 +209,9 @@ class MidtransWebhookController extends Controller
 
 ---
 
-## 4. Dispensasi Pembayaran, Cicilan & Beasiswa
+## 7. Dispensasi Pembayaran, Cicilan & Beasiswa
 
-SIAKAD menyediakan alur pengecualian resmi untuk menjamin hak akademik mahasiswa prasejahtera:
+SIAKAD menyediakan alur pengecualian resmi untuk menjamin hak akademik mahasiswa:
 
 1. **Pengajuan Cicilan (Installment Scheme)**:
    - Mahasiswa dapat mengajukan skema 50% sebelum KRS dan 50% sebelum UTS.
@@ -151,7 +224,7 @@ SIAKAD menyediakan alur pengecualian resmi untuk menjamin hak akademik mahasiswa
 
 ---
 
-## 5. Rekonsiliasi Keuangan & Audit Ledger
+## 8. Rekonsiliasi Keuangan & Audit Ledger
 
 Setiap hari pada pukul 23:59 WIB, sistem menjalankan *automated financial reconciliation job*:
 
@@ -173,10 +246,13 @@ WHERE b.academic_period_id = 20261
 
 ---
 
-## 6. Checklist Verifikasi Modul Keuangan
+## 9. Definition of Done (DoD) & Acceptance Criteria
 
-- [ ] Kode Virtual Account (BCA, Mandiri, BNI, BRI, Permata) dan QRIS teruji valid di lingkungan *Midtrans Sandbox & Production*.
-- [ ] Handler webhook aman dengan validasi SHA-512 dan menerapkan row-level lock (`lockForUpdate()`) anti *race condition*.
-- [ ] Perubahan status `SETTLEMENT` secara instan mengaktifkan flag `is_financial_cleared = true` pada entitas mahasiswa.
-- [ ] Tersedia fitur ekspor laporan rekapitulasi penerimaan kas semesteran dalam format Excel/PDF untuk audit internal BPKP/KAP.
-- [ ] Notifikasi struk pembayaran digital terkirim otomatis ke email dan WhatsApp mahasiswa terdaftar.
+Setiap modul billing dan transaksi keuangan wajib memenuhi kriteria berikut:
+
+- [ ] **Financial Clearance Gate for KRS & Graduation**: Mahasiswa berstatus belum lunas terblokir otomatis dari pendaftaran KRS War dan pengesahan Yudisium.
+- [ ] **SHA-512 Cryptographic Signature**: Seluruh webhook eksternal tervalidasi menggunakan SHA-512 sebelum memicu mutasi status database.
+- [ ] **Idempotent Webhook Handler**: Transaksi menggunakan `lockForUpdate()` untuk mencegah pencatatan ganda saat menerima retry callback.
+- [ ] **Real-time Status Unlocking**: Transisi ke `SETTLEMENT` seketika mengubah `is_financial_cleared = true` pada entitas mahasiswa.
+- [ ] **Laporan Rekonsiliasi Kas**: Menyediakan rekapitulasi penerimaan kas semesteran yang dapat diekspor ke Excel/PDF untuk audit keuangan.
+- [ ] **Reviewer Sign-Off**: Disetujui oleh agen reviewer yang ditunjuk (`siakad-security-compliance-auditor`).

@@ -8,11 +8,85 @@ description: >-
 
 Panduan keahlian administrasi akademik dan pengelolaan siklus mahasiswa bagi **BAAK & Student Lifecycle Registrar Specialist** pada platform **Sistem Informasi Akademik Kampus (SIAKAD/SIMAK)**.
 
-Keahlian ini menetapkan standar operasional Biro Administrasi Akademik dan Kemahasiswaan (BAAK) dalam penyusunan jadwal kuliah bebas bentrok (*collision-free master timetable*), alokasi kapasitas ruang kuliah, pemrosesan mutasi status akademik mahasiswa (Cuti Akademik, Re-aktivasi, Mutasi/Pindah Prodi, Drop-Out / DO, Pengunduran Diri), pemantauan evaluasi masa studi (*academic standing & retention warning*), serta kompilasi transkrip akademik dan Kartu Hasil Studi (KHS) bertanda tangan digital dengan kode verifikasi QR.
+Keahlian ini menetapkan standar operasional Biro Administrasi Akademik dan Kemahasiswaan (BAAK) dalam penyusunan jadwal kuliah bebas bentrok (*collision-free master timetable*), alokasi kapasitas ruang kuliah, pemrosesan mutasi status akademik mahasiswa (Cuti Akademik, Re-aktivasi, Mutasi/Pindah Prodi, Drop-Out / DO, Pengunduran Diri), pemantauan evaluasi masa studi (*academic standing & retention warning*), kompilasi transkrip akademik dan Kartu Hasil Studi (KHS) bertanda tangan digital dengan kode verifikasi QR, serta tata kelola Scrum Swarm dengan **Reviewer Wajib (Mandatory Peer Reviewer)**.
 
 ---
 
-## 1. Algoritma Penjadwalan Bebas Bentrok (Timetable Collision Resolution)
+## 1. Peran Scrum Swarm & Matriks Penugasan Reviewer Wajib
+
+Dalam ekosistem **15 Agen Spesialis SIAKAD Kampus**, agen ini memegang peran:
+- **Peran Scrum Utama**: **Academic Registrar Specialist & BAAK Operations Lead**
+- **Domain Fokus**: Master timetable penjadwalan kelas bebas bentrok (dosen, ruangan, angkatan), pemrosesan SK mutasi mahasiswa (cuti/DO/transfer), evaluasi batas studi (Early Warning System), dan penerbitan transkrip resmi ber-QR.
+
+### Matriks Pasangan Peer-Review Wajib:
+| Skenario Penugasan | Agen Pelaksana | Agen Reviewer Wajib | Fokus Pemeriksaan Reviewer |
+| :--- | :--- | :--- | :--- |
+| **Sebagai Implementer** | `siakad-academic-registrar` | `siakad-pddikti-feeder-officer` | Kepatuhan jadwal dan mutasi mahasiswa terhadap regulasi nasional PDDIKTI, serta integritas data AKM. |
+| **Sebagai Reviewer Wajib (1)** | `siakad-pddikti-feeder-officer` | `siakad-academic-registrar` | Validasi kelengkapan data master kurikulum, mahasiswa aktif, dan pelaporan AKM semesteran sebelum submit. |
+| **Sebagai Reviewer Wajib (2)** | `siakad-thesis-graduation-manager` | `siakad-academic-registrar` | Audit kelayakan kelulusan: minimal 144 SKS (S1), ketiadaan nilai E, dan keabsahan nomor ijazah nasional (PIN). |
+
+---
+
+## 2. Protokol Task Scrum Atomik & Format Kanban
+
+Sesuai aturan **Sokudo Scrum Swarm Task Breakdown & Mandatory Reviewer**:
+1. Setiap perancangan jadwal master, pemrosesan mutasi massal, atau fitur evaluasi studi dipecah menjadi tiket Scrum atomik di Kanban board (`kanban_create_task`).
+2. Format tiket wajib menggunakan standar Markdown terstruktur:
+
+```markdown
+## Goal
+[Tujuan penjadwalan bebas bentrok / pemrosesan mutasi status / penerbitan transkrip resmi]
+
+## Assigned Implementer
+`siakad-academic-registrar`
+
+## Mandatory Reviewer
+`siakad-pddikti-feeder-officer`
+
+## Context & Files
+- Scope: Master Timetable, Status Mutasi Mahasiswa, Transkrip & KHS Ber-QR
+- File terkait: `app/Services/Academic/*`, `resources/views/class-schedules/*`, `resources/views/transcripts/*`
+
+## Scrum Steps
+1. Validasi collision detection pada dimensi dosen, ruangan, jam, dan kelas angkatan.
+2. Proses status mutasi (cuti/pindah) dengan nomor SK Dekan/Rektor resmi.
+3. Generate transkrip resmi dengan signature hash SHA-256 dan kode QR verifikasi publik.
+4. Uji kelayakan data terhadap ketentuan pelaporan PDDIKTI.
+
+## Acceptance Criteria & DoD
+- [ ] Jadwal master terverifikasi 100% bebas bentrok dosen, ruangan, dan kelas cohort.
+- [ ] Mutasi status mahasiswa tervalidasi dengan SK resmi dan tersinkronkan ke entitas AKM.
+- [ ] Transkrip resmi memuat kode QR publik yang dapat diverifikasi keasliannya.
+- [ ] Reviewer sign-off disetujui oleh agen reviewer yang ditunjuk.
+```
+
+### Alur Status Kanban:
+```
+[Backlog] ───> [In Progress] ───> [Under Review] ───> [Done]
+```
+- **Backlog**: Tiket dibuat oleh Orchestrator dengan lingkup kalender akademik semester baru.
+- **In Progress**: Registrar menyusun jadwal, algoritma deteksi bentrok, dan mutasi mahasiswa.
+- **Under Review**: Feeder Officer memvalidasi kesesuaian skema kementerian dan aturan beban studi.
+- **Done**: Disetujui reviewer dan disahkan sebagai jadwal aktif kampus.
+
+---
+
+## 3. Penyelarasan BAAK dengan Siklus Hidup Akademik 6-Fase
+
+Registrar BAAK mengawal ketertiban administrasi pada seluruh rangkaian siklus akademik:
+
+| Fase Akademik | Tanggung Jawab Registrar BAAK | Output Dokumen & Status |
+| :--- | :--- | :--- |
+| **Fase 1: Admisi & Tagihan** | Verifikasi berkas fisik calon mahasiswa, penetapan nomor induk mahasiswa (NIM). | Master Mahasiswa Baru Terdaftar. |
+| **Fase 2: Registrasi KRS** | **Penyusunan Master Timetable Bebas Bentrok**, pembagian kuota kelas, plotting ruangan & dosen. | Jadwal Kuliah Semester Aktif. |
+| **Fase 3: Masa Perkuliahan** | Pemrosesan permohonan Cuti Akademik resmi, monitoring presensi harian dosen dan mahasiswa. | SK Cuti Akademik, Rekap Presensi. |
+| **Fase 4: Evaluasi & Ujian** | Distribusi Kartu Peserta Ujian (KPU), pemantauan syarat presensi $\ge 75\%$, penerbitan KHS. | KPU Ujian, KHS ber-QR Code. |
+| **Fase 5: Kelulusan & Wisuda** | Audit transkrip kelulusan (144 SKS), verifikasi ijazah nasional PIN, penerbitan transkrip resmi. | Transkrip Kelulusan Sah Ber-QR. |
+| **Fase 6: Feeder PDDIKTI** | Rekonsiliasi data Aktivitas Kuliah Mahasiswa (AKM) dan status keluar mahasiswa (Lulus/DO). | Berita Acara Sinkronisasi Feeder. |
+
+---
+
+## 4. Algoritma Penjadwalan Bebas Bentrok (Timetable Collision Resolution)
 
 Penyusunan jadwal kuliah semesteran wajib mematuhi 4 dimensi batasan (*constraints*) untuk mencegah bentrok jadwal:
 
@@ -63,7 +137,7 @@ WHERE academic_period_id = :period_id
 
 ---
 
-## 2. Mesin Mutasi Status Akademik Mahasiswa (Student Lifecycle Mutations)
+## 5. Mesin Mutasi Status Akademik Mahasiswa (Student Lifecycle Mutations)
 
 SIAKAD mengatur perubahan status administratif mahasiswa melalui alur dekret resmi:
 
@@ -97,7 +171,7 @@ SIAKAD mengatur perubahan status administratif mahasiswa melalui alur dekret res
 
 ---
 
-## 3. Sistem Peringatan Dini Akademik (Early Warning System)
+## 6. Sistem Peringatan Dini Akademik (Early Warning System)
 
 Sistem secara otomatis mengidentifikasi mahasiswa dengan risiko putus studi (*retention risk*) setiap kali KHS semester diterbitkan:
 
@@ -116,7 +190,7 @@ Sistem secara otomatis mengidentifikasi mahasiswa dengan risiko putus studi (*re
 
 ---
 
-## 4. Kompilasi Transkrip Resmi & KHS dengan Verifikasi Kriptografis QR
+## 7. Kompilasi Transkrip Resmi & KHS dengan Verifikasi Kriptografis QR
 
 Untuk mencegah manipulasi transkrip atau pemalsuan nilai cetak:
 
@@ -126,14 +200,17 @@ Untuk mencegah manipulasi transkrip atau pemalsuan nilai cetak:
 2. **Kriptografi & Kode Verifikasi QR**:
    - Setiap lembar transkrip resmi dan KHS disematkan tanda tangan digital berbasis hash:
      $$\text{Hash Dokumen} = \text{hash}(\text{'sha256'}, \text{nim} + \text{ipk} + \text{total\_sks} + \text{tanggal\_cetak} + \text{AppSecret})$$
-   - Kode QR mengarahkan verifikator publik (perusahaan/kampus lain) ke URL validasi resmi: `https://siakad.kampus.ac.id/verify-document/{hash}` untuk memvalidasi keaslian dokumen secara instan tanpa login.
+   - Kode QR mengarahkan verifikator publik ke URL validasi resmi: `https://siakad.kampus.ac.id/verify-document/{hash}` untuk memvalidasi keaslian dokumen secara instan tanpa login.
 
 ---
 
-## 5. Checklist Verifikasi Operasional BAAK
+## 8. Definition of Done (DoD) & Acceptance Criteria
 
-- [ ] Master jadwal kuliah semester baru telah bebas bentrok dosen, ruangan, dan kelas cohort 100%.
-- [ ] Batas maksimal kapasitas ruangan telah disinkronkan dengan kuota penerimaan kelas.
-- [ ] Seluruh mahasiswa cuti dan mutasi telah memiliki nomor SK Dekan yang terarsip di sistem.
-- [ ] Evaluasi mahasiswa pra-DO dan peringatan IPS rendah terdistribusi ke seluruh DPA terkait.
-- [ ] Pencetakan transkrip akademik resmi memuat kode verifikasi QR yang valid dan dapat dipindai.
+Setiap hasil kerja administrasi akademik dan registrasi wajib memenuhi kriteria berikut:
+
+- [ ] **Bebas Bentrok 100%**: Master jadwal kuliah terbukti bebas dari tumpang tindih waktu dosen, ruangan, dan kelas cohort.
+- [ ] **Sinkronisasi Kapasitas**: Daya tampung ruangan mencukupi kuota maksimal kelas tanpa kelebihan kapasitas fisik.
+- [ ] **Legalitas Mutasi**: Seluruh mutasi status mahasiswa (cuti/transfer/DO) tercatat dengan nomor SK Dekan/Rektor resmi.
+- [ ] **Retention Risk Alerting**: Mahasiswa berisiko DO dan IPS rendah menerima peringatan dini serta diteruskan ke DPA.
+- [ ] **Validasi Dokumen QR**: Transkrip resmi dan KHS memuat kode QR publik dengan hash SHA-256 yang valid saat dipindai.
+- [ ] **Reviewer Sign-Off**: Disetujui oleh agen reviewer yang ditunjuk (`siakad-pddikti-feeder-officer`).

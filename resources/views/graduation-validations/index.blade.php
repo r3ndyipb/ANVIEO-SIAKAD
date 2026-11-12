@@ -9,13 +9,15 @@
     @if (session('error'))<div class="alert alert-danger" role="alert">{{ session('error') }}</div>@endif
 
     <form class="graduation-validation-filter" method="GET" action="{{ route('graduation-validations.index') }}">
-        <label for="graduation-validation-period">Periode Wisuda</label>
-        <select id="graduation-validation-period" name="periode" required>
-            <option value="">Pilih periode</option>
-            @foreach ($periods as $item)
-                <option value="{{ $item->id_periode }}" @selected($period && (string) $period->id_periode === (string) $item->id_periode)>{{ $item->nama_periode }} · {{ $item->tanggal_mulai }} s.d. {{ $item->tanggal_akhir }}</option>
-            @endforeach
-        </select>
+        <div>
+            <label for="graduation-validation-period">Periode Wisuda</label>
+            <select id="graduation-validation-period" name="periode" required>
+                <option value="">Pilih periode</option>
+                @foreach ($periods as $item)
+                    <option value="{{ $item->id_periode }}" @selected($period && (string) $period->id_periode === (string) $item->id_periode)>{{ $item->nama_periode }} · {{ $item->tanggal_mulai }} s.d. {{ $item->tanggal_akhir }}</option>
+                @endforeach
+            </select>
+        </div>
         <button class="button button-primary" type="submit">Tampilkan</button>
     </form>
 

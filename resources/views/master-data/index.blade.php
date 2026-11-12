@@ -40,22 +40,26 @@
     @if ($showProgramFilter || $showStatusFilter)
         <form class="master-data-filters" method="GET" action="{{ route('master-data.'.$module.'.index') }}">
             @if ($showProgramFilter)
-                <label for="master-filter-program">Program studi</label>
-                <select id="master-filter-program" name="prodi" data-searchable-select="filter">
-                    <option value="">Semua program studi dalam cakupan akses</option>
-                    @foreach ($programOptions as $id => $name)
-                        <option value="{{ $id }}" @selected($selectedProgram === $id)>{{ $name }}</option>
-                    @endforeach
-                </select>
+                <div>
+                    <label for="master-filter-program">Program studi</label>
+                    <select id="master-filter-program" name="prodi" data-searchable-select="filter">
+                        <option value="">Semua program studi dalam cakupan akses</option>
+                        @foreach ($programOptions as $id => $name)
+                            <option value="{{ $id }}" @selected($selectedProgram === $id)>{{ $name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             @endif
             @if ($showStatusFilter)
-                <label for="master-filter-status">Status mahasiswa</label>
-                <select id="master-filter-status" name="status" data-searchable-select="filter">
-                    <option value="">Semua status</option>
-                    @foreach ($statusOptions as $id => $name)
-                        <option value="{{ $id }}" @selected($selectedStatus === $id)>{{ $name }}</option>
-                    @endforeach
-                </select>
+                <div>
+                    <label for="master-filter-status">Status mahasiswa</label>
+                    <select id="master-filter-status" name="status" data-searchable-select="filter">
+                        <option value="">Semua status</option>
+                        @foreach ($statusOptions as $id => $name)
+                            <option value="{{ $id }}" @selected($selectedStatus === $id)>{{ $name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             @endif
             <button class="button" type="submit">Terapkan filter</button>
         </form>

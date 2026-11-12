@@ -96,7 +96,7 @@
                                     <span>Tipe: {{ $record->tipe_berkas ?: 'Dokumen Perkuliahan' }} · Ukuran: {{ number_format(($record->ukuran_berkas ?? 0) / 1024, 0) }} KB</span>
                                 </div>
                                 <a class="button button-secondary button-compact" href="{{ route('lms.materials.download', $record->id_materi) }}" data-page-loader-skip>
-                                    <span data-lucide="download" aria-hidden="true"></span> Unduh
+                                    <span>Unduh</span><span data-lucide="download" aria-hidden="true"></span>
                                 </a>
                             </div>
                         @endif
@@ -133,13 +133,13 @@
                             @if ($canManage)
                                 <div class="lms-material-aside-actions">
                                     <button class="button button-secondary" type="button" data-lms-open="lms-edit-modal">
-                                        <span data-lucide="pencil" aria-hidden="true"></span> Ubah Materi
+                                        <span>Ubah Materi</span><span data-lucide="pencil" aria-hidden="true"></span>
                                     </button>
                                     @if ($record->used_in_meeting)
                                         <span class="subtext">Materi ini sudah digunakan pada pertemuan mata kuliah, hanya bisa dilakukan edit.</span>
                                     @else
                                         <button class="button button-danger" type="button" data-lms-open="lms-delete-modal">
-                                            <span data-lucide="trash-2" aria-hidden="true"></span> Hapus Materi
+                                            <span>Hapus Materi</span><span data-lucide="trash-2" aria-hidden="true"></span>
                                         </button>
                                     @endif
                                 </div>

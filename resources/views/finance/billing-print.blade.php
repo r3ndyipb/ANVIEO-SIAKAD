@@ -41,7 +41,10 @@
     <main class="billing-sheet">
         <div class="billing-watermark {{ $billing['is_paid'] ? 'is-paid' : 'is-unpaid' }}" aria-hidden="true">{{ $billing['is_paid'] ? 'LUNAS' : 'BELUM LUNAS' }}</div>
         <header class="billing-heading">
-            <img class="billing-logo billing-university-logo" src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}">
+            <img class="billing-logo billing-university-logo"
+                 src="{{ $siteConfiguration['preloader_logo_url'] ?: $siteConfiguration['logo_url'] }}"
+                 alt="Logo {{ $siteConfiguration['institution_name'] }}"
+                 onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';">
             <div class="billing-heading-title">
                 <h1>{{ $billing['is_paid'] ? 'Bukti Pelunasan' : 'Billing' }}</h1>
                 <p>{{ $siteConfiguration['app_name'] }}</p>

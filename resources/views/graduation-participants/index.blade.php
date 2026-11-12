@@ -9,13 +9,15 @@
     @if (session('error'))<div class="alert alert-danger" role="alert">{{ session('error') }}</div>@endif
     @if (session('status'))<div class="alert alert-success" role="status">{{ session('status') }}</div>@endif
     <form class="kkn-filter" method="GET" action="{{ route('graduation-participants.index') }}">
-        <label for="graduation-participant-period">Periode Wisuda</label>
-        <select id="graduation-participant-period" name="periode" data-searchable-select required>
-            <option value="">Pilih periode</option>
-            @foreach ($periods as $item)
-                <option value="{{ $item->id_periode }}" @selected($period && (string) $period->id_periode === (string) $item->id_periode)>{{ $item->nama_periode }}@if (filled($item->tahun)) ({{ $item->tahun }})@endif</option>
-            @endforeach
-        </select>
+        <div>
+            <label for="graduation-participant-period">Periode Wisuda</label>
+            <select id="graduation-participant-period" name="periode" data-searchable-select required>
+                <option value="">Pilih periode</option>
+                @foreach ($periods as $item)
+                    <option value="{{ $item->id_periode }}" @selected($period && (string) $period->id_periode === (string) $item->id_periode)>{{ $item->nama_periode }}@if (filled($item->tahun)) ({{ $item->tahun }})@endif</option>
+                @endforeach
+            </select>
+        </div>
         <button class="button button-primary" type="submit">Tampilkan</button>
     </form>
     @if ($period && $canPropose)

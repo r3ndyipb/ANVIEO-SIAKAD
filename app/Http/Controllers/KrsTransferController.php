@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -306,13 +307,9 @@ class KrsTransferController extends Controller
 
         $pdf = new \FPDF('P', 'cm', 'A4');
         $pdf->AddPage();
-        foreach ([
-            [public_path('images/kkn/dikbud.jpg'), 2.5],
-            [app(\App\Services\InstitutionSettings::class)->logoFilePath(), 17],
-        ] as [$image, $x]) {
-            if (is_file($image)) {
-                $pdf->Image($image, $x, 0.5, 2, 2);
-            }
+        $logoPath = app(\App\Services\InstitutionSettings::class)->logoFilePath();
+        if (is_file($logoPath)) {
+            $pdf->Image($logoPath, 2, 0.5, 2, 2);
         }
         $text = fn (string $value): string => iconv('UTF-8', 'ISO-8859-1//TRANSLIT//IGNORE', $value) ?: '';
         $pdf->SetFont('Arial', 'B', 11);
@@ -357,7 +354,8 @@ class KrsTransferController extends Controller
         $pdf->Cell(2, 0.5, (string) (int) $courses->sum(fn (object $course): float => (float) $course->sks_mata_kuliah), 'LRTB', 0, 'C');
         $pdf->Ln(1);
         $pdf->SetFont('Times', '', 10);
-        $pdf->Cell(19, 0.5, $text('Ternate, '.now()->locale('id')->translatedFormat('d F Y')), 0, 1, 'R');
+        $cityName = app(\App\Services\InstitutionSettings::class)->cityName();
+        $pdf->Cell(19, 0.5, $text($cityName.', '.now()->locale('id')->translatedFormat('d F Y')), 0, 1, 'R');
         $pdf->Ln(0.5);
         $chairName = LecturerName::format(
             $program?->chair_nama ? ucwords(mb_strtolower($program->chair_nama)) : null,

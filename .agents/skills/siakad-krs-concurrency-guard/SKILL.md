@@ -8,11 +8,84 @@ description: >-
 
 Panduan keahlian rekayasa konkurensi ekstrem dan ketahanan sistem bagi **KRS War & Concurrency Performance Guardian** pada platform **Sistem Informasi Akademik Kampus (SIAKAD/SIMAK)**.
 
-Keahlian ini menetapkan standar arsitektur perlindungan sistem saat periode puncak pemilihan rencana studi (*KRS War*), di mana ribuan mahasiswa mengakses dan memperebutkan kuota kelas dalam hitungan detik. Mencakup implementasi ruang tunggu virtual (*virtual waiting room*) berbasis Redis, pembatasan laju (*rate limiting & throttling*), penguncian baris pesimistik (*pessimistic row-level locking*), strategi *cache warming*, mitigasi deadlock, serta skrip uji beban (*load testing*) menggunakan **k6**.
+Keahlian ini menetapkan standar arsitektur perlindungan sistem saat periode puncak pemilihan rencana studi (*KRS War*), di mana ribuan mahasiswa mengakses dan memperebutkan kuota kelas dalam hitungan detik. Mencakup implementasi ruang tunggu virtual (*virtual waiting room*) berbasis Redis, pembatasan laju (*rate limiting & throttling*), penguncian baris pesimistik (**Pessimistic Row-Locking `SELECT ... FOR UPDATE`**), mitigasi deadlock dengan perolehan kunci berurutan (*ordered locking*), strategi *cache warming*, skrip uji beban (*load testing*) menggunakan **k6**, serta tata kelola Scrum Swarm dengan **Reviewer Wajib (Mandatory Peer Reviewer)**.
 
 ---
 
-## 1. Anatomi Masalah: The "KRS War" Stampede
+## 1. Peran Scrum Swarm & Matriks Penugasan Reviewer Wajib
+
+Dalam ekosistem **15 Agen Spesialis SIAKAD Kampus**, agen ini memegang peran:
+- **Peran Scrum Utama**: **High-Load Concurrency Guardian & KRS War Specialist**
+- **Domain Fokus**: Ketahanan lonjakan trafik pendaftaran studi serentak, konfigurasi Redis waiting room, integritas row-lock anti-overbooking kuota kelas, pencegahan deadlock multi-MK, dan uji beban k6/Locust.
+
+### Matriks Pasangan Peer-Review Wajib:
+| Skenario Penugasan | Agen Pelaksana | Agen Reviewer Wajib | Fokus Pemeriksaan Reviewer |
+| :--- | :--- | :--- | :--- |
+| **Sebagai Implementer** | `siakad-krs-concurrency-guard` | `siakad-dbms-postgresql` | Validasi kepatuhan transaksi atomik, eksekusi `lockForUpdate()`, batas waktu `lock_timeout <= 3s`, dan saturasi connection pool pgBouncer. |
+| **Sebagai Reviewer Wajib** | `siakad-dbms-postgresql` | `siakad-krs-concurrency-guard` | Memastikan skema baru atau indeks PostgreSQL tidak memicu *lock contention* berlebih saat diakses bersamaan oleh ribuan proses worker. |
+
+---
+
+## 2. Protokol Task Scrum Atomik & Format Kanban
+
+Sesuai aturan **Sokudo Scrum Swarm Task Breakdown & Mandatory Reviewer**:
+1. Setiap optimasi performa puncak, konfigurasi middleware throttling, atau uji beban konkurensi dipecah menjadi tiket Scrum atomik di Kanban board (`kanban_create_task`).
+2. Format tiket wajib menggunakan standar Markdown terstruktur:
+
+```markdown
+## Goal
+[Tujuan rekayasa konkurensi / implementasi waiting room / penanganan race condition]
+
+## Assigned Implementer
+`siakad-krs-concurrency-guard`
+
+## Mandatory Reviewer
+`siakad-dbms-postgresql`
+
+## Context & Files
+- Scope: Redis Cache, Waiting Room Middleware, Transaction Locking Engine, Load Test Script
+- File terkait: `app/Http/Middleware/KrsWaitingRoomMiddleware.php`, `app/Services/Krs/*`, `tests/Load/krs_war_test.js`
+
+## Scrum Steps
+1. Konfigurasi Redis data structures (sorted sets untuk antrean, strings untuk token).
+2. Terapkan ordered class locking (`sort($scheduleIds)`) dan `lockForUpdate()`.
+3. Jalankan skrip pemanasan cache (`php artisan siakad:warm-krs-cache`).
+4. Eksekusi stres-test k6 (500 virtual users serentak) pada kuota 40 kursi.
+
+## Acceptance Criteria & DoD
+- [ ] Overbooking kuota kelas tepat 0 (kelas berkuota 40 terisi tepat 40, sisa 460 tertolak rapi).
+- [ ] Tidak terjadi circular deadlock pada pendaftaran multi-mata kuliah.
+- [ ] Database connection pool tidak mengalami saturasi (CPU < 75%).
+- [ ] Reviewer sign-off disetujui oleh agen reviewer yang ditunjuk.
+```
+
+### Alur Status Kanban:
+```
+[Backlog] ───> [In Progress] ───> [Under Review] ───> [Done]
+```
+- **Backlog**: Tiket dibuat oleh Orchestrator dengan target SLA latensi dan kapasitas konkurensi.
+- **In Progress**: Concurrency Guard menyusun middleware, antrean Redis, dan skrip uji beban.
+- **Under Review**: PostgreSQL DBA memvalidasi durasi lock, ketiadaan table scan, dan stabilitas engine.
+- **Done**: Disetujui reviewer setelah lolos uji stres test k6 tanpa kegagalan integritas data.
+
+---
+
+## 3. Penyelarasan Konkurensi dengan Siklus Hidup Akademik 6-Fase
+
+Concurrency Guard mengamankan infrastruktur pada momen-momen puncak kalender akademik:
+
+| Fase Akademik | Titik Kritis Konkurensi | Solusi Ketahanan Sistem |
+| :--- | :--- | :--- |
+| **Fase 1: Admisi & Tagihan** | Lonjakan pengumuman seleksi PMB & pembayaran massal tagihan UKT awal semester. | Caching katalog prodi di Redis, CDN caching untuk halaman statis pengumuman. |
+| **Fase 2: Registrasi KRS** | **KRS War**: Ribuan mahasiswa memperebutkan kuota kelas dalam detik ke-0 pembukaan portal. | **Virtual Waiting Room FIFO**, **Pessimistic Row Lock (`FOR UPDATE`)**, **Ordered Locking**. |
+| **Fase 3: Masa Perkuliahan** | Pindai presensi QR serentak oleh puluhan ribu mahasiswa pada jam kuliah masuk (08:00 & 13:00). | Throttling endpoint presensi per IP/kelas, verifikasi token TOTP tanpa hit database masif. |
+| **Fase 4: Evaluasi & Ujian** | Tenggat waktu input nilai dosen semesteran serentak sebelum cut-off sistem. | Antrean asinkron komputasi agregasi nilai dan ekspor berkas KHS. |
+| **Fase 5: Kelulusan & Wisuda** | Trafik registrasi wisuda dan pemindaian QR verifikasi ijazah massal saat seremonial. | Redis cache verification endpoints transkrip resmi ber-QR. |
+| **Fase 6: Feeder PDDIKTI** | Pengiriman ratusan ribu baris data transaksi ke server lokal Neo Feeder. | Batching 100 record per request dengan checkpoint recovery di database. |
+
+---
+
+## 4. Anatomi Masalah: The "KRS War" Stampede
 
 Saat portal KRS dibuka serentak (misal pukul 08:00 WIB):
 1. **The Overbooking Race Condition**: Kelas berkuota 40 kursi diperebutkan oleh 800 mahasiswa pada detik ke-0. Jika sistem hanya membaca `SELECT count(*) < quota` tanpa row lock, dua atau lebih transaksi dapat menyimpulkan bahwa kuota masih tersedia, menyebabkan kapasitas terisi melonjak menjadi 45 kursi (*negative available quota*).
@@ -21,7 +94,7 @@ Saat portal KRS dibuka serentak (misal pukul 08:00 WIB):
 
 ---
 
-## 2. Arsitektur Pertahanan Berlapis (Multi-Tier Defense Architecture)
+## 5. Arsitektur Pertahanan Berlapis (Multi-Tier Defense Architecture)
 
 Untuk menjamin ketersediaan 99.9% tanpa anomali data, SIAKAD menerapkan 4 lapis pertahanan:
 
@@ -52,7 +125,7 @@ Untuk menjamin ketersediaan 99.9% tanpa anomali data, SIAKAD menerapkan 4 lapis 
 
 ---
 
-## 3. Implementasi Redis Virtual Waiting Room
+## 6. Implementasi Redis Virtual Waiting Room
 
 Ruang tunggu virtual mencegah penumpukan koneksi database dengan menahan mahasiswa dalam antrean teratur:
 
@@ -105,7 +178,7 @@ class KrsWaitingRoomMiddleware
 
 ---
 
-## 4. Eksekusi Transaksi Atomik PostgreSQL & Mitigasi Deadlock
+## 7. Eksekusi Transaksi Atomik PostgreSQL & Mitigasi Deadlock
 
 Pendaftaran KRS dieksekusi dengan protokol perolehan kunci terurut (*ordered locking*) untuk mengeliminasi potensi deadlock:
 
@@ -165,7 +238,7 @@ class KrsEnrollmentEngine
 
 ---
 
-## 5. Strategi Pemanasan Cache (Cache Warming)
+## 8. Strategi Pemanasan Cache (Cache Warming)
 
 Sebelum gerbang KRS dibuka resmi, jalankan skrip pemanasan cache agar database tidak menerima *cold read hits*:
 
@@ -178,9 +251,7 @@ php artisan siakad:warm-krs-cache --period=20261
 
 ---
 
-## 6. Template Skrip Uji Beban k6 (Stress Testing)
-
-Jalankan uji beban menggunakan skrip **k6** untuk memvalidasi ketahanan sebelum hari pelaksanaan KRS War:
+## 9. Skrip Uji Beban Concurrency Menggunakan k6
 
 ```javascript
 import http from 'k6/http';
@@ -188,13 +259,13 @@ import { check, sleep } from 'k6';
 
 export const options = {
   stages: [
-    { duration: '30s', target: 500 },  // Ramp-up ke 500 virtual users
-    { duration: '1m', target: 2000 },  // Lonjakan ekstrem ke 2.000 user serentak
+    { duration: '30s', target: 100 },  // Ramp-up 100 user
+    { duration: '1m', target: 500 },   // Spike 500 concurrent user saat war
     { duration: '30s', target: 0 },    // Ramp-down
   ],
   thresholds: {
-    http_req_duration: ['p(95)<800'], // 95% request harus selesai di bawah 800ms
-    http_req_failed: ['rate<0.01'],    // Kegagalan error < 1%
+    http_req_duration: ['p(95)<300'], // 95% request harus selesai di bawah 300ms
+    http_req_failed: ['rate<0.01'],   // Error server harus di bawah 1%
   },
 };
 
@@ -225,10 +296,13 @@ export default function () {
 
 ---
 
-## 7. Checklist Kesiapan KRS War
+## 10. Definition of Done (DoD) & Acceptance Criteria
 
-- [ ] Redis server berjalan dengan alokasi memori minimal 4GB dan kebijakan *allkeys-lru*.
-- [ ] Database PostgreSQL memiliki `max_connections >= 300` dengan pgBouncer aktif di mode *transaction pooling*.
-- [ ] Seluruh kueri pemesanan kursi menggunakan transaksi `lockForUpdate()` dengan ID terurut.
-- [ ] Ruang tunggu virtual (Waiting Room) teruji mengalihkan kelebihan trafik tanpa meruntuhkan web server.
-- [ ] Uji coba k6 pada kelas berkuota 40 dengan 500 request serentak menghasilkan tepat 40 baris sukses dan 460 penolakan rapi tanpa *overbooking*.
+Setiap optimasi atau modul pendaftaran konkurensi tinggi wajib memenuhi kriteria berikut:
+
+- [ ] **Pessimistic Row-Locking on Class Capacity**: Seluruh reservasi kuota kelas wajib dieksekusi dengan `SELECT ... FOR UPDATE` dan `lock_timeout <= 3s`.
+- [ ] **Zero Overbooking**: Teruji secara empiris via k6 pada kelas berkuota 40 kursi dengan 500 pendaftar serentak menghasilkan tepat 40 baris sukses dan 460 penolakan tanpa kuota minus.
+- [ ] **Ordered Locking**: Seluruh perolehan lock jadwal kelas terurut secara *ascending* untuk mencegah deadlock.
+- [ ] **Virtual Waiting Room**: Middleware antrean Redis membatasi akses aktif maksimal 500 user/menit dan mengalirkan antrean secara adil (FIFO).
+- [ ] **Cache Warming**: Katalog jadwal kuliah telah terisi di Redis dengan waktu respon baca $< 10\text{ms}$.
+- [ ] **Reviewer Sign-Off**: Disetujui oleh agen reviewer yang ditunjuk (`siakad-dbms-postgresql`).

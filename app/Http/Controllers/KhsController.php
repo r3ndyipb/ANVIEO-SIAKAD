@@ -255,14 +255,9 @@ class KhsController extends Controller
 
         $pdf = new \FPDF('P', 'cm', 'A4');
         $pdf->AddPage();
-        $imageDir = public_path('images/kkn');
-        foreach ([
-            [$imageDir.'/dikbud.jpg', 2],
-            [app(InstitutionSettings::class)->logoFilePath(), 17],
-        ] as [$image, $x]) {
-            if (is_file($image)) {
-                $pdf->Image($image, $x, 0.5, 2, 2);
-            }
+        $logoPath = app(InstitutionSettings::class)->logoFilePath();
+        if (is_file($logoPath)) {
+            $pdf->Image($logoPath, 2, 0.5, 2, 2);
         }
         $text = fn (string $value): string => iconv('UTF-8', 'ISO-8859-1//TRANSLIT//IGNORE', $value) ?: '';
         $pdf->SetFont('Arial', 'B', 10);
@@ -319,8 +314,9 @@ class KhsController extends Controller
         $pdf->SetFont('Times', '', 9);
         $signatureX = 6.5;
         $signatureWidth = 8.0;
+        $cityName = app(InstitutionSettings::class)->cityName();
         $pdf->SetX($signatureX);
-        $pdf->Cell($signatureWidth, 0.5, $text('Ternate, '.now()->locale('id')->translatedFormat('d F Y')), 0, 1, 'C');
+        $pdf->Cell($signatureWidth, 0.5, $text($cityName.', '.now()->locale('id')->translatedFormat('d F Y')), 0, 1, 'C');
         $pdf->SetX($signatureX);
         $pdf->Cell($signatureWidth, 0.5, $text('Wakil Dekan I Bidang Akademik'), 0, 1, 'C');
         $pdf->Ln(0.15);

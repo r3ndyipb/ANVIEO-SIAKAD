@@ -120,7 +120,9 @@
                             @endforeach
                         </select>
                     </div>
-                    <button class="button button-primary" type="submit"><span data-lucide="search"></span> Tampilkan KRS</button>
+                    <div class="krs-search-actions">
+                        <button class="button button-primary" type="submit"><span data-lucide="search"></span> Tampilkan KRS</button>
+                    </div>
                 </form>
             @endif
 

@@ -48,9 +48,9 @@
             @if ($canManage && in_array($module, ['materi', 'pertemuan', 'tugas', 'bank-soal', 'diskusi'], true))
                 <div class="lms-page-actions">
                     @if ($module === 'bank-soal')
-                        <button class="button button-secondary" type="button" data-lms-open="lms-question-upload-modal">Upload Soal</button>
+                        <button class="button button-secondary" type="button" data-lms-open="lms-question-upload-modal"><span>Upload Soal</span><span data-lucide="upload" aria-hidden="true"></span></button>
                     @endif
-                    <button class="button button-primary" type="button" data-lms-open="lms-create-modal">Tambah {{ $title }}</button>
+                    <button class="button button-primary" type="button" data-lms-open="lms-create-modal"><span>Tambah {{ $title }}</span><span data-lucide="plus" aria-hidden="true"></span></button>
                 </div>
             @endif
         </div>
@@ -200,7 +200,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="button button-primary"><span data-lucide="users-round" aria-hidden="true"></span>Tampilkan dosen</button>
+                    <button type="submit" class="button button-primary"><span>Tampilkan dosen</span><span data-lucide="users-round" aria-hidden="true"></span></button>
                 </form>
             @endif
             @if ($materialProgramFilterRequired && $selectedProgramId === '')
@@ -212,7 +212,7 @@
             @elseif ($selectedLecturerId !== '' && $selectedCourseId !== '')
                 <section class="lms-material-library">
                     <div class="lms-material-library-heading">
-                        <a class="button button-secondary" href="{{ route('lms.materials.index', $materialProgramFilterRequired ? ['id_prodi' => $selectedProgramId] : []) }}"><span data-lucide="arrow-left" aria-hidden="true"></span>Kembali ke dosen</a>
+                        <a class="button button-secondary" href="{{ route('lms.materials.index', $materialProgramFilterRequired ? ['id_prodi' => $selectedProgramId] : []) }}"><span>Kembali ke dosen</span><span data-lucide="arrow-left" aria-hidden="true"></span></a>
                         <div class="lms-material-library-heading-info">
                             <p class="lms-material-library-kicker">{{ $selectedMaterialCourse->kode_mata_kuliah }} · {{ $selectedMaterialCourse->nama_program_studi ?: 'Program studi' }}</p>
                             <h2>{{ $selectedMaterialCourse->nama_mata_kuliah }}</h2>
@@ -258,7 +258,7 @@
                                         <p class="lms-material-file-info">{{ $item->nama_berkas ?: 'Dokumen materi' }} · {{ \App\Support\LecturerName::format($item->nama_dosen, $item->gelar_depan, $item->gelar_belakang) }}</p>
                                         <div class="lms-material-card-footer">
                                             @if ($item->path_berkas)
-                                                <a class="button button-primary lms-material-download" href="{{ route('lms.materials.download', $item->id_materi) }}" data-page-loader-skip aria-label="Unduh materi {{ $item->nama_berkas }}" title="Unduh materi"><span data-lucide="download" aria-hidden="true"></span><span>Unduh</span></a>
+                                                <a class="button button-primary lms-material-download" href="{{ route('lms.materials.download', $item->id_materi) }}" data-page-loader-skip aria-label="Unduh materi {{ $item->nama_berkas }}" title="Unduh materi"><span>Unduh</span><span data-lucide="download" aria-hidden="true"></span></a>
                                             @else
                                                 <span class="lms-material-unavailable">File belum tersedia</span>
                                             @endif
@@ -330,13 +330,13 @@
                     <thead>
                         <tr>
                             @if ($module === 'materi')
-                                <th>Judul Materi</th><th>Mata Kuliah</th><th>Program Studi</th><th>Dosen</th><th>Status</th><th>Aksi</th>
+                                <th>Materi & Mata Kuliah</th><th>Program Studi</th><th>Dosen</th><th>Status</th><th class="text-right">Aksi</th>
                             @elseif ($module === 'pertemuan')
                                 <th>Pertemuan</th><th>Mata Kuliah / Kelas</th><th>Tanggal dan Waktu</th><th>Absen Mandiri</th>
                                 @if ($isStudent)
                                     <th>Keterangan Kehadiran</th>
                                 @endif
-                                <th>Aksi</th>
+                                <th class="text-right">Aksi</th>
                             @elseif ($module === 'tugas')
                                 <th>Nama Tugas</th><th>Mata Kuliah / Kelas</th><th>Batas Pengumpulan</th>
                                 @if ($isStudent)
@@ -344,11 +344,11 @@
                                 @else
                                     <th>Status</th>
                                 @endif
-                                <th>Aksi</th>
+                                <th class="text-right">Aksi</th>
                             @elseif ($module === 'bank-soal')
-                                <th>Pertanyaan</th><th>Mata Kuliah</th><th>Jenis</th><th>Status</th><th>Aksi</th>
+                                <th>Pertanyaan</th><th>Mata Kuliah</th><th>Jenis</th><th>Status</th><th class="text-right">Aksi</th>
                             @else
-                                <th>Topik Diskusi</th><th>Mata Kuliah / Kelas</th><th>Status</th><th>Tanggal Terakhir Diskusi</th><th>Aksi</th>
+                                <th>Topik Diskusi</th><th>Mata Kuliah / Kelas</th><th>Status</th><th>Tanggal Terakhir Diskusi</th><th class="text-right">Aksi</th>
                             @endif
                         </tr>
                     </thead>
@@ -357,19 +357,28 @@
                             <tr>
                                 @if ($module === 'materi')
                                     <td>
-                                        <div class="lms-table-item">
-                                            <span class="lms-table-item-icon" aria-hidden="true"><span data-lucide="file-text"></span></span>
-                                            <div class="lms-table-item-info">
-                                                <strong>{{ $item->judul }}</strong>
-                                                @if ($item->nama_berkas)
-                                                    <span class="subtext">{{ $item->nama_berkas }} · {{ number_format(($item->ukuran_berkas ?? 0) / 1024, 0) }} KB</span>
-                                                @elseif ($item->deskripsi)
-                                                    <span class="subtext">{{ \Illuminate\Support\Str::limit($item->deskripsi, 60) }}</span>
-                                                @endif
+                                        <div class="lms-merged-cell">
+                                            <div class="lms-merged-title-row">
+                                                <strong class="lms-merged-title">{{ $item->judul }}</strong>
+                                                <span class="lms-merged-icon" aria-hidden="true"><span data-lucide="file-text"></span></span>
                                             </div>
+                                            <div class="lms-merged-course-row">
+                                                @if ($item->kode_mata_kuliah)
+                                                    <span class="lms-course-code-badge">{{ $item->kode_mata_kuliah }}</span>
+                                                @endif
+                                                <span class="lms-course-name">{{ $item->nama_mata_kuliah ?: 'Mata kuliah tidak ditentukan' }}</span>
+                                            </div>
+                                            @if ($item->nama_berkas)
+                                                <div class="lms-merged-file-meta">
+                                                    <span class="subtext">{{ $item->nama_berkas }} · {{ number_format(($item->ukuran_berkas ?? 0) / 1024, 0) }} KB</span>
+                                                </div>
+                                            @elseif ($item->deskripsi)
+                                                <div class="lms-merged-file-meta">
+                                                    <span class="subtext">{{ \Illuminate\Support\Str::limit($item->deskripsi, 80) }}</span>
+                                                </div>
+                                            @endif
                                         </div>
                                     </td>
-                                    <td>{{ $item->kode_mata_kuliah ? $item->kode_mata_kuliah.' — '.$item->nama_mata_kuliah : '—' }}</td>
                                     <td>{{ $item->nama_program_studi ?: '—' }}</td>
                                     <td>{{ \App\Support\LecturerName::format($item->nama_dosen, $item->gelar_depan, $item->gelar_belakang) ?: '—' }}</td>
                                     <td><span class="status-chip {{ $item->status_publikasi === 'terbit' ? 'active' : '' }}">{{ ucfirst($item->status_publikasi) }}</span></td>
@@ -427,63 +436,65 @@
                                     <td><span class="status-chip {{ $item->status_diskusi === 'terbuka' ? 'active' : '' }}">{{ ucfirst($item->status_diskusi) }}</span></td>
                                     <td>{{ \Illuminate\Support\Carbon::parse($item->tanggal_terakhir_diskusi, 'Asia/Jayapura')->format('d/m/Y H:i') }}</td>
                                 @endif
-                                <td>
-                                    @if ($module === 'materi')
-                                        @if ($item->path_berkas)
-                                            <a class="table-icon-button" href="{{ route('lms.materials.download', $item->id_materi) }}" data-page-loader-skip aria-label="Unduh materi {{ $item->nama_berkas }}" title="Unduh materi"><span data-lucide="file-down" aria-hidden="true"></span></a>
-                                        @endif
-                                        @if ($canManage)
-                                            <button class="table-icon-button" type="button" data-lms-open="lms-material-edit-{{ $item->id_materi }}" aria-label="Ubah materi" title="Ubah materi"><span data-lucide="pencil" aria-hidden="true"></span></button>
-                                            @if ($item->used_in_meeting)
-                                                <span class="subtext">Materi ini sudah digunakan pada pertemuan mata kuliah, hanya bisa dilakukan edit.</span>
-                                            @else
-                                                <button class="table-icon-button reset" type="button" data-lms-open="lms-material-delete-{{ $item->id_materi }}" aria-label="Hapus materi" title="Hapus materi"><span data-lucide="trash-2" aria-hidden="true"></span></button>
+                                <td class="text-right table-actions-cell">
+                                    <div class="table-actions">
+                                        @if ($module === 'materi')
+                                            @if ($item->path_berkas)
+                                                <a class="table-icon-button" href="{{ route('lms.materials.download', $item->id_materi) }}" data-page-loader-skip aria-label="Unduh materi {{ $item->nama_berkas }}" title="Unduh materi ({{ $item->nama_berkas }})"><span data-lucide="file-down" aria-hidden="true"></span></a>
                                             @endif
-                                        @endif
-                                    @elseif ($module === 'pertemuan')
-                                        @if ($canManage)
-                                            <button class="table-icon-button" type="button" data-lms-open="lms-meeting-edit-{{ $item->id_pertemuan }}" aria-label="Ubah pertemuan" title="Ubah pertemuan"><span data-lucide="pencil" aria-hidden="true"></span></button>
-                                            <button class="table-icon-button reset" type="button" data-lms-open="lms-meeting-delete-{{ $item->id_pertemuan }}" aria-label="Hapus pertemuan" title="Hapus pertemuan"><span data-lucide="trash-2" aria-hidden="true"></span></button>
-                                            <a class="table-icon-button" href="{{ route('lms.attendance.roster', $item->id_pertemuan) }}" aria-label="Kelola absensi" title="Kelola absensi"><span data-lucide="clipboard-check" aria-hidden="true"></span></a>
-                                        @endif
-                                        @unless ($isStudent)
-                                            <a class="table-icon-button" href="{{ route('lms.meetings.attendance.print', $item->id_pertemuan) }}" target="_blank" rel="noopener noreferrer" aria-label="Cetak absensi dan berita acara" title="Cetak absensi dan berita acara"><span data-lucide="printer" aria-hidden="true"></span></a>
-                                        @endunless
-                                        @if ($canManage)
-                                            @if ($item->exam)
-                                                <a class="table-icon-button" href="{{ route('lms.exams.show', $item->exam->id_ujian) }}" aria-label="Lihat ujian" title="Lihat ujian"><span data-lucide="file-text" aria-hidden="true"></span></a>
-                                            @else
-                                                <a class="table-icon-button" href="{{ route('lms.exams.create', $item->id_pertemuan) }}" aria-label="Buat ujian" title="Buat ujian"><span data-lucide="clipboard-plus" aria-hidden="true"></span></a>
+                                            @if ($canManage)
+                                                <button class="table-icon-button" type="button" data-lms-open="lms-material-edit-{{ $item->id_materi }}" aria-label="Ubah materi" title="Ubah materi"><span data-lucide="pencil" aria-hidden="true"></span></button>
+                                                @if ($item->used_in_meeting)
+                                                    <span class="table-icon-button is-disabled" title="Materi ini sudah digunakan pada pertemuan mata kuliah, hanya bisa dilakukan edit." aria-label="Materi terkunci"><span data-lucide="lock" aria-hidden="true"></span><span class="sr-only">Materi ini sudah digunakan pada pertemuan mata kuliah, hanya bisa dilakukan edit.</span></span>
+                                                @else
+                                                    <button class="table-icon-button reset" type="button" data-lms-open="lms-material-delete-{{ $item->id_materi }}" aria-label="Hapus materi" title="Hapus materi"><span data-lucide="trash-2" aria-hidden="true"></span></button>
+                                                @endif
                                             @endif
-                                        @else
+                                        @elseif ($module === 'pertemuan')
+                                            @if ($canManage)
+                                                <button class="table-icon-button" type="button" data-lms-open="lms-meeting-edit-{{ $item->id_pertemuan }}" aria-label="Ubah pertemuan" title="Ubah pertemuan"><span data-lucide="pencil" aria-hidden="true"></span></button>
+                                                <button class="table-icon-button reset" type="button" data-lms-open="lms-meeting-delete-{{ $item->id_pertemuan }}" aria-label="Hapus pertemuan" title="Hapus pertemuan"><span data-lucide="trash-2" aria-hidden="true"></span></button>
+                                                <a class="table-icon-button" href="{{ route('lms.attendance.roster', $item->id_pertemuan) }}" aria-label="Kelola absensi" title="Kelola absensi"><span data-lucide="clipboard-check" aria-hidden="true"></span></a>
+                                            @endif
+                                            @unless ($isStudent)
+                                                <a class="table-icon-button" href="{{ route('lms.meetings.attendance.print', $item->id_pertemuan) }}" target="_blank" rel="noopener noreferrer" aria-label="Cetak absensi dan berita acara" title="Cetak absensi dan berita acara"><span data-lucide="printer" aria-hidden="true"></span></a>
+                                            @endunless
+                                            @if ($canManage)
+                                                @if ($item->exam)
+                                                    <a class="table-icon-button" href="{{ route('lms.exams.show', $item->exam->id_ujian) }}" aria-label="Lihat ujian" title="Lihat ujian"><span data-lucide="file-text" aria-hidden="true"></span></a>
+                                                @else
+                                                    <a class="table-icon-button" href="{{ route('lms.exams.create', $item->id_pertemuan) }}" aria-label="Buat ujian" title="Buat ujian"><span data-lucide="clipboard-plus" aria-hidden="true"></span></a>
+                                                @endif
+                                            @else
                                                 @if ($isStudent && $studentActivityWritable && $item->student_exam)
                                                     <a class="table-icon-button" href="{{ route('lms.exams.show', $item->student_exam->id_ujian) }}" aria-label="Ikut ujian" title="Ikut ujian"><span data-lucide="clipboard-check" aria-hidden="true"></span></a>
                                                 @endif
-                                            <a class="table-icon-button" href="{{ route('lms.show', array_merge(['module' => $module, 'record' => $item->id_pertemuan], $detailFilterParameters)) }}" aria-label="Lihat detail" title="Lihat detail"><span data-lucide="eye" aria-hidden="true"></span></a>
-                                        @endif
-                                    @elseif ($module === 'bank-soal' && $canManage)
-                                        <button class="table-icon-button" type="button" data-lms-open="lms-question-edit-{{ $item->id_soal }}" aria-label="Ubah soal" title="Ubah soal"><span data-lucide="pencil" aria-hidden="true"></span></button>
-                                    @else
-                                        @if ($module === 'tugas' && $isStudent)
-                                            @if ($studentActivityWritable)
-                                                <button class="button button-secondary lms-task-submit-action" type="button" data-lms-open="lms-task-submit-{{ $item->id_tugas }}">
-                                                    <span data-lucide="upload" aria-hidden="true"></span><span>Kumpul tugas</span>
-                                                </button>
-                                            @else
-                                                <a class="table-icon-button" href="{{ route('lms.show', array_merge(['module' => 'tugas', 'record' => $item->id_tugas], $detailFilterParameters)) }}" aria-label="Lihat tugas" title="Lihat tugas"><span data-lucide="eye" aria-hidden="true"></span></a>
+                                                <a class="table-icon-button" href="{{ route('lms.show', array_merge(['module' => $module, 'record' => $item->id_pertemuan], $detailFilterParameters)) }}" aria-label="Lihat detail" title="Lihat detail"><span data-lucide="eye" aria-hidden="true"></span></a>
                                             @endif
-                                        @elseif ($module === 'tugas' && $canManage)
-                                            <a class="table-icon-button" href="{{ route('lms.show', array_merge(['module' => 'tugas', 'record' => $item->id_tugas], $detailFilterParameters)) }}" aria-label="Lihat detail tugas" title="Lihat tugas"><span data-lucide="eye" aria-hidden="true"></span></a>
-                                            <button class="table-icon-button" type="button" data-lms-open="lms-task-edit-{{ $item->id_tugas }}" aria-label="Ubah tugas" title="Ubah tugas"><span data-lucide="pencil" aria-hidden="true"></span></button>
-                                            <button class="table-icon-button reset" type="button" data-lms-open="lms-task-delete-{{ $item->id_tugas }}" aria-label="Hapus tugas" title="Hapus tugas"><span data-lucide="trash-2" aria-hidden="true"></span></button>
-                                        @elseif ($module === 'diskusi' && $canManage)
-                                            <a class="table-icon-button" href="{{ route('lms.show', array_merge(['module' => 'diskusi', 'record' => $item->id_diskusi], $detailFilterParameters)) }}" aria-label="Lihat diskusi" title="Lihat diskusi"><span data-lucide="eye" aria-hidden="true"></span></a>
-                                            <button class="table-icon-button" type="button" data-lms-open="lms-discussion-edit-{{ $item->id_diskusi }}" aria-label="Ubah diskusi" title="Ubah diskusi"><span data-lucide="pencil" aria-hidden="true"></span></button>
-                                            <button class="table-icon-button reset" type="button" data-lms-open="lms-discussion-delete-{{ $item->id_diskusi }}" aria-label="Hapus diskusi" title="Hapus diskusi"><span data-lucide="trash-2" aria-hidden="true"></span></button>
+                                        @elseif ($module === 'bank-soal' && $canManage)
+                                            <button class="table-icon-button" type="button" data-lms-open="lms-question-edit-{{ $item->id_soal }}" aria-label="Ubah soal" title="Ubah soal"><span data-lucide="pencil" aria-hidden="true"></span></button>
                                         @else
-                                            <a class="table-icon-button" href="{{ route('lms.show', array_merge(['module' => $module, 'record' => $item->{'id_'.str_replace('-', '_', $module)} ?? $item->id_materi ?? $item->id_pertemuan ?? $item->id_tugas ?? $item->id_soal ?? $item->id_diskusi], $detailFilterParameters)) }}" aria-label="Lihat detail" title="Lihat detail"><span data-lucide="eye" aria-hidden="true"></span></a>
+                                            @if ($module === 'tugas' && $isStudent)
+                                                @if ($studentActivityWritable)
+                                                    <button class="button button-secondary lms-task-submit-action" type="button" data-lms-open="lms-task-submit-{{ $item->id_tugas }}">
+                                                        <span>Kumpul tugas</span><span data-lucide="upload" aria-hidden="true"></span>
+                                                    </button>
+                                                @else
+                                                    <a class="table-icon-button" href="{{ route('lms.show', array_merge(['module' => 'tugas', 'record' => $item->id_tugas], $detailFilterParameters)) }}" aria-label="Lihat tugas" title="Lihat tugas"><span data-lucide="eye" aria-hidden="true"></span></a>
+                                                @endif
+                                            @elseif ($module === 'tugas' && $canManage)
+                                                <a class="table-icon-button" href="{{ route('lms.show', array_merge(['module' => 'tugas', 'record' => $item->id_tugas], $detailFilterParameters)) }}" aria-label="Lihat detail tugas" title="Lihat tugas"><span data-lucide="eye" aria-hidden="true"></span></a>
+                                                <button class="table-icon-button" type="button" data-lms-open="lms-task-edit-{{ $item->id_tugas }}" aria-label="Ubah tugas" title="Ubah tugas"><span data-lucide="pencil" aria-hidden="true"></span></button>
+                                                <button class="table-icon-button reset" type="button" data-lms-open="lms-task-delete-{{ $item->id_tugas }}" aria-label="Hapus tugas" title="Hapus tugas"><span data-lucide="trash-2" aria-hidden="true"></span></button>
+                                            @elseif ($module === 'diskusi' && $canManage)
+                                                <a class="table-icon-button" href="{{ route('lms.show', array_merge(['module' => 'diskusi', 'record' => $item->id_diskusi], $detailFilterParameters)) }}" aria-label="Lihat diskusi" title="Lihat diskusi"><span data-lucide="eye" aria-hidden="true"></span></a>
+                                                <button class="table-icon-button" type="button" data-lms-open="lms-discussion-edit-{{ $item->id_diskusi }}" aria-label="Ubah diskusi" title="Ubah diskusi"><span data-lucide="pencil" aria-hidden="true"></span></button>
+                                                <button class="table-icon-button reset" type="button" data-lms-open="lms-discussion-delete-{{ $item->id_diskusi }}" aria-label="Hapus diskusi" title="Hapus diskusi"><span data-lucide="trash-2" aria-hidden="true"></span></button>
+                                            @else
+                                                <a class="table-icon-button" href="{{ route('lms.show', array_merge(['module' => $module, 'record' => $item->{'id_'.str_replace('-', '_', $module)} ?? $item->id_materi ?? $item->id_pertemuan ?? $item->id_tugas ?? $item->id_soal ?? $item->id_diskusi], $detailFilterParameters)) }}" aria-label="Lihat detail" title="Lihat detail"><span data-lucide="eye" aria-hidden="true"></span></a>
+                                            @endif
                                         @endif
-                                    @endif
+                                    </div>
                                 </td>
                             </tr>
                         @empty
@@ -513,14 +524,14 @@
                             </label>
                             <label>Status publikasi<select name="status_publikasi" data-searchable-select required><option value="terbit" @selected($item->status_publikasi === 'terbit')>Terbit</option><option value="draf" @selected($item->status_publikasi === 'draf')>Draf (belum ditayangkan)</option></select></label>
                         </div>
-                        <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close>Batal</button><button class="button button-primary" type="submit">Simpan perubahan</button></div>
+                        <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button><button class="button button-primary" type="submit"><span>Simpan perubahan</span><span data-lucide="check" aria-hidden="true"></span></button></div>
                     </form>
                 </dialog>
                 @unless ($item->used_in_meeting)
                     <dialog class="lms-dialog lms-confirm-dialog" id="lms-material-delete-{{ $item->id_materi }}">
                         <div class="lms-dialog-heading"><h2>Hapus materi</h2></div>
                         <p>Yakin ingin menghapus materi “{{ $item->judul }}”?</p>
-                        <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close>Batal</button><form method="post" action="{{ route('lms.materials.destroy', $item->id_materi) }}">@csrf @method('DELETE')<button class="button button-danger" type="submit">Hapus materi</button></form></div>
+                        <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button><form method="post" action="{{ route('lms.materials.destroy', $item->id_materi) }}">@csrf @method('DELETE')<button class="button button-danger" type="submit"><span>Hapus materi</span><span data-lucide="trash-2" aria-hidden="true"></span></button></form></div>
                     </dialog>
                 @endunless
             @endif
@@ -553,7 +564,7 @@
                             <input type="url" name="tautan_berkas" maxlength="2048" placeholder="https://" value="{{ $restoreTaskSubmission ? old('tautan_berkas') : ($studentSubmission->tautan_berkas ?? '') }}">
                         </label>
                     </div>
-                    <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close>Batal</button><button class="button button-primary" type="submit">{{ $studentSubmission ? 'Simpan perubahan' : 'Kumpulkan tugas' }}</button></div>
+                    <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button><button class="button button-primary" type="submit"><span>{{ $studentSubmission ? 'Simpan perubahan' : 'Kumpulkan tugas' }}</span><span data-lucide="send" aria-hidden="true"></span></button></div>
                 </form>
             </dialog>
         @endforeach
@@ -572,13 +583,13 @@
                         <label>Batas pengumpulan<input type="datetime-local" name="batas_pengumpulan" value="{{ str_replace(' ', 'T', substr($item->batas_pengumpulan, 0, 16)) }}" required></label>
                         <label>Status<select name="status_tugas" data-searchable-select required><option value="terbit" @selected($item->status_tugas === 'terbit')>Terbit</option><option value="draf" @selected($item->status_tugas === 'draf')>Draf</option><option value="ditutup" @selected($item->status_tugas === 'ditutup')>Ditutup</option></select></label>
                     </div>
-                    <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close>Batal</button><button class="button button-primary" type="submit">Simpan perubahan</button></div>
+                    <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button><button class="button button-primary" type="submit"><span>Simpan perubahan</span><span data-lucide="check" aria-hidden="true"></span></button></div>
                 </form>
             </dialog>
             <dialog class="lms-dialog lms-confirm-dialog" id="lms-task-delete-{{ $item->id_tugas }}">
                 <div class="lms-dialog-heading"><h2>Hapus tugas</h2></div>
                 <p>Yakin ingin menghapus tugas “{{ $item->judul }}”?</p>
-                <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close>Batal</button><form method="post" action="{{ route('lms.tasks.destroy', $item->id_tugas) }}">@csrf @method('DELETE')<button class="button button-danger" type="submit">Hapus tugas</button></form></div>
+                <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button><form method="post" action="{{ route('lms.tasks.destroy', $item->id_tugas) }}">@csrf @method('DELETE')<button class="button button-danger" type="submit"><span>Hapus tugas</span><span data-lucide="trash-2" aria-hidden="true"></span></button></form></div>
             </dialog>
         @endforeach
     @endif
@@ -600,13 +611,13 @@
                         <label>Tautan video conference (opsional)<input type="url" name="tautan_video" maxlength="2048" value="{{ $item->tautan_video }}"></label>
                         <label>Status pertemuan<select name="status_pertemuan" data-searchable-select required>@foreach (['draf' => 'Draf', 'terbit' => 'Terbit', 'selesai' => 'Selesai'] as $value => $label)<option value="{{ $value }}" @selected($item->status_pertemuan === $value)>{{ $label }}</option>@endforeach</select></label>
                     </div>
-                    <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close>Batal</button><button class="button button-primary" type="submit">Simpan perubahan</button></div>
+                    <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button><button class="button button-primary" type="submit"><span>Simpan perubahan</span><span data-lucide="check" aria-hidden="true"></span></button></div>
                 </form>
             </dialog>
             <dialog class="lms-dialog lms-confirm-dialog" id="lms-meeting-delete-{{ $item->id_pertemuan }}">
                 <div class="lms-dialog-heading"><h2>Hapus pertemuan</h2></div>
                 <p>Yakin ingin menghapus Pertemuan {{ $item->pertemuan_ke }} — {{ $item->judul }}?</p>
-                <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close>Batal</button><form method="post" action="{{ route('lms.meetings.destroy', $item->id_pertemuan) }}">@csrf @method('DELETE')<button class="button button-danger" type="submit">Hapus pertemuan</button></form></div>
+                <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button><form method="post" action="{{ route('lms.meetings.destroy', $item->id_pertemuan) }}">@csrf @method('DELETE')<button class="button button-danger" type="submit"><span>Hapus pertemuan</span><span data-lucide="trash-2" aria-hidden="true"></span></button></form></div>
             </dialog>
         @endforeach
     @endif
@@ -623,13 +634,13 @@
                         <label>Uraian pembuka<textarea name="isi_diskusi" rows="5" required>{{ $item->isi_diskusi }}</textarea></label>
                         <label>Status<select name="status_diskusi" data-searchable-select required><option value="terbuka" @selected($item->status_diskusi === 'terbuka')>Terbuka</option><option value="ditutup" @selected($item->status_diskusi === 'ditutup')>Ditutup</option></select></label>
                     </div>
-                    <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close>Batal</button><button class="button button-primary" type="submit">Simpan perubahan</button></div>
+                    <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button><button class="button button-primary" type="submit"><span>Simpan perubahan</span><span data-lucide="check" aria-hidden="true"></span></button></div>
                 </form>
             </dialog>
             <dialog class="lms-dialog lms-confirm-dialog" id="lms-discussion-delete-{{ $item->id_diskusi }}">
                 <div class="lms-dialog-heading"><h2>Hapus diskusi</h2></div>
                 <p>Yakin ingin menghapus diskusi “{{ $item->judul }}” beserta percakapannya?</p>
-                <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close>Batal</button><form method="post" action="{{ route('lms.discussions.destroy', $item->id_diskusi) }}">@csrf @method('DELETE')<button class="button button-danger" type="submit">Hapus diskusi</button></form></div>
+                <div class="lms-dialog-actions"><button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button><form method="post" action="{{ route('lms.discussions.destroy', $item->id_diskusi) }}">@csrf @method('DELETE')<button class="button button-danger" type="submit"><span>Hapus diskusi</span><span data-lucide="trash-2" aria-hidden="true"></span></button></form></div>
             </dialog>
         @endforeach
     @endif
@@ -674,8 +685,8 @@
                         </label>
                     </div>
                     <div class="lms-dialog-actions">
-                        <button class="button button-secondary" type="button" data-lms-close>Batal</button>
-                        <button class="button button-primary" type="submit">Simpan perubahan</button>
+                        <button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button>
+                        <button class="button button-primary" type="submit"><span>Simpan perubahan</span><span data-lucide="check" aria-hidden="true"></span></button>
                     </div>
                 </form>
             </dialog>
@@ -700,8 +711,8 @@
                     </label>
                 </div>
                 <div class="lms-dialog-actions">
-                    <button class="button button-secondary" type="button" data-lms-close>Batal</button>
-                    <button class="button button-primary" type="submit">Upload soal</button>
+                    <button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button>
+                    <button class="button button-primary" type="submit"><span>Upload soal</span><span data-lucide="upload" aria-hidden="true"></span></button>
                 </div>
             </form>
         </dialog>
@@ -770,8 +781,8 @@
                     @endif
                 </div>
                 <div class="lms-dialog-actions">
-                    <button class="button button-secondary" type="button" data-lms-close>Batal</button>
-                    <button class="button button-primary" type="submit">Simpan</button>
+                    <button class="button button-secondary" type="button" data-lms-close><span>Batal</span></button>
+                    <button class="button button-primary" type="submit"><span>Simpan</span><span data-lucide="check" aria-hidden="true"></span></button>
                 </div>
             </form>
         </dialog>

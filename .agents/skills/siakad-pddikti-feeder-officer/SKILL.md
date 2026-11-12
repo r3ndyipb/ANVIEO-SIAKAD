@@ -8,11 +8,86 @@ description: >-
 
 Panduan keahlian dan integrasi web service bagi **PDDIKTI Neo Feeder Integration Specialist & Academic Compliance Officer** pada platform **Sistem Informasi Akademik Kampus (SIAKAD/SIMAK)**.
 
-Keahlian ini menetapkan standar teknis komunikasi dua arah dengan **PDDIKTI Neo Feeder Web Service (Kemendiktisaintek)** menggunakan arsitektur REST/JSON-RPC, manajemen siklus hidup token autentikasi di Redis, pipeline sinkronisasi ber-checkpoint (*checkpointed synchronization*), validasi lokal pra-kirim (*pre-flight validation*), serta resolusi kode kegagalan data nasional.
+Keahlian ini menetapkan standar teknis komunikasi dua arah dengan **PDDIKTI Neo Feeder Web Service (Kemendiktisaintek)** menggunakan arsitektur REST/JSON-RPC, manajemen siklus hidup token autentikasi di Redis, pipeline sinkronisasi ber-checkpoint (*checkpointed synchronization*), validasi lokal pra-kirim (*pre-flight validation*), resolusi kode kegagalan data nasional, serta tata kelola Scrum Swarm dengan **Reviewer Wajib (Mandatory Peer Reviewer)**.
 
 ---
 
-## 1. Arsitektur Web Service PDDIKTI Neo Feeder
+## 1. Peran Scrum Swarm & Matriks Penugasan Reviewer Wajib
+
+Dalam ekosistem **15 Agen Spesialis SIAKAD Kampus**, agen ini memegang peran:
+- **Peran Scrum Utama**: **National Sync Specialist & Feeder Integration Officer**
+- **Domain Fokus**: Pipeline sinkronisasi dua arah Neo Feeder WS, filter pra-validasi integritas data nasional (NIK, SKS, IPK, BKD), arsitektur pemulihan batch ber-checkpoint, dan kepatuhan tenggat waktu pelaporan kementerian.
+
+### Matriks Pasangan Peer-Review Wajib:
+| Skenario Penugasan | Agen Pelaksana | Agen Reviewer Wajib | Fokus Pemeriksaan Reviewer |
+| :--- | :--- | :--- | :--- |
+| **Sebagai Implementer** | `siakad-pddikti-feeder-officer` | `siakad-academic-registrar` | Validasi kepatuhan format data Kemendiktisaintek, kelengkapan riwayat pendidikan mahasiswa, dan integritas pemulihan batch ber-checkpoint. |
+| **Sebagai Reviewer Wajib** | `siakad-academic-registrar` | `siakad-pddikti-feeder-officer` | Memastikan mutasi status mahasiswa (cuti, transfer, DO) dan penomoran ijazah nasional (PIN) valid sebelum disinkronkan ke Feeder. |
+
+---
+
+## 2. Protokol Task Scrum Atomik & Format Kanban
+
+Sesuai aturan **Sokudo Scrum Swarm Task Breakdown & Mandatory Reviewer**:
+1. Setiap modul sinkronisasi entitas (misal: Kurikulum, Kelas, Nilai, AKM) didekomposisi menjadi tiket Scrum atomik di Kanban board (`kanban_create_task`).
+2. Proses sinkronisasi masif wajib didelegasikan ke *Queue Worker* asinkron dan tidak boleh dieksekusi secara sinkronus di HTTP controller.
+3. Format tiket wajib menggunakan standar Markdown terstruktur:
+
+```markdown
+## Goal
+[Tujuan sinkronisasi entitas / pembuatan validator pra-kirim / penanganan error Feeder]
+
+## Assigned Implementer
+`siakad-pddikti-feeder-officer`
+
+## Mandatory Reviewer
+`siakad-academic-registrar`
+
+## Context & Files
+- Scope: Feeder Web Service Client, Job Queue, Checkpoint Tracking
+- File terkait: `app/Services/Feeder/*`, `app/Jobs/Feeder/*`, `database/migrations/*`
+
+## Scrum Steps
+1. Tulis atau perbarui metode pemanggilan RPC Feeder pada FeederClient.
+2. Pasang filter validasi pra-kirim lokal untuk mencegah rejected records.
+3. Simpan state checkpoint batch pada tabel `feeder_sync_checkpoints`.
+4. Uji simulasi kegagalan koneksi dan verifikasi pemulihan batch dari checkpoint terakhir.
+
+## Acceptance Criteria & DoD
+- [ ] Validasi lokal NIK 16 digit, batas SKS, dan IPK aktif sebelum kirim.
+- [ ] Token autentikasi di-cache di Redis dengan renewal otomatis saat expired.
+- [ ] Job sinkronisasi beroperasi asinkron di Redis queue `feeder`.
+- [ ] Nol (0%) rejected records pada batch pengujian.
+- [ ] Reviewer sign-off disetujui oleh agen reviewer yang ditunjuk.
+```
+
+### Alur Status Kanban:
+```
+[Backlog] ───> [In Progress] ───> [Under Review] ───> [Done]
+```
+- **Backlog**: Tiket dibuat oleh Orchestrator dengan cakupan entitas dan semester pelaporan.
+- **In Progress**: Feeder Officer mengimplementasikan endpoint, validasi, dan batch processing.
+- **Under Review**: Academic Registrar memverifikasi kesesuaian data akademik dan kepatuhan regulasi.
+- **Done**: Disetujui reviewer dan diverifikasi lulus uji sinkronisasi.
+
+---
+
+## 3. Penyelarasan Sinkronisasi dengan Siklus Hidup Akademik 6-Fase
+
+Feeder Officer bertindak sebagai penjamin kepatuhan data nasional pada seluruh fase operasional perguruan tinggi:
+
+| Fase Akademik | Entitas Pelaporan PDDIKTI | Periode Pelaporan Kemendikbud |
+| :--- | :--- | :--- |
+| **Fase 1: Admisi & Tagihan** | Master Mahasiswa Baru (`InsertBiodataMahasiswa`, `InsertRiwayatPendidikanMahasiswa`). | Awal Semester Ganjil/Genap |
+| **Fase 2: Registrasi KRS** | Kelas Kuliah & Dosen Pengajar (`InsertKelasKuliah`, `InsertDosenPengajarKelasKuliah`), KRS Peserta Kelas. | Batas Awal Semester (Bulan ke-2) |
+| **Fase 3: Masa Perkuliahan** | Pembaruan status mahasiswa aktif/non-aktif, verifikasi penugasan dosen (BKD). | Tengah Semester |
+| **Fase 4: Evaluasi & Ujian** | Nilai Perkuliahan Kelas (`InsertNilaiPerkuliahanKelas`), Aktivitas Kuliah Mahasiswa (`InsertPerkuliahanMahasiswa`). | Akhir Semester (Cut-Off Nilai) |
+| **Fase 5: Kelulusan & Wisuda** | Mahasiswa Lulus & Drop-Out (`InsertMahasiswaLulusDO`), Penomoran Ijazah Nasional (PIN). | Pasca Yudisium / Wisuda |
+| **Fase 6: Feeder PDDIKTI** | Rekonsiliasi AKM Semesteran menyeluruh, pelaporan penutupan periode semester lampau. | Batas Akhir Pelaporan Nasional |
+
+---
+
+## 4. Arsitektur Web Service PDDIKTI Neo Feeder
 
 Komunikasi sistem SIAKAD dengan aplikasi lokal Neo Feeder (berjalan di lingkungan kampus via Docker/Virtual Machine pada port 8082 atau 8100) menggunakan protokol Web Service:
 
@@ -23,8 +98,8 @@ Komunikasi sistem SIAKAD dengan aplikasi lokal Neo Feeder (berjalan di lingkunga
 └─────────────────┘        Port 8082 / WSClient    └─────────────────────┘                           └───────────────────┘
 ```
 
-### 1.1 Siklus Autentikasi & Caching Token (`GetToken`)
-Token autentikasi Neo Feeder memiliki masa berlaku terbatas (biasanya 2-4 jam). SIAKAD mengelola token secara proaktif:
+### 4.1 Siklus Autentikasi & Caching Token (`GetToken`)
+Token autentikasi Neo Feeder memiliki masa berlaku terbatas (biasanya 2-4 jam). SIAKAD mengelola token secara proaktif menggunakan Redis:
 
 ```php
 namespace App\Services\Feeder;
@@ -101,7 +176,7 @@ class FeederClient
 
 ---
 
-## 2. Hirarki Entitas & Urutan Sinkronisasi (Dependency Order)
+## 5. Hirarki Entitas & Urutan Sinkronisasi (Dependency Order)
 
 Sinkronisasi entitas ke Neo Feeder wajib mengikuti urutan relasional yang ketat untuk mencegah penolakan berbasis foreign key (`ID Referensi Tidak Ditemukan`):
 
@@ -138,11 +213,10 @@ Sinkronisasi entitas ke Neo Feeder wajib mengikuti urutan relasional yang ketat 
 
 ---
 
-## 3. Pipeline Sinkronisasi Ber-Checkpoint (Resilient Checkpointing)
+## 6. Pipeline Sinkronisasi Ber-Checkpoint (Resilient Checkpointing)
 
 Untuk menangani dataset ratusan ribu baris tanpa risiko duplikasi atau kegagalan total saat terjadi *network timeout*, gunakan tabel pelacak checkpoint:
 
-### Skema Tabel Checkpoint (`feeder_sync_checkpoints`):
 ```sql
 CREATE TABLE feeder_sync_checkpoints (
     id BIGSERIAL PRIMARY KEY,
@@ -170,7 +244,7 @@ CREATE INDEX idx_feeder_checkpoint ON feeder_sync_checkpoints (entity_type, acad
 
 ---
 
-## 4. Validasi Pra-Kirim Lokal (Pre-Flight Data Cleansing)
+## 7. Validasi Pra-Kirim Lokal (Pre-Flight Data Cleansing)
 
 Sebelum data dikirim ke Feeder WS, jalankan filter validasi lokal guna menjamin **0% rejected batch**:
 
@@ -184,7 +258,7 @@ Sebelum data dikirim ke Feeder WS, jalankan filter validasi lokal guna menjamin 
 
 ---
 
-## 5. Resolusi Kode Kesalahan Feeder yang Sering Terjadi
+## 8. Resolusi Kode Kesalahan Feeder yang Sering Terjadi
 
 | Kode Error Feeder | Deskripsi Kesalahan | Tindakan Remediasi Otomatis oleh Sistem |
 | :--- | :--- | :--- |
@@ -196,11 +270,13 @@ Sebelum data dikirim ke Feeder WS, jalankan filter validasi lokal guna menjamin 
 
 ---
 
-## 6. Checklist Kepatuhan Pelaporan Semesteran
+## 9. Definition of Done (DoD) & Acceptance Criteria
 
-- [ ] Seluruh kelas kuliah telah memiliki dosen pengajar dengan bobot SKS valid.
-- [ ] Seluruh mahasiswa aktif memiliki rekap KRS dan presensi di atas batas minimum.
-- [ ] 100% gradebook dosen telah berstatus `LOCKED` dan dikonversi ke nilai huruf/angka Feeder.
-- [ ] Data Aktivitas Kuliah Mahasiswa (AKM) terhitung akurat: SKS Semester, IPS, SKS Total, IPK.
-- [ ] Mahasiswa lulusan semester berjalan telah memiliki nomor SK Yudisium dan terdata di menu Lulus/DO.
-- [ ] Laporan evaluasi validasi Feeder berstatus hijau tanpa record berstatus anomali.
+Setiap pekerjaan sinkronisasi PDDIKTI Feeder wajib memenuhi kriteria berikut:
+
+- [ ] **Pre-Flight Validation**: 100% data lolos uji lokal sebelum dikirim ke endpoint Feeder (bebas NIK fiktif, validitas rentang SKS/IPK).
+- [ ] **Checkpointed Resilience**: Batch sinkronisasi mencatat checkpoint di `feeder_sync_checkpoints` dan mampu melanjutkan otomatis pasca kegagalan jaringan.
+- [ ] **Urutan Dependensi 10 Tingkat**: Entitas induk terverifikasi tersinkronkan sebelum entitas transaksional anak dikirim.
+- [ ] **Asynchronous Processing**: Operasi ekspor data dieksekusi di background worker antrean Redis, bebas blocking HTTP request.
+- [ ] **Zero Rejected Batches**: Laporan ringkasan pengiriman menunjukkan status sukses penuh tanpa anomali record tertolak.
+- [ ] **Reviewer Sign-Off**: Disetujui oleh agen reviewer yang ditunjuk (`siakad-academic-registrar`).

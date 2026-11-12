@@ -7,7 +7,18 @@
     <div class="page-heading"><div><p class="eyebrow">Kuliah Kerja Nyata</p><h1>Verifikasi Peserta KKN</h1><p class="subtitle">Tinjau pengusulan mahasiswa dan hasil pemeriksaan administrasi.</p></div></div>
     @if ($errors->any())<div class="calendar-modal-error" role="alert">{{ $errors->first() }}</div>@endif
     @if (session('status'))<div class="alert alert-success" role="status">{{ session('status') }}</div>@endif
-    <form class="kkn-filter" method="GET" action="{{ route('kkn.validations.index') }}"><label for="kkn-validation-year">Periode KKN</label><select id="kkn-validation-year" name="tahun" data-searchable-select required><option value="">Pilih periode</option>@foreach ($periods as $item)<option value="{{ $item->tahun }}" @selected($period && (string) $period->tahun === (string) $item->tahun)>{{ $item->nama_periode }} ({{ $item->tahun }})</option>@endforeach</select><button class="button button-primary" type="submit">Tampilkan</button></form>
+    <form class="kkn-filter" method="GET" action="{{ route('kkn.validations.index') }}">
+        <div>
+            <label for="kkn-validation-year">Periode KKN</label>
+            <select id="kkn-validation-year" name="tahun" data-searchable-select required>
+                <option value="">Pilih periode</option>
+                @foreach ($periods as $item)
+                    <option value="{{ $item->tahun }}" @selected($period && (string) $period->tahun === (string) $item->tahun)>{{ $item->nama_periode }} ({{ $item->tahun }})</option>
+                @endforeach
+            </select>
+        </div>
+        <button class="button button-primary" type="submit">Tampilkan</button>
+    </form>
     @if ($rows)
         <div class="table-wrap"><table data-simple-search-table><thead><tr><th>No.</th><th>NPM</th><th>Nama mahasiswa</th><th>Program studi</th><th>Pengusul</th><th>Status</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody>
             @forelse ($rows as $row)

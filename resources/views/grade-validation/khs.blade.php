@@ -9,13 +9,15 @@
         <a class="button button-secondary" href="{{ route('grade-validation.index') }}"><span data-lucide="arrow-left"></span> Kembali ke daftar</a>
     </div>
     <form class="grade-validation-filter" method="GET" action="{{ route('grade-validation.khs', $record->id_mahasiswa) }}">
-        <label for="grade-calendar">Pilih tahun akademik</label>
-        <select id="grade-calendar" name="calendar" required>
-            <option value="">Pilih tahun akademik</option>
-            @foreach ($calendars as $item)
-                <option value="{{ $item->id_kalender }}" @selected($calendar && (string) $calendar->id_kalender === (string) $item->id_kalender)>{{ $item->namatahun ?: $item->tahun }}</option>
-            @endforeach
-        </select>
+        <div>
+            <label for="grade-calendar">Pilih tahun akademik</label>
+            <select id="grade-calendar" name="calendar" data-searchable-select="filter" required>
+                <option value="">Pilih tahun akademik</option>
+                @foreach ($calendars as $item)
+                    <option value="{{ $item->id_kalender }}" @selected($calendar && (string) $calendar->id_kalender === (string) $item->id_kalender)>{{ $item->namatahun ?: $item->tahun }}</option>
+                @endforeach
+            </select>
+        </div>
         <button class="button button-primary" type="submit"><span data-lucide="search"></span> Tampilkan KHS</button>
     </form>
     @if ($calendars->isEmpty())

@@ -46,7 +46,10 @@ class InstitutionSettings
                 ->whereNotNull('nama_perguruan_tinggi')
                 ->value('nama_perguruan_tinggi')
             : '';
-        $institutionName = trim($institutionName) !== '' ? trim($institutionName) : 'Perguruan Tinggi';
+        $institutionName = trim($institutionName);
+        if ($institutionName === '' || $institutionName === 'Perguruan Tinggi' || str_contains($institutionName, 'Universitas SIAKAD')) {
+            $institutionName = 'ASEAN University International';
+        }
         $primaryColor = is_string($settings?->primary_color ?? null)
             && preg_match('/^#[0-9A-Fa-f]{6}$/', $settings->primary_color) === 1
             ? strtolower($settings->primary_color)
@@ -106,6 +109,22 @@ class InstitutionSettings
         return $this->forDisplay()['institution_name'];
     }
 
+    public function cityName(): string
+    {
+        $city = Schema::connection('simak_main')->hasTable('s1m4k_masterpt')
+            ? (string) DB::connection('simak_main')->table('s1m4k_masterpt')
+                ->whereNotNull('nama_wilayah')
+                ->value('nama_wilayah')
+            : '';
+
+        $city = trim($city);
+        if ($city === '' || strcasecmp($city, 'Ternate') === 0) {
+            return 'Jakarta Selatan';
+        }
+
+        return $city;
+    }
+
     private function primaryForeground(string $color): string
     {
         $channels = array_map(
@@ -125,22 +144,40 @@ class InstitutionSettings
     public function logoFilePath(): string
     {
         $settings = Schema::connection('simak_main')->hasTable('simak_site_settings')
-            ? DB::connection('simak_main')->table('simak_site_settings')->where('id', 1)->first(['logo_path'])
+            ? DB::connection('simak_main')->table('simak_site_settings')->where('id', 1)->first(['logo_path', 'preloader_logo_path'])
             : null;
 
-        $configuredPath = filled($settings?->logo_path)
-            ? Storage::disk('public')->path($settings->logo_path)
-            : null;
+        $candidates = array_filter([
+            $settings?->logo_path,
+            $settings?->preloader_logo_path,
+        ]);
 
-        if ($configuredPath === null || ! is_file($configuredPath)) {
+        foreach ($candidates as $candidate) {
+            $cleaned = ltrim((string) $candidate, '/');
+            $configuredPath = Storage::disk('public')->path($cleaned);
+            if (is_file($configuredPath)) {
+                if (strtolower(pathinfo($configuredPath, PATHINFO_EXTENSION)) === 'webp') {
+                    return $this->convertWebpLogoForPdf($configuredPath);
+                }
+
+                return $configuredPath;
+            }
+
+            $publicCandidate = public_path($cleaned);
+            if (is_file($publicCandidate)) {
+                if (strtolower(pathinfo($publicCandidate, PATHINFO_EXTENSION)) === 'webp') {
+                    return $this->convertWebpLogoForPdf($publicCandidate);
+                }
+
+                return $publicCandidate;
+            }
+        }
+
+        if (is_file(public_path('images/landing/default-campus-logo.png'))) {
             return public_path('images/landing/default-campus-logo.png');
         }
 
-        if (strtolower(pathinfo($configuredPath, PATHINFO_EXTENSION)) === 'webp') {
-            return $this->convertWebpLogoForPdf($configuredPath);
-        }
-
-        return $configuredPath;
+        return public_path('images/landing/icon.png');
     }
 
     private function convertWebpLogoForPdf(string $sourcePath): string
@@ -186,8 +223,24 @@ class InstitutionSettings
 
     private function publicImageUrl(?string $path, string $fallback): string
     {
-        if (filled($path) && Storage::disk('public')->exists($path)) {
-            return url('storage/'.ltrim($path, '/'));
+        if (! filled($path)) {
+            return $fallback;
+        }
+
+        $trimmed = trim((string) $path);
+
+        if (filter_var($trimmed, FILTER_VALIDATE_URL)) {
+            return $trimmed;
+        }
+
+        $cleanPath = ltrim($trimmed, '/');
+
+        if (Storage::disk('public')->exists($cleanPath)) {
+            return url('storage/'.$cleanPath);
+        }
+
+        if (file_exists(public_path($cleanPath))) {
+            return asset($cleanPath);
         }
 
         return $fallback;

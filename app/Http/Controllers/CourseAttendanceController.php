@@ -363,14 +363,14 @@ class CourseAttendanceController extends Controller
         $text = fn (string $value): string => $this->pdfText($value);
         $logoPath = app(\App\Services\InstitutionSettings::class)->logoFilePath();
         if (is_file($logoPath)) {
-            $pdf->Image($logoPath, 9.8, 0.3, 2, 2);
-            $pdf->SetY(2.5);
+            $pdf->Image($logoPath, 2, 0.5, 2, 2);
         }
         $title = $document === 'midterm'
             ? 'PELAKSANAAN UJIAN TENGAH SEMESTER (UTS)'
             : 'PELAKSANAAN UJIAN AKHIR SEMESTER (UAS)';
         $pdf->SetFont('Courier', 'B', 9);
         $pdf->Cell(19, 0.5, $text('DAFTAR HADIR'), 0, 1, 'C');
+        $pdf->Cell(19, 0.5, $text(mb_strtoupper(app(\App\Services\InstitutionSettings::class)->institutionName())), 0, 1, 'C');
         $pdf->Cell(19, 0.5, $text($title), 0, 1, 'C');
         $pdf->Cell(19, 0.5, $text('MATA KULIAH: '.mb_strtoupper($schedule->nama_mata_kuliah).' / '.mb_strtoupper($schedule->nama_kelas)), 0, 1, 'C');
         $pdf->Ln(0.5);
@@ -465,11 +465,9 @@ class CourseAttendanceController extends Controller
 
     private function attendanceHeading(\FPDF $pdf, object $schedule, callable $text, string $title): void
     {
-        $imageDirectory = public_path('images/kkn');
-        foreach ([[$imageDirectory.'/dikbud.jpg', 6], [app(\App\Services\InstitutionSettings::class)->logoFilePath(), 27]] as [$image, $x]) {
-            if (is_file($image)) {
-                $pdf->Image($image, $x, 0.5, 2, 2);
-            }
+        $logoPath = app(\App\Services\InstitutionSettings::class)->logoFilePath();
+        if (is_file($logoPath)) {
+            $pdf->Image($logoPath, 3, 0.5, 2, 2);
         }
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(33, 0.5, $text($title.' '.mb_strtoupper((string) $schedule->namatahun)), 0, 1, 'C');

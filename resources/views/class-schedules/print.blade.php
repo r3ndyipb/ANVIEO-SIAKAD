@@ -6,13 +6,15 @@
     <title>Jadwal Perkuliahan {{ $programName }} | SIAKAD</title>
     <style>
         body { margin: 24px; color: #1f2933; font: 12px Arial, sans-serif; }
-        header { margin-bottom: 22px; text-align: center; }
-        header h1, header h2, header p { margin: 5px 0; }
-        header img { width: 56px; height: 56px; margin-bottom: 5px; object-fit: contain; }
-        header h1 { font-size: 18px; }
-        header h2 { font-size: 14px; }
+        .print-header { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; border-bottom: 2px solid #0A2E52; padding-bottom: 12px; }
+        .institution-logo { width: 68px; height: 68px; object-fit: contain; flex-shrink: 0; }
+        .print-header-text { flex: 1; }
+        .print-header-text h1, .print-header-text h2, .print-header-text p { margin: 2px 0; }
+        .print-header-text h1 { font-size: 18px; color: #0A2E52; font-weight: 700; }
+        .print-header-text h2 { font-size: 14px; color: #333; }
+        .print-header-text p { font-size: 11px; font-weight: 700; color: #C9962E; }
         .print-actions { margin-bottom: 16px; text-align: right; }
-        button { padding: 8px 14px; border: 0; border-radius: 4px; background: #356b45; color: white; cursor: pointer; }
+        button { padding: 8px 14px; border: 0; border-radius: 4px; background: #0A2E52; color: white; cursor: pointer; font-weight: 600; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 7px 6px; border: 1px solid #333; vertical-align: top; }
         th { font-weight: 700; text-align: center; }
@@ -25,11 +27,13 @@
 </head>
 <body>
     <div class="print-actions"><button type="button" onclick="window.print()">Cetak / Simpan PDF</button></div>
-    <header>
-        <img src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}">
-        <h1>JADWAL PERKULIAHAN {{ strtoupper((string) ($calendar->namatahun ?: $calendar->tahun)) }}</h1>
-        <h2>PROGRAM STUDI {{ strtoupper($programName) }}</h2>
-        <p>{{ mb_strtoupper($siteConfiguration['institution_name']) }}</p>
+    <header class="print-header">
+        <img class="institution-logo" src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}" onerror="this.onerror=null; this.src='{{ asset('images/landing/default-campus-logo.png') }}';">
+        <div class="print-header-text">
+            <h1>JADWAL PERKULIAHAN {{ strtoupper((string) ($calendar->namatahun ?: $calendar->tahun)) }}</h1>
+            <h2>PROGRAM STUDI {{ strtoupper($programName) }}</h2>
+            <p>{{ mb_strtoupper($siteConfiguration['institution_name']) }}</p>
+        </div>
     </header>
     <table>
         <thead>

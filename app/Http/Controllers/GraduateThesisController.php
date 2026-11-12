@@ -969,7 +969,8 @@ class GraduateThesisController extends Controller
                 $pdf->Cell(0, 0.6, $text('NILAI DOSEN '.$row['role']), 0, 1, 'C');
                 $pdf->Cell(0, 0.6, $text('UJIAN '.mb_strtoupper((string) $exam->jenis_ujian)), 0, 1, 'C');
                 $pdf->SetFont('Arial', '', 10);
-                $pdf->Cell(0, 0.6, $text('Ternate, '.$dateLine.' Jam '.date('H:i', $examDate)), 0, 1, 'C');
+                $cityName = app(InstitutionSettings::class)->cityName();
+                $pdf->Cell(0, 0.6, $text($cityName.', '.$dateLine.' Jam '.date('H:i', $examDate)), 0, 1, 'C');
                 $pdf->Ln(0.6);
                 $this->pdfLabelValue($pdf, $text, 'Nama', $studentName);
                 $this->pdfLabelValue($pdf, $text, 'NPM', (string) $exam->nim);
@@ -1137,7 +1138,8 @@ class GraduateThesisController extends Controller
             }
             $pdf->Ln(1);
             $pdf->Cell(10, 0.5, '', 0, 0);
-            $pdf->Cell(5, 0.5, $text('Ternate, '.$dateText), 0, 1);
+            $cityName = app(InstitutionSettings::class)->cityName();
+            $pdf->Cell(5, 0.5, $text($cityName.', '.$dateText), 0, 1);
             $pdf->Cell(10, 0.5, '', 0, 0);
             $pdf->Cell(5, 0.5, $text('Koordinator Program Studi,'), 0, 1);
             $pdf->Image($qrPath, 13, $pdf->GetY() + 0.2, 2, 2);

@@ -1228,7 +1228,7 @@ class LmsAccessTest extends TestCase
             ->assertDontSee('Mata kuliah / kelas')
             ->assertSee('Seret file materi ke sini')
             ->assertSee('data-lms-required-upload required', false)
-            ->assertSee('<th>Mata Kuliah</th>', false)
+            ->assertSee('<th>Materi & Mata Kuliah</th>', false)
             ->assertSee('<th>Program Studi</th>', false)
             ->assertDontSee('<th>Label Pertemuan</th>', false)
             ->assertDontSee('Materi untuk pertemuan')

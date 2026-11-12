@@ -58,7 +58,7 @@
 <body class="public-site">
     @include('partials.flash-notice')
     <div class="simak-page-loader" data-page-loader role="status" aria-live="polite" aria-label="loading..." aria-hidden="true" hidden>
-        <span class="simak-page-loader-mark"><img src="{{ $siteConfiguration['preloader_logo_url'] }}" alt=""><span class="simak-page-loader-orbit" aria-hidden="true"></span></span>
+        <span class="simak-page-loader-mark"><img src="{{ $siteConfiguration['preloader_logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';"><span class="simak-page-loader-orbit" aria-hidden="true"></span></span>
         <span class="simak-page-loader-label">loading<span class="simak-page-loader-dots"></span></span>
     </div>
     <div id="public-landing" data-page-type="{{ $pageType }}">
@@ -82,7 +82,7 @@
             <header class="public-header hdr">
                 <div class="wrap">
                     <a class="public-brand logo brand-header-logo" href="{{ route('public.home') }}" aria-label="ASEAN University International — Home">
-                        <img src="{{ $siteConfiguration['logo_url'] }}" alt="Logo ASEAN University International" class="brand-logo-img">
+                        <img src="{{ $siteConfiguration['preloader_logo_url'] ?? $siteConfiguration['logo_url'] }}" alt="Logo ASEAN University International" class="brand-logo-img" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';">
                         <div class="brand-text">
                             <span class="brand-title">
                                 <span class="sr-only">ASEAN UNIVERSITU </span>

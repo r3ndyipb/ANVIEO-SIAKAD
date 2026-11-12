@@ -390,7 +390,7 @@
     <main class="maintenance-card" role="status" aria-live="polite">
         <header class="topbar">
             <div class="university-brand">
-                <img src="{{ $maintenanceLogo }}" alt="Logo {{ $maintenanceInstitution }}">
+                <img src="{{ $maintenanceLogo }}" alt="Logo {{ $maintenanceInstitution }}" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';">
                 <div class="brand-copy">
                     <strong>{{ $maintenanceInstitution }}</strong>
                     <span>{{ $maintenanceBranding['app_full_name'] ?? 'SIAKAD (Sistem Informasi Akademik)' }}</span>

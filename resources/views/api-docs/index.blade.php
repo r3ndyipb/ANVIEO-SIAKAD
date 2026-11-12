@@ -101,7 +101,7 @@
 </head>
 <body data-api-base="{{ url('/api/v1') }}" data-operations-url="{{ $operationsUrl }}" data-token-url="{{ $tokenUrl }}" data-sso-url="{{ $ssoUrl }}" data-sandbox-url="{{ $sandboxUrl }}">
     <header class="ws-topbar">
-        <a class="ws-brand" href="{{ route('public.home') }}"><img src="{{ $siteConfiguration['logo_url'] }}" alt=""><span><strong>Layanan Web SIAKAD</strong><small>Dokumentasi API {{ $siteConfiguration['institution_name'] }} · v1</small></span></a>
+        <a class="ws-brand" href="{{ route('public.home') }}"><img src="{{ $siteConfiguration['preloader_logo_url'] ?? $siteConfiguration['logo_url'] }}" alt="" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';"><span><strong>Layanan Web SIAKAD</strong><small>Dokumentasi API {{ $siteConfiguration['institution_name'] }} · v1</small></span></a>
         <div class="ws-topbar-actions"><a href="{{ $guideUrl }}"><i data-lucide="book-open-check"></i> Panduan API (PDF)</a><a href="{{ $openApiUrl }}"><i data-lucide="file-down"></i> Spesifikasi OpenAPI (YAML)</a><span>API REST · JSON · Token</span></div>
     </header>
     <div class="ws-shell">

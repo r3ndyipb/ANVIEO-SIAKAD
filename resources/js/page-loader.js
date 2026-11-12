@@ -42,6 +42,7 @@ if (loader) {
 	document.addEventListener('submit', (event) => {
 		const form = event.target;
 		if (!(form instanceof HTMLFormElement) || (form.target && form.target !== '_self')) return;
+		if (form.hasAttribute('data-page-loader-skip') || form.querySelector('[data-page-loader-skip]')) return;
 		window.setTimeout(() => {
 			if (!event.defaultPrevented) show();
 		}, 0);

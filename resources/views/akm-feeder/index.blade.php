@@ -17,26 +17,31 @@
 
     <form class="akm-feeder-filters" method="GET" action="{{ route('akm-feeder.index') }}">
         @if ($user->role === 'admin')
-            <label for="akm-feeder-program">Program studi
+            <div>
+                <label for="akm-feeder-program">Program studi</label>
                 <select id="akm-feeder-program" name="program" required data-searchable-select="filter" onchange="this.form.elements.calendar.value = ''; this.form.submit()">
                     <option value="">Pilih program studi</option>
                     @foreach ($programs as $program)
                         <option value="{{ $program->id_prodi }}" @selected($programId === (string) $program->id_prodi)>{{ $program->nama_program_studi }}{{ $program->nama_jenjang_pendidikan ? ' ('.$program->nama_jenjang_pendidikan.')' : '' }}</option>
                     @endforeach
                 </select>
-            </label>
+            </div>
         @else
             <input type="hidden" name="program" value="{{ $programId }}">
-            <div class="module-alert" role="note"><p>{{ $programs->firstWhere('id_prodi', $programId)->nama_program_studi ?? 'Program studi sesuai akun' }}</p></div>
+            <div>
+                <label>Program studi</label>
+                <input type="text" value="{{ $programs->firstWhere('id_prodi', $programId)->nama_program_studi ?? 'Program studi sesuai akun' }}" readonly>
+            </div>
         @endif
-        <label for="akm-feeder-calendar">Tahun akademik
+        <div>
+            <label for="akm-feeder-calendar">Tahun akademik</label>
             <select id="akm-feeder-calendar" name="calendar" required data-searchable-select="filter" @disabled($programId === '' || $calendars->isEmpty())>
                 <option value="">Pilih tahun akademik</option>
                 @foreach ($calendars as $calendarOption)
                     <option value="{{ $calendarOption->id_kalender }}" @selected((string) ($calendar?->id_kalender ?? '') === (string) $calendarOption->id_kalender)>{{ $calendarOption->namatahun ?: $calendarOption->tahun }}</option>
                 @endforeach
             </select>
-        </label>
+        </div>
         <button class="button button-primary" type="submit" @disabled($programId === '' || $calendars->isEmpty())><span data-lucide="search"></span> Tampilkan</button>
     </form>
 

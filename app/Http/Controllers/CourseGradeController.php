@@ -559,14 +559,9 @@ class CourseGradeController extends Controller
         $pdf = new \FPDF('P', 'cm', 'A4');
         $pdf->AddPage();
         $text = fn (string $value): string => $this->pdfText($value);
-        $imageDirectory = public_path('images/kkn');
-        foreach ([
-            [$imageDirectory.'/dikbud.jpg', 2.5],
-            [app(\App\Services\InstitutionSettings::class)->logoFilePath(), 17],
-        ] as [$image, $x]) {
-            if (is_file($image)) {
-                $pdf->Image($image, $x, 0.5, 2, 2);
-            }
+        $logoPath = app(\App\Services\InstitutionSettings::class)->logoFilePath();
+        if (is_file($logoPath)) {
+            $pdf->Image($logoPath, 2, 0.5, 2, 2);
         }
         $pdf->SetFont('Arial', 'B', 11);
         foreach ([

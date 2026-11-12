@@ -491,13 +491,9 @@ class KknController extends Controller
         $pdf->SetAutoPageBreak(true, 12);
         $pdf->AddPage();
         $text = fn (string $value): string => iconv('UTF-8', 'ISO-8859-1//TRANSLIT//IGNORE', $value) ?: '';
-        foreach ([
-            [public_path('images/kkn/dikbud.jpg'), 24],
-            [app(\App\Services\InstitutionSettings::class)->logoFilePath(), 253],
-        ] as [$imagePath, $x]) {
-            if (is_file($imagePath)) {
-                $pdf->Image($imagePath, $x, 8, 20, 20);
-            }
+        $logoPath = app(\App\Services\InstitutionSettings::class)->logoFilePath();
+        if (is_file($logoPath)) {
+            $pdf->Image($logoPath, 15, 8, 20, 20);
         }
         $pdf->SetY(8);
         $pdf->SetFont('Arial', 'B', 14);

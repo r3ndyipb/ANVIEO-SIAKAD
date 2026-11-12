@@ -872,75 +872,6 @@ html, body {
   color: #EF4444;
 }
 
-/* Prodi Selector */
-.tree-prodi-selector-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.tree-filter-label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.66rem;
-  font-weight: 700;
-  color: var(--bx-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.tree-prodi-active-pill {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  font-weight: 800;
-  color: var(--gold);
-  background: var(--gold-soft);
-  padding: 1px 5px;
-  border-radius: 3px;
-}
-
-.tree-select-box {
-  position: relative;
-  width: 100%;
-}
-
-.tree-prodi-select {
-  width: 100%;
-  height: 30px;
-  padding: 0 24px 0 8px;
-  border-radius: 6px;
-  background: var(--bx-surface);
-  border: 1px solid var(--bx-border);
-  color: var(--bx-ink);
-  font-family: var(--font-body);
-  font-size: 0.73rem;
-  font-weight: 600;
-  outline: none;
-  cursor: pointer;
-  appearance: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  box-sizing: border-box;
-}
-
-.tree-prodi-select:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 2px rgba(201, 150, 46, 0.2);
-}
-
-.tree-select-chevron {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  color: var(--bx-muted);
-}
-
 /* Role Filter Pills */
 .tree-role-filter-wrap {
   width: 100%;
@@ -3515,7 +3446,6 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 /* 2. Hero Banners & Welcome Cards across all Dashboards */
 .academic-dashboard-head,
 .lms-dashboard-head,
-.finance-dashboard-welcome,
 .portal-dash-hero {
   display: flex !important;
   align-items: flex-end !important;
@@ -3533,7 +3463,6 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 
 .academic-dashboard-head h1,
 .lms-dashboard-head h1,
-.finance-dashboard-welcome h2,
 .portal-dash-hero h1 {
   margin: 0 !important;
   font-family: var(--font-heading) !important;
@@ -3545,20 +3474,76 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 
 [data-theme="dark"] .academic-dashboard-head h1,
 [data-theme="dark"] .lms-dashboard-head h1,
-[data-theme="dark"] .finance-dashboard-welcome h2,
 [data-theme="dark"] .portal-dash-hero h1 {
   color: #FFFFFF !important;
 }
 
 .academic-dashboard-head p,
 .lms-dashboard-head p,
-.finance-dashboard-welcome span,
 .portal-dash-hero p {
   max-width: 720px !important;
   margin: 8px 0 0 !important;
   color: var(--bx-muted) !important;
   font-size: 0.82rem !important;
   line-height: 1.55 !important;
+}
+
+/* Dedicated Finance Dashboard Welcome Card */
+.finance-dashboard-welcome {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 4px !important;
+  margin-bottom: 18px !important;
+  padding: 16px 20px !important;
+  border: 1px solid var(--bx-border) !important;
+  border-left: 4px solid var(--gold) !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, var(--brand-soft) 0%, var(--gold-soft) 100%), var(--bx-surface) !important;
+  box-shadow: var(--shadow-sm) !important;
+  box-sizing: border-box !important;
+}
+
+.finance-dashboard-welcome p.eyebrow,
+.finance-dashboard-welcome p:first-child,
+.finance-dashboard-welcome .finance-welcome-eyebrow {
+  margin: 0 0 2px !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: var(--gold-2) !important;
+}
+
+[data-theme="dark"] .finance-dashboard-welcome p.eyebrow,
+[data-theme="dark"] .finance-dashboard-welcome p:first-child,
+[data-theme="dark"] .finance-dashboard-welcome .finance-welcome-eyebrow {
+  color: var(--gold) !important;
+}
+
+.finance-dashboard-welcome h2 {
+  margin: 0 !important;
+  font-family: var(--font-heading) !important;
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: var(--brand) !important;
+  line-height: 1.25 !important;
+}
+
+[data-theme="dark"] .finance-dashboard-welcome h2 {
+  color: #FFFFFF !important;
+}
+
+.finance-dashboard-welcome span,
+.finance-dashboard-welcome p.subtitle,
+.finance-dashboard-welcome p:last-child,
+.finance-dashboard-welcome .finance-welcome-desc {
+  max-width: 720px !important;
+  margin: 2px 0 0 !important;
+  color: var(--bx-muted) !important;
+  font-size: 0.78rem !important;
+  line-height: 1.45 !important;
 }
 
 .academic-scope,
@@ -3621,13 +3606,91 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 .kkn-filter,
 .kkn-filters,
 .filter-section,
-.filter-box {
+.filter-box,
+.edom-filters,
+.thesis-dashboard-filter,
+.class-transfer-search,
+.course-removal-search,
+.reenrollment-search,
+.akm-filter,
+.teaching-filter,
+.student-activity-filter,
+.grade-validation-filter,
+.graduation-validation-filter,
+.mbkm-search {
   background: var(--bx-surface) !important;
   border: 1px solid var(--bx-border) !important;
   border-radius: 10px !important;
   box-shadow: var(--shadow-sm) !important;
-  padding: 18px 20px !important;
+  padding: 16px 20px !important;
   margin: 16px 0 22px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: flex-end !important;
+  justify-content: flex-start !important;
+  gap: 14px 18px !important;
+}
+
+.academic-filter > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.academic-filter > label,
+.lms-dashboard-filter > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.lms-dashboard-filter > label,
+.krs-search > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.krs-search > label,
+.monitoring-krs-filters > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.monitoring-krs-filters > label,
+.khs-filters > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.khs-filters > label,
+.transcript-search > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.transcript-search > label,
+.transcripts-filters > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.transcripts-filters > label,
+.student-status-filters > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.student-status-filters > label,
+.finance-filters > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.finance-filters > label,
+.finance-dashboard-filter > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.finance-dashboard-filter > label,
+.schedule-filters > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.schedule-filters > label,
+.attendance-filter > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.attendance-filter > label,
+.grade-filter > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.grade-filter > label,
+.akm-feeder-filters > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.akm-feeder-filters > label,
+.activity-log-filters > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.activity-log-filters > label,
+.master-data-filters > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.master-data-filters > label,
+.camaba-filter > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.camaba-filter > label,
+.camaba-filters > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.camaba-filters > label,
+.kkn-filter > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.kkn-filter > label,
+.kkn-filters > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.kkn-filters > label,
+.filter-section > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.filter-section > label,
+.filter-box > div:not(.krs-search-actions):not(.filter-actions):not(.schedule-actions):not(.form-actions),
+.filter-box > label,
+.edom-filters > div,
+.thesis-dashboard-filter > div,
+.class-transfer-search > div,
+.course-removal-search > div,
+.reenrollment-search > div,
+.akm-filter > div,
+.teaching-filter > div,
+.student-activity-filter > div,
+.grade-validation-filter > div,
+.graduation-validation-filter > div,
+.midtrans-history-filters > div,
+.mbkm-search > div {
+  flex: 0 1 360px !important;
+  min-width: 240px !important;
+  max-width: 480px !important;
   box-sizing: border-box !important;
 }
 
@@ -3648,7 +3711,17 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 .activity-log-filters label,
 .master-data-filters label,
 .camaba-filter label,
-.kkn-filter label {
+.camaba-filters label,
+.kkn-filter label,
+.kkn-filters label,
+.edom-filters label,
+.thesis-dashboard-filter label,
+.grade-validation-filter label,
+.graduation-validation-filter label,
+.midtrans-history-filters label,
+.akm-filter label,
+.teaching-filter label,
+.student-activity-filter label {
   display: block !important;
   margin-bottom: 6px !important;
   font-family: var(--font-body) !important;
@@ -3671,6 +3744,8 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 .khs-filters select,
 .transcript-search input,
 .transcript-search select,
+.transcripts-filters input,
+.transcripts-filters select,
 .student-status-filters input,
 .student-status-filters select,
 .finance-filters input,
@@ -3688,7 +3763,32 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 .activity-log-filters input,
 .activity-log-filters select,
 .master-data-filters input,
-.master-data-filters select {
+.master-data-filters select,
+.camaba-filter input,
+.camaba-filter select,
+.camaba-filters input,
+.camaba-filters select,
+.kkn-filter input,
+.kkn-filter select,
+.kkn-filters input,
+.kkn-filters select,
+.edom-filters input,
+.edom-filters select,
+.thesis-dashboard-filter input,
+.thesis-dashboard-filter select,
+.grade-validation-filter input,
+.grade-validation-filter select,
+.graduation-validation-filter input,
+.graduation-validation-filter select,
+.midtrans-history-filters input,
+.midtrans-history-filters select,
+.akm-filter input,
+.akm-filter select,
+.teaching-filter input,
+.teaching-filter select,
+.student-activity-filter input,
+.student-activity-filter select {
+  width: 100% !important;
   min-height: 38px !important;
   padding: 0 12px !important;
   border-radius: 6px !important;
@@ -3699,6 +3799,81 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
   font-size: 0.82rem !important;
   box-sizing: border-box !important;
   outline: none !important;
+}
+
+.ts-wrapper.filter,
+.academic-filter .ts-wrapper,
+.lms-dashboard-filter .ts-wrapper,
+.krs-search .ts-wrapper,
+.khs-filters .ts-wrapper,
+.transcript-search .ts-wrapper,
+.transcripts-filters .ts-wrapper,
+.student-status-filters .ts-wrapper,
+.finance-filters .ts-wrapper,
+.finance-dashboard-filter .ts-wrapper,
+.monitoring-krs-filters .ts-wrapper,
+.schedule-filters .ts-wrapper,
+.attendance-filter .ts-wrapper,
+.grade-filter .ts-wrapper,
+.akm-feeder-filters .ts-wrapper,
+.activity-log-filters .ts-wrapper,
+.master-data-filters .ts-wrapper,
+.camaba-filter .ts-wrapper,
+.camaba-filters .ts-wrapper,
+.kkn-filter .ts-wrapper,
+.kkn-filters .ts-wrapper,
+.edom-filters .ts-wrapper,
+.thesis-dashboard-filter .ts-wrapper,
+.akm-filter .ts-wrapper,
+.teaching-filter .ts-wrapper,
+.student-activity-filter .ts-wrapper,
+.grade-validation-filter .ts-wrapper,
+.graduation-validation-filter .ts-wrapper,
+.midtrans-history-filters .ts-wrapper,
+.mbkm-search .ts-wrapper {
+  width: 100% !important;
+}
+
+.academic-filter .ts-control,
+.lms-dashboard-filter .ts-control,
+.krs-search .ts-control,
+.monitoring-krs-filters .ts-control,
+.khs-filters .ts-control,
+.transcript-search .ts-control,
+.transcripts-filters .ts-control,
+.student-status-filters .ts-control,
+.finance-filters .ts-control,
+.finance-dashboard-filter .ts-control,
+.schedule-filters .ts-control,
+.attendance-filter .ts-control,
+.grade-filter .ts-control,
+.akm-feeder-filters .ts-control,
+.activity-log-filters .ts-control,
+.master-data-filters .ts-control,
+.camaba-filter .ts-control,
+.camaba-filters .ts-control,
+.kkn-filter .ts-control,
+.kkn-filters .ts-control,
+.edom-filters .ts-control,
+.thesis-dashboard-filter .ts-control,
+.akm-filter .ts-control,
+.teaching-filter .ts-control,
+.student-activity-filter .ts-control,
+.grade-validation-filter .ts-control,
+.graduation-validation-filter .ts-control,
+.midtrans-history-filters .ts-control,
+.mbkm-search .ts-control {
+  min-height: 38px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--bx-border) !important;
+  background: var(--bx-surface) !important;
+  color: var(--bx-ink) !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.82rem !important;
+  padding: 0 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
 }
 
 [data-theme="dark"] .academic-filter input,
@@ -3726,40 +3901,331 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 [data-theme="dark"] .akm-feeder-filters input,
 [data-theme="dark"] .akm-feeder-filters select,
 [data-theme="dark"] .activity-log-filters input,
-[data-theme="dark"] .activity-log-filters select {
+[data-theme="dark"] .activity-log-filters select,
+[data-theme="dark"] .master-data-filters input,
+[data-theme="dark"] .master-data-filters select,
+[data-theme="dark"] .camaba-filter input,
+[data-theme="dark"] .camaba-filter select,
+[data-theme="dark"] .camaba-filters input,
+[data-theme="dark"] .camaba-filters select,
+[data-theme="dark"] .kkn-filter input,
+[data-theme="dark"] .kkn-filter select,
+[data-theme="dark"] .kkn-filters input,
+[data-theme="dark"] .kkn-filters select,
+[data-theme="dark"] .edom-filters input,
+[data-theme="dark"] .edom-filters select,
+[data-theme="dark"] .thesis-dashboard-filter input,
+[data-theme="dark"] .thesis-dashboard-filter select,
+[data-theme="dark"] .grade-validation-filter input,
+[data-theme="dark"] .grade-validation-filter select,
+[data-theme="dark"] .graduation-validation-filter input,
+[data-theme="dark"] .graduation-validation-filter select,
+[data-theme="dark"] .midtrans-history-filters input,
+[data-theme="dark"] .midtrans-history-filters select,
+[data-theme="dark"] .akm-filter input,
+[data-theme="dark"] .akm-filter select,
+[data-theme="dark"] .teaching-filter input,
+[data-theme="dark"] .teaching-filter select,
+[data-theme="dark"] .student-activity-filter input,
+[data-theme="dark"] .student-activity-filter select,
+[data-theme="dark"] .academic-filter .ts-control,
+[data-theme="dark"] .lms-dashboard-filter .ts-control,
+[data-theme="dark"] .krs-search .ts-control,
+[data-theme="dark"] .monitoring-krs-filters .ts-control,
+[data-theme="dark"] .khs-filters .ts-control,
+[data-theme="dark"] .transcript-search .ts-control,
+[data-theme="dark"] .transcripts-filters .ts-control,
+[data-theme="dark"] .student-status-filters .ts-control,
+[data-theme="dark"] .finance-filters .ts-control,
+[data-theme="dark"] .finance-dashboard-filter .ts-control,
+[data-theme="dark"] .schedule-filters .ts-control,
+[data-theme="dark"] .attendance-filter .ts-control,
+[data-theme="dark"] .grade-filter .ts-control,
+[data-theme="dark"] .akm-feeder-filters .ts-control,
+[data-theme="dark"] .activity-log-filters .ts-control,
+[data-theme="dark"] .master-data-filters .ts-control,
+[data-theme="dark"] .camaba-filter .ts-control,
+[data-theme="dark"] .camaba-filters .ts-control,
+[data-theme="dark"] .kkn-filter .ts-control,
+[data-theme="dark"] .kkn-filters .ts-control,
+[data-theme="dark"] .edom-filters .ts-control,
+[data-theme="dark"] .thesis-dashboard-filter .ts-control,
+[data-theme="dark"] .akm-filter .ts-control,
+[data-theme="dark"] .teaching-filter .ts-control,
+[data-theme="dark"] .student-activity-filter .ts-control,
+[data-theme="dark"] .grade-validation-filter .ts-control,
+[data-theme="dark"] .graduation-validation-filter .ts-control,
+[data-theme="dark"] .midtrans-history-filters .ts-control,
+[data-theme="dark"] .mbkm-search .ts-control {
   background: var(--bx-bg) !important;
   border-color: var(--bx-border) !important;
   color: var(--bx-ink) !important;
+}
+
+[data-theme="dark"] .ts-dropdown {
+  background: var(--bx-surface) !important;
+  border-color: var(--bx-border) !important;
+  color: var(--bx-ink) !important;
+}
+
+[data-theme="dark"] .ts-dropdown .option {
+  color: var(--bx-ink) !important;
+}
+
+[data-theme="dark"] .ts-dropdown .active {
+  background: var(--brand-soft) !important;
+  color: var(--gold) !important;
+}
+
+/* Universal Button Positioning: Align Buttons beside dropdowns on the right */
+.academic-filter > button,
+.academic-filter > .button,
+.lms-dashboard-filter > button,
+.lms-dashboard-filter > .button,
+.krs-search > button,
+.krs-search > .button,
+.monitoring-krs-filters > button,
+.monitoring-krs-filters > .button,
+.khs-filters > button,
+.khs-filters > .button,
+.transcript-search > button,
+.transcript-search > .button,
+.transcripts-filters > button,
+.transcripts-filters > .button,
+.student-status-filters > button,
+.student-status-filters > .button,
+.finance-filters > button,
+.finance-filters > .button,
+.finance-dashboard-filter > button,
+.finance-dashboard-filter > .button,
+.schedule-filters > button,
+.schedule-filters > .button,
+.attendance-filter > button,
+.attendance-filter > .button,
+.grade-filter > button,
+.grade-filter > .button,
+.akm-feeder-filters > button,
+.akm-feeder-filters > .button,
+.activity-log-filters > button,
+.activity-log-filters > .button,
+.master-data-filters > button,
+.master-data-filters > .button,
+.camaba-filter > button,
+.camaba-filter > .button,
+.camaba-filters > button,
+.camaba-filters > .button,
+.kkn-filter > button,
+.kkn-filter > .button,
+.kkn-filters > button,
+.kkn-filters > .button,
+.filter-section > button,
+.filter-section > .button,
+.filter-box > button,
+.filter-box > .button,
+.edom-filters > button,
+.edom-filters > .button,
+.thesis-dashboard-filter > button,
+.thesis-dashboard-filter > .button,
+.class-transfer-search > button,
+.class-transfer-search > .button,
+.course-removal-search > button,
+.course-removal-search > .button,
+.reenrollment-search > button,
+.reenrollment-search > .button,
+.akm-filter > button,
+.akm-filter > .button,
+.teaching-filter > button,
+.teaching-filter > .button,
+.student-activity-filter > button,
+.student-activity-filter > .button,
+.grade-validation-filter > button,
+.grade-validation-filter > .button,
+.graduation-validation-filter > button,
+.graduation-validation-filter > .button,
+.midtrans-history-filters > button,
+.midtrans-history-filters > .button,
+.mbkm-search > button,
+.mbkm-search > .button {
+  margin: 0 !important;
+  align-self: flex-end !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+.krs-search-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  align-self: flex-end !important;
+  height: 38px !important;
+}
+
+.krs-search-actions > .button,
+.krs-search-actions > button {
+  height: 38px !important;
+  min-height: 38px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Status chips inside filter bars */
+.grade-filter .status-chip,
+.teaching-filter .status-chip,
+.student-activity-filter .status-chip {
+  align-self: flex-end !important;
+  height: 38px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+}
+
+/* Explanatory notes under filter inputs inside flex container */
+.academic-filter p,
+.academic-filter .academic-filter-note,
+.lms-dashboard-filter p,
+.lms-dashboard-filter .lms-dashboard-note,
+.grade-validation-status-note {
+  width: 100% !important;
+  flex-basis: 100% !important;
+  margin: 6px 0 0 !important;
+  font-size: 0.78rem !important;
+  color: var(--bx-muted) !important;
+}
+
+@media (max-width: 640px) {
+  .academic-filter,
+  .krs-search,
+  .khs-filters,
+  .monitoring-krs-filters,
+  .schedule-filters,
+  .attendance-filter,
+  .grade-filter,
+  .finance-dashboard-filter,
+  .camaba-filters,
+  .kkn-filter,
+  .master-data-filters {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .academic-filter > div,
+  .krs-search > div,
+  .khs-filters > div,
+  .monitoring-krs-filters > div,
+  .schedule-filters > div,
+  .attendance-filter > div,
+  .grade-filter > div,
+  .finance-dashboard-filter > div,
+  .camaba-filters > div,
+  .kkn-filter > div,
+  .master-data-filters > div {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .academic-filter > button,
+  .academic-filter > .button,
+  .krs-search > button,
+  .krs-search > .button,
+  .krs-search-actions,
+  .monitoring-krs-filters > button,
+  .monitoring-krs-filters > .button,
+  .khs-filters > button,
+  .khs-filters > .button,
+  .schedule-filters > button,
+  .schedule-filters > .button,
+  .attendance-filter > button,
+  .attendance-filter > .button,
+  .grade-filter > button,
+  .grade-filter > .button,
+  .finance-dashboard-filter > button,
+  .finance-dashboard-filter > .button,
+  .camaba-filters > button,
+  .camaba-filters > .button,
+  .kkn-filter > button,
+  .kkn-filter > .button,
+  .master-data-filters > button,
+  .master-data-filters > .button {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .academic-filter > div,
+  .academic-filter > label,
+  .krs-search > div,
+  .krs-search > label,
+  .khs-filters > div,
+  .khs-filters > label,
+  .monitoring-krs-filters > div,
+  .monitoring-krs-filters > label,
+  .schedule-filters > div,
+  .schedule-filters > label,
+  .attendance-filter > div,
+  .attendance-filter > label,
+  .grade-filter > div,
+  .grade-filter > label {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .academic-filter > button,
+  .academic-filter > .button,
+  .krs-search > button,
+  .krs-search > .button,
+  .krs-search-actions,
+  .monitoring-krs-filters > button,
+  .monitoring-krs-filters > .button,
+  .khs-filters > button,
+  .khs-filters > .button,
+  .schedule-filters > button,
+  .schedule-filters > .button,
+  .attendance-filter > button,
+  .attendance-filter > .button,
+  .grade-filter > button,
+  .grade-filter > .button,
+  .finance-dashboard-filter > button,
+  .camaba-filters > button {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
 }
 
 /* 4. Metric & Stat KPI Cards */
 .academic-cards,
 .lms-dashboard-grid,
 .krs-summary,
-.finance-dashboard-grid,
 .khs-profile,
 .transcripts-summary {
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) !important;
   gap: 12px !important;
-  margin: 18px 0 24px !important;
+  margin: 16px 0 22px !important;
 }
 
 .academic-card,
 .lms-dashboard-card,
 .krs-summary-card,
-.finance-dashboard-card,
 .khs-profile > div,
 .transcripts-summary > div {
-  padding: 16px 18px !important;
+  padding: 13px 15px !important;
   border: 1px solid var(--bx-border) !important;
   border-top: 3px solid var(--brand) !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   background: var(--bx-surface) !important;
   box-shadow: var(--shadow-sm) !important;
   display: flex !important;
   flex-direction: column !important;
-  justify-content: space-between !important;
+  justify-content: center !important;
+  min-height: 74px !important;
   transition: all 0.18s ease !important;
   position: relative !important;
   overflow: hidden !important;
@@ -3769,7 +4235,6 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 [data-theme="dark"] .academic-card,
 [data-theme="dark"] .lms-dashboard-card,
 [data-theme="dark"] .krs-summary-card,
-[data-theme="dark"] .finance-dashboard-card,
 [data-theme="dark"] .khs-profile > div,
 [data-theme="dark"] .transcripts-summary > div {
   border-top-color: var(--gold) !important;
@@ -3778,7 +4243,8 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 .academic-card:hover,
 .lms-dashboard-card:hover,
 .krs-summary-card:hover,
-.finance-dashboard-card:hover {
+.khs-profile > div:hover,
+.transcripts-summary > div:hover {
   transform: translateY(-2px) !important;
   border-color: var(--gold) !important;
   box-shadow: var(--shadow-md) !important;
@@ -3786,56 +4252,209 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 
 .academic-card-label,
 .lms-dashboard-card-label,
-.krs-summary-card small,
-.finance-dashboard-card h2,
+.krs-summary-card small:first-child,
 .khs-profile strong,
 .transcripts-summary small {
   display: block !important;
   font-family: var(--font-body) !important;
-  font-size: 0.7rem !important;
-  font-weight: 800 !important;
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
   color: var(--bx-muted) !important;
-  margin-bottom: 6px !important;
+  margin-bottom: 4px !important;
+  line-height: 1.2 !important;
 }
 
 .academic-card-value,
-.lms-dashboard-card-value,
+.lms-dashboard-card-value {
+  display: block !important;
+  font-family: var(--font-heading) !important;
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  color: var(--brand) !important;
+  line-height: 1.2 !important;
+}
+
 .krs-summary-card strong,
-.finance-dashboard-card strong,
 .khs-profile span,
 .transcripts-summary strong {
   display: block !important;
-  font-family: var(--font-heading) !important;
-  font-size: 1.85rem !important;
+  font-family: var(--font-body) !important;
+  font-size: 1.05rem !important;
   font-weight: 700 !important;
   color: var(--brand) !important;
-  line-height: 1.1 !important;
+  line-height: 1.3 !important;
+  word-break: break-word !important;
+}
+
+.krs-summary-card strong + small {
+  display: block !important;
+  margin-top: 3px !important;
+  font-size: 0.65rem !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  color: var(--bx-muted) !important;
+  letter-spacing: normal !important;
 }
 
 [data-theme="dark"] .academic-card-value,
 [data-theme="dark"] .lms-dashboard-card-value,
 [data-theme="dark"] .krs-summary-card strong,
-[data-theme="dark"] .finance-dashboard-card strong,
 [data-theme="dark"] .khs-profile span,
 [data-theme="dark"] .transcripts-summary strong {
   color: #FFFFFF !important;
 }
 
 .academic-card-detail,
-.lms-dashboard-card small,
-.finance-dashboard-card p {
+.lms-dashboard-card small {
   display: block !important;
-  margin-top: 6px !important;
+  margin-top: 4px !important;
   font-size: 0.72rem !important;
   color: var(--bx-muted) !important;
-  line-height: 1.4 !important;
+  line-height: 1.3 !important;
+}
+
+/* KRS Actions & Status Enhancements */
+.krs-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  margin: 16px 0 !important;
+  flex-wrap: wrap !important;
+}
+
+.krs-actions:has(.krs-section-title),
+.krs-actions:has(h2),
+.krs-actions:has(h3) {
+  justify-content: space-between !important;
+}
+
+.krs-actions:has([data-lucide="arrow-left"]) {
+  justify-content: flex-start !important;
+}
+
+.krs-section-title {
+  margin: 0 !important;
+  font-family: var(--font-heading) !important;
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: var(--brand) !important;
+}
+
+[data-theme="dark"] .krs-section-title {
+  color: #FFFFFF !important;
+}
+
+.krs-status {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 10px 0 16px !important;
+}
+
+.krs-status .status-chip {
+  padding: 5px 12px !important;
+  font-size: 0.76rem !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+}
+
+.krs-bulk-approval form {
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.krs-select-cell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+}
+
+.krs-select-cell input[type="checkbox"] {
+  width: 18px !important;
+  height: 18px !important;
+  cursor: pointer !important;
+  accent-color: var(--brand) !important;
+}
+
+/* Dedicated Finance Dashboard KPI Cards & Grid */
+.finance-dashboard-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 12px !important;
+  margin: 16px 0 22px !important;
+}
+
+.finance-dashboard-card {
+  padding: 14px 16px !important;
+  border: 1px solid var(--bx-border) !important;
+  border-top: 3px solid var(--brand) !important;
+  border-radius: 10px !important;
+  background: var(--bx-surface) !important;
+  box-shadow: var(--shadow-sm) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  gap: 6px !important;
+  transition: all 0.18s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="dark"] .finance-dashboard-card {
+  border-top-color: var(--gold) !important;
+}
+
+.finance-dashboard-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--gold) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.finance-dashboard-card h2 {
+  display: block !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: var(--bx-muted) !important;
+  margin: 0 !important;
+  line-height: 1.35 !important;
+}
+
+.finance-dashboard-card strong {
+  display: block !important;
+  font-family: var(--font-heading) !important;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  color: var(--brand) !important;
+  line-height: 1.25 !important;
+  word-break: break-word !important;
+  margin: 2px 0 !important;
+}
+
+[data-theme="dark"] .finance-dashboard-card strong {
+  color: #FFFFFF !important;
+}
+
+.finance-dashboard-card p {
+  display: block !important;
+  margin: 0 !important;
+  font-size: 0.72rem !important;
+  color: var(--bx-muted) !important;
+  line-height: 1.35 !important;
 }
 
 /* 5. Panels and Structural Sections */
 .panel,
 .academic-section,
+.finance-dashboard-section,
 .krs-program-form,
 .activity-panel {
   padding: 22px !important;
@@ -3849,6 +4468,7 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 
 .panel h2,
 .academic-section h2,
+.finance-dashboard-section h2,
 .krs-program-form h2,
 .activity-panel h2 {
   margin: 0 0 16px !important;
@@ -3862,6 +4482,7 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
 
 [data-theme="dark"] .panel h2,
 [data-theme="dark"] .academic-section h2,
+[data-theme="dark"] .finance-dashboard-section h2,
 [data-theme="dark"] .krs-program-form h2,
 [data-theme="dark"] .activity-panel h2 {
   color: #FFFFFF !important;
@@ -3879,6 +4500,223 @@ tr.title-proposal-status-2 > td { background: rgba(220, 38, 38, 0.08) !important
   background: var(--bx-surface) !important;
   box-shadow: var(--shadow-sm) !important;
   margin: 16px 0 !important;
+}
+
+/* DataTables Header & Footer Layouts inside Table Wrappers */
+.dt-container {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  color: var(--bx-ink) !important;
+  font: inherit !important;
+  font-size: 11px !important;
+}
+
+/* Table Header Toolbar / Controls (Search, Buttons, Length, Filters) */
+.dt-container > div.dt-layout-row:not(.dt-layout-table):first-child {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 12px 16px !important;
+  padding: 14px 18px !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--bx-border) !important;
+  background: var(--bx-surface) !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+.dt-container > div.dt-layout-row:not(.dt-layout-table):first-child .dt-layout-cell.dt-layout-start {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin-right: auto !important;
+}
+
+.dt-container > div.dt-layout-row:not(.dt-layout-table):first-child .dt-layout-cell.dt-layout-end {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin-left: auto !important;
+}
+
+.dt-container .dt-search,
+.dt-container .dt-length {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: var(--bx-muted) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+}
+
+.dt-container .dt-search input,
+.dt-container .dt-length select {
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  border: 1px solid var(--bx-border) !important;
+  border-radius: 6px !important;
+  background: var(--bx-surface) !important;
+  color: var(--bx-ink) !important;
+  font: inherit !important;
+  font-size: 11px !important;
+  outline: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.dt-container .dt-search input:focus,
+.dt-container .dt-length select:focus {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 2px var(--gold-soft) !important;
+}
+
+.dt-container .dt-search input {
+  width: min(280px, 45vw) !important;
+}
+
+.dt-buttons {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.dt-container .dt-button.dt-export-button {
+  display: inline-flex !important;
+  min-height: 36px !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 0 13px !important;
+  border: 1px solid var(--bx-border) !important;
+  border-radius: 6px !important;
+  background: var(--bx-surface) !important;
+  color: var(--brand) !important;
+  font: inherit !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.dt-container .dt-button.dt-export-button:hover {
+  border-color: var(--gold) !important;
+  color: var(--gold) !important;
+  background: var(--gold-soft) !important;
+}
+
+[data-theme="dark"] .dt-container .dt-button.dt-export-button {
+  color: var(--gold) !important;
+}
+
+/* Table Row beneath header (remains edge-to-edge) */
+.dt-container > div.dt-layout-row.dt-layout-table {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  overflow-x: auto !important;
+}
+
+.dt-container > div.dt-layout-row.dt-layout-table > div.dt-layout-cell {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.dt-container table.dataTable {
+  width: 100% !important;
+  margin: 0 !important;
+  border-collapse: collapse !important;
+}
+
+/* Table Footer Toolbar / Pagination & Info Controls */
+.dt-container > div.dt-layout-row:not(.dt-layout-table):not(:first-child):last-child,
+.dt-container > div.dt-layout-row:not(.dt-layout-table):last-child:not(:first-child) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 12px 16px !important;
+  padding: 12px 18px !important;
+  margin: 0 !important;
+  border-top: 1px solid var(--bx-border) !important;
+  background: var(--bx-surface) !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+.dt-container > div.dt-layout-row:not(.dt-layout-table):not(:first-child):last-child .dt-layout-cell.dt-layout-start {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-right: auto !important;
+}
+
+.dt-container > div.dt-layout-row:not(.dt-layout-table):not(:first-child):last-child .dt-layout-cell.dt-layout-end {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  margin-left: auto !important;
+}
+
+.dt-container .dt-info {
+  padding-top: 0 !important;
+  color: var(--bx-muted) !important;
+  font-size: 11px !important;
+}
+
+/* Toolbars directly associated with tables */
+.schedule-toolbar,
+.transcript-toolbar,
+.khs-toolbar,
+.transfer-toolbar,
+.transfer-course-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin: 14px 0 !important;
+}
+
+/* Standalone forms or info blocks inside .table-wrap */
+.table-wrap > form,
+form.table-wrap,
+section.table-wrap,
+details.table-wrap,
+.table-wrap[role="status"] {
+  padding: 16px 18px !important;
+  box-sizing: border-box !important;
+}
+
+/* Responsive adjustment for table controls */
+@media (max-width: 640px) {
+  .dt-container > div.dt-layout-row:not(.dt-layout-table):first-child {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+  }
+  .dt-container > div.dt-layout-row:not(.dt-layout-table):first-child .dt-layout-cell.dt-layout-start,
+  .dt-container > div.dt-layout-row:not(.dt-layout-table):first-child .dt-layout-cell.dt-layout-end {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    margin: 0 !important;
+  }
+  .dt-container .dt-search {
+    width: 100% !important;
+  }
+  .dt-container .dt-search input {
+    width: 100% !important;
+  }
 }
 
 table,
@@ -3957,6 +4795,323 @@ table tr:last-child td {
 
 [data-theme="dark"] .krs-offering-table tbody tr.krs-selected-row > td {
   background: var(--gold-soft) !important;
+}
+
+/* ==========================================================================
+   UNIVERSAL TABLE GRID ACTIONS & ICON POSITIONING (WCAG 2.1 AA)
+   - Zero Stacking / No "Numpuk": Action buttons aligned horizontally in 1 line
+   - Icon on the RIGHT of text in buttons
+   - Merged Materi & Mata Kuliah (Atas Bawah)
+   ========================================================================== */
+
+/* Universal: Icon positioned on the RIGHT of text in buttons across all modules */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border-width: 0 !important;
+}
+
+.button,
+.btn,
+.portal-btn,
+.lms-button,
+a.button,
+button.button,
+.table-button,
+.dt-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+/* When icon is first child and followed by text/elements, place icon on the right */
+.button:has(> [data-lucide]:first-child:not(:last-child)),
+.button:has(> svg:first-child:not(:last-child)),
+.btn:has(> [data-lucide]:first-child:not(:last-child)),
+.btn:has(> svg:first-child:not(:last-child)),
+.portal-btn:has(> [data-lucide]:first-child:not(:last-child)),
+.portal-btn:has(> svg:first-child:not(:last-child)),
+a.button:has(> [data-lucide]:first-child:not(:last-child)),
+a.button:has(> svg:first-child:not(:last-child)) {
+  flex-direction: row-reverse !important;
+}
+
+.button > [data-lucide],
+.button > svg,
+.btn > [data-lucide],
+.btn > svg,
+.portal-btn > [data-lucide],
+.portal-btn > svg {
+  order: 2 !important;
+  flex-shrink: 0 !important;
+}
+
+.button > span:not([data-lucide]),
+.btn > span:not([data-lucide]),
+.portal-btn > span:not([data-lucide]) {
+  order: 1 !important;
+}
+
+/* Table Action Cells & Column Alignment (No Stacking / Zero "Numpuk") */
+table th:last-child,
+table th.text-right,
+table td.text-right,
+table td.table-actions-cell,
+table td.grade-action-cell {
+  text-align: right !important;
+  white-space: nowrap !important;
+}
+
+table th:last-child {
+  width: auto !important;
+  min-width: 90px !important;
+}
+
+table tbody td:last-child {
+  white-space: nowrap !important;
+}
+
+.table-actions,
+.table-action-group,
+td.table-actions-cell > .table-actions,
+td:last-child > .table-actions {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+}
+
+/* Prevent forms inside table cells from breaking to new lines */
+table tbody td form,
+td .table-actions form,
+.table-actions form,
+table tbody td form:has(.table-icon-button),
+table tbody td form:has(button) {
+  display: inline-flex !important;
+  vertical-align: middle !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Universal Table Icon Button (AUI Enterprise Standard) */
+.table-icon-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  padding: 0 !important;
+  margin: 0 1px !important;
+  border: 1px solid var(--bx-border) !important;
+  border-radius: 6px !important;
+  background: var(--bx-surface) !important;
+  color: var(--brand) !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 2px rgba(10, 46, 82, 0.04) !important;
+  transition: all 0.15s ease !important;
+  vertical-align: middle !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+
+.table-icon-button:hover {
+  border-color: var(--gold) !important;
+  color: var(--gold-2) !important;
+  background: var(--gold-soft) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 5px rgba(201, 150, 46, 0.18) !important;
+}
+
+.table-icon-button svg,
+.table-icon-button [data-lucide] {
+  width: 15px !important;
+  height: 15px !important;
+  stroke-width: 2 !important;
+  color: inherit !important;
+}
+
+.table-icon-button.reset,
+.table-icon-button.danger,
+.table-icon-button[data-dialog-danger] {
+  color: var(--danger) !important;
+  border-color: var(--bx-border) !important;
+}
+
+.table-icon-button.reset:hover,
+.table-icon-button.danger:hover {
+  border-color: #fca5a5 !important;
+  background: rgba(220, 38, 38, 0.08) !important;
+  color: #b91c1c !important;
+  box-shadow: 0 2px 5px rgba(220, 38, 38, 0.15) !important;
+}
+
+.table-icon-button.activate,
+.table-icon-button.success {
+  color: var(--success) !important;
+  border-color: var(--bx-border) !important;
+}
+
+.table-icon-button.activate:hover,
+.table-icon-button.success:hover {
+  border-color: #86efac !important;
+  background: rgba(22, 163, 74, 0.08) !important;
+  color: #15803d !important;
+  box-shadow: 0 2px 5px rgba(22, 163, 74, 0.15) !important;
+}
+
+.table-icon-button.is-disabled,
+.table-icon-button:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+  border-color: var(--bx-border) !important;
+  background: var(--bx-bg-alt) !important;
+  color: var(--bx-muted) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+[data-theme="dark"] .table-icon-button {
+  background: var(--bx-surface-card) !important;
+  border-color: var(--bx-border) !important;
+  color: var(--gold) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .table-icon-button:hover {
+  border-color: var(--gold) !important;
+  color: #ffffff !important;
+  background: rgba(245, 200, 66, 0.18) !important;
+}
+
+[data-theme="dark"] .table-icon-button.reset,
+[data-theme="dark"] .table-icon-button.danger {
+  color: #f87171 !important;
+}
+
+[data-theme="dark"] .table-icon-button.reset:hover,
+[data-theme="dark"] .table-icon-button.danger:hover {
+  background: rgba(220, 38, 38, 0.22) !important;
+  border-color: #f87171 !important;
+  color: #fca5a5 !important;
+}
+
+[data-theme="dark"] .table-icon-button.activate,
+[data-theme="dark"] .table-icon-button.success {
+  color: #4ade80 !important;
+}
+
+[data-theme="dark"] .table-icon-button.activate:hover,
+[data-theme="dark"] .table-icon-button.success:hover {
+  background: rgba(74, 222, 128, 0.18) !important;
+  border-color: #4ade80 !important;
+  color: #86efac !important;
+}
+
+[data-theme="dark"] .table-icon-button.is-disabled,
+[data-theme="dark"] .table-icon-button:disabled {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: var(--bx-border) !important;
+  color: var(--bx-muted) !important;
+}
+
+/* Merged Cell for Materi & Mata Kuliah (Atas Bawah) */
+.lms-merged-cell {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  min-width: 220px !important;
+  max-width: 440px !important;
+  text-align: left !important;
+}
+
+.lms-merged-title-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.lms-merged-title {
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  color: var(--bx-ink) !important;
+  line-height: 1.35 !important;
+  word-break: break-word !important;
+}
+
+.lms-merged-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+  color: var(--gold-2) !important;
+}
+
+[data-theme="dark"] .lms-merged-icon {
+  color: var(--gold) !important;
+}
+
+.lms-merged-icon svg,
+.lms-merged-icon [data-lucide] {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.lms-merged-course-row {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+.lms-course-code-badge {
+  display: inline-block !important;
+  padding: 1px 6px !important;
+  border-radius: 4px !important;
+  background: var(--brand-soft) !important;
+  color: var(--brand) !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  font-family: var(--font-mono) !important;
+  letter-spacing: 0.02em !important;
+  border: 1px solid rgba(10, 46, 82, 0.12) !important;
+}
+
+[data-theme="dark"] .lms-course-code-badge {
+  background: rgba(37, 99, 235, 0.22) !important;
+  color: #93c5fd !important;
+  border-color: rgba(147, 197, 253, 0.2) !important;
+}
+
+.lms-course-name {
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: var(--bx-muted) !important;
+  line-height: 1.3 !important;
+}
+
+.lms-merged-file-meta {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 0.72rem !important;
+  color: var(--bx-muted) !important;
 }
 
 /* 7. Status Badges, Chips & Progress Indicators */
@@ -5356,6 +6511,109 @@ dialog.lms-confirm-dialog h2 {
     grid-template-columns: 1fr !important;
     gap: 12px !important;
   }
+}
+
+.system-settings-form-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 18px 24px !important;
+  margin: 16px 0 !important;
+}
+
+@media (max-width: 768px) {
+  .system-settings-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+.system-settings-readonly-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 40px !important;
+  padding: 0 14px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--bx-border) !important;
+  background: var(--bx-bg-alt) !important;
+  color: var(--bx-ink) !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  box-sizing: border-box !important;
+}
+
+.system-settings-upload-card {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  padding: 14px 16px !important;
+  border: 1px solid var(--bx-border) !important;
+  border-radius: 10px !important;
+  background: var(--bx-bg-alt) !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.15s ease !important;
+}
+
+.system-settings-upload-card:hover {
+  border-color: var(--gold) !important;
+}
+
+.system-settings-upload-label {
+  color: var(--brand) !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
+  margin: 0 !important;
+}
+
+[data-theme="dark"] .system-settings-upload-label {
+  color: var(--gold) !important;
+}
+
+.system-settings-upload-layout {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+}
+
+.system-settings-icon-left {
+  width: 74px !important;
+  height: 74px !important;
+  min-width: 74px !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--bx-border) !important;
+  background: var(--bx-surface) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.system-settings-icon-left .system-settings-preview {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+.system-settings-upload-controls {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+.system-settings-form-actions {
+  margin-top: 20px !important;
+  display: flex !important;
+  justify-content: flex-start !important;
 }
 
 .system-settings-field {

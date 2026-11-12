@@ -16,9 +16,18 @@
     </div>
 
     <form class="midtrans-history-filters" method="GET" action="{{ route('finance.midtrans-transactions.index') }}">
-        <label>Tanggal mulai<input type="date" name="tanggal_mulai" value="{{ $filters['tanggal_mulai'] }}" required></label>
-        <label>Tanggal akhir<input type="date" name="tanggal_akhir" value="{{ $filters['tanggal_akhir'] }}" required></label>
-        <label>Cari transaksi<input type="search" name="cari" value="{{ $filters['cari'] }}" maxlength="100" placeholder="NPM, pembayar, deskripsi, order ID, atau ID transaksi"></label>
+        <div>
+            <label for="midtrans-start">Tanggal mulai</label>
+            <input id="midtrans-start" type="date" name="tanggal_mulai" value="{{ $filters['tanggal_mulai'] }}" required>
+        </div>
+        <div>
+            <label for="midtrans-end">Tanggal akhir</label>
+            <input id="midtrans-end" type="date" name="tanggal_akhir" value="{{ $filters['tanggal_akhir'] }}" required>
+        </div>
+        <div>
+            <label for="midtrans-search">Cari transaksi</label>
+            <input id="midtrans-search" type="search" name="cari" value="{{ $filters['cari'] }}" maxlength="100" placeholder="NPM, pembayar, deskripsi, order ID, atau ID transaksi">
+        </div>
         <button class="button button-primary" type="submit">Tampilkan</button>
     </form>
 

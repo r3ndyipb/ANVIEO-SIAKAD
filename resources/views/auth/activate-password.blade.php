@@ -27,7 +27,7 @@
 </head>
 <body>
     <main>
-        <img src="{{ $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}">
+        <img src="{{ $siteConfiguration['preloader_logo_url'] ?? $siteConfiguration['logo_url'] }}" alt="Logo {{ $siteConfiguration['institution_name'] }}" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';">
         <h1>Aktifkan password</h1>
         <p>Setelah aktivasi, masuk menggunakan password sementara yang dikirim ke email akun Anda. Tautan ini hanya dapat digunakan satu kali.</p>
         <form method="POST" action="{{ request()->fullUrl() }}">
