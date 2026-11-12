@@ -70,11 +70,88 @@
                                     <table class="portal-table">
                                         <thead><tr><th>Kode</th><th>Mata Kuliah</th><th>SKS</th><th>Dosen Pengampu</th></tr></thead>
                                         <tbody>@foreach ($personalActivity['courses'] as $course)
-                                            <tr><td><code>{{ $course->kode_mata_kuliah }}</code></td><td><strong>{{ $course->nama_mata_kuliah }}</strong></td><td>{{ (int) $course->sks_mata_kuliah }}</td><td>{{ $course->nama_dosen ?: '—' }}</td></tr>
+                                            <tr><td><code>{{ $course->kode_mata_kuliah ?? '-' }}</code></td><td><strong>{{ $course->nama_mata_kuliah }}</strong></td><td>{{ (int) $course->sks_mata_kuliah }}</td><td>{{ $course->nama_dosen ?? '—' }}</td></tr>
                                         @endforeach</tbody>
                                     </table>
                                 </div>
                             @endif
+                            <div style="display: flex; gap: 8px; margin-top: 15px;">
+                                <a class="portal-btn" href="{{ route('krs.index') }}">Buka KRS</a>
+                                <a class="portal-btn" href="{{ route('transcripts.index') }}">Lihat Transkrip</a>
+                            </div>
+                        </section>
+
+                        <section class="portal-panel" style="margin-top: 18px;">
+                            <h2>Riwayat Indeks Prestasi</h2>
+                            @if ($personalActivity['history']->isEmpty())
+                                <div class="dashboard-empty">Riwayat AKM belum tersedia.</div>
+                            @else
+                                <div class="dashboard-visual-legend" aria-label="Legenda grafik indeks prestasi">
+                                    <span><i></i>IPS</span><span><i class="is-green"></i>IPK</span>
+                                </div>
+                                <div class="dashboard-visual-list" role="img" aria-label="Grafik riwayat IPS dan IPK maksimal 4">
+                                    @foreach ($personalActivity['history'] as $record)
+                                        @php
+                                            $termLabel = $record->namatahun ?: $record->calendar_year ?: $record->tahun;
+                                        @endphp
+                                        <div class="dashboard-visual-row">
+                                            <span class="dashboard-visual-label">{{ $termLabel }}</span>
+                                            <span class="dashboard-visual-track" data-tooltip="IPS {{ $record->ips }} · {{ $record->namatahun ?: $record->calendar_year }}"><i class="dashboard-visual-bar" style="width: {{ min(100, max(0, (float) $record->ips / 4 * 100)) }}%"></i></span>
+                                            <strong class="dashboard-visual-value">{{ $record->ips ?: '-' }} / {{ $record->ipk ?: '-' }}</strong>
+                                        </div>
+                                        <div class="dashboard-visual-row">
+                                            <span class="dashboard-visual-label">{{ $termLabel }} · IPK</span>
+                                            <span class="dashboard-visual-track" data-tooltip="IPK {{ $record->ipk }} · {{ $record->namatahun ?: $record->calendar_year }}"><i class="dashboard-visual-bar is-green" style="width: {{ min(100, max(0, (float) $record->ipk / 4 * 100)) }}%"></i></span>
+                                            <strong class="dashboard-visual-value">{{ $record->ipk ?: '-' }}</strong>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="portal-table-wrap">
+                                    <table class="portal-table">
+                                        <thead><tr><th>Semester</th><th>IPS</th><th>IPK</th><th>SKS Semester</th><th>SKS Lulus</th></tr></thead>
+                                        <tbody>@foreach ($personalActivity['history'] as $record)
+                                            <tr><td>{{ $record->namatahun ?: $record->calendar_year ?: $record->tahun }}</td><td>{{ $record->ips ?: '-' }}</td><td>{{ $record->ipk ?: '-' }}</td><td>{{ $record->sks_semester ?: '-' }}</td><td>{{ $record->sks_lulus ?: '-' }}</td></tr>
+                                        @endforeach</tbody>
+                                    </table>
+                                </div>
+                            @endif
+                        </section>
+                    @else
+                        <section class="portal-panel" style="margin-top: 18px;">
+                            <h2>Jadwal Mengajar Kalender Aktif</h2>
+                            @if ($personalActivity['schedules']->isEmpty())
+                                <div class="dashboard-empty">Belum ada jadwal mengajar yang ditugaskan pada kalender aktif.</div>
+                            @else
+                                @php
+                                    $maxPlannedSessions = max(1, (int) $personalActivity['schedules']->max(fn ($schedule): int => (int) $schedule->rencana));
+                                @endphp
+                                <div class="dashboard-visual-legend" aria-label="Legenda grafik aktivitas mengajar">
+                                    <span><i></i>Rencana</span><span><i class="is-green"></i>Realisasi</span>
+                                </div>
+                                <div class="dashboard-visual-list" role="img" aria-label="Grafik perbandingan rencana dan realisasi tatap muka dosen">
+                                    @foreach ($personalActivity['schedules'] as $schedule)
+                                        @php
+                                            $courseLabel = $schedule->nama_mata_kuliah.' · '.$schedule->nama_kelas;
+                                        @endphp
+                                        <div class="dashboard-visual-row">
+                                            <span class="dashboard-visual-label">{{ $courseLabel }}</span>
+                                            <span class="dashboard-visual-track" data-tooltip="Tatap muka direncanakan · {{ $schedule->nama_mata_kuliah }} · {{ (int) $schedule->rencana }}"><i class="dashboard-visual-bar" style="width: {{ (int) $schedule->rencana / $maxPlannedSessions * 100 }}%"></i></span>
+                                            <strong class="dashboard-visual-value">{{ (int) $schedule->realisasi }} / {{ (int) $schedule->rencana }}</strong>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="portal-table-wrap">
+                                    <table class="portal-table">
+                                        <thead><tr><th>Semester</th><th>Program Studi</th><th>Mata Kuliah</th><th>Kelas</th><th>Rencana</th><th>Realisasi</th></tr></thead>
+                                        <tbody>@foreach ($personalActivity['schedules'] as $schedule)
+                                            <tr><td>{{ $schedule->namatahun ?: $schedule->tahun }}</td><td>{{ $schedule->nama_program_studi }}</td><td>{{ $schedule->nama_mata_kuliah }}</td><td>{{ $schedule->nama_kelas }}</td><td>{{ $schedule->rencana ?: 0 }}</td><td>{{ $schedule->realisasi ?: 0 }}</td></tr>
+                                        @endforeach</tbody>
+                                    </table>
+                                </div>
+                            @endif
+                            <div style="display: flex; gap: 8px; margin-top: 15px;">
+                                <a class="portal-btn" href="{{ route('class-schedules.index') }}">Lihat Jadwal Kuliah</a>
+                            </div>
                         </section>
                     @endif
                 @endif

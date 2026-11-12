@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
+require_once __DIR__.'/UserSeeder.php';
 require_once __DIR__.'/AcademicSeeder.php';
 require_once __DIR__.'/LegalPagesSeeder.php';
 
@@ -15,6 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            UserSeeder::class,
             AcademicSeeder::class,
             LegalPagesSeeder::class,
         ]);

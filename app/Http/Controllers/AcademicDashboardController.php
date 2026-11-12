@@ -468,7 +468,7 @@ class AcademicDashboardController extends Controller
 
         return DB::connection('simak_main')->table('s1m4k_akm')
             ->whereIn('id_kalender', $calendarIds)
-            ->selectRaw("id_prodi, AVG(NULLIF(ips, '')) as average_ips, AVG(NULLIF(ipk, '')) as average_ipk")
+            ->selectRaw("id_prodi, AVG(CAST(NULLIF(TRIM(REPLACE(ips, ',', '.')), '') AS DECIMAL(10, 4))) as average_ips, AVG(CAST(NULLIF(TRIM(REPLACE(ipk, ',', '.')), '') AS DECIMAL(10, 4))) as average_ipk")
             ->groupBy('id_prodi')->get()
             ->mapWithKeys(fn (object $row): array => [(string) $row->id_prodi => [
                 'ips' => $row->average_ips !== null ? (float) $row->average_ips : null,
@@ -560,7 +560,7 @@ class AcademicDashboardController extends Controller
                     (string) min($years),
                     (string) max($years),
                 ])
-                ->selectRaw("calendar.id_prodi, SUBSTR(calendar.tahun, 1, 4) as academic_year, AVG(NULLIF(akm.ips, '')) as average_ips, AVG(NULLIF(akm.ipk, '')) as average_ipk")
+                ->selectRaw("calendar.id_prodi, SUBSTR(calendar.tahun, 1, 4) as academic_year, AVG(CAST(NULLIF(TRIM(REPLACE(akm.ips, ',', '.')), '') AS DECIMAL(10, 4))) as average_ips, AVG(CAST(NULLIF(TRIM(REPLACE(akm.ipk, ',', '.')), '') AS DECIMAL(10, 4))) as average_ipk")
                 ->groupBy('calendar.id_prodi', 'academic_year')->get()
                 ->keyBy(fn (object $row): string => $row->id_prodi.'|'.$row->academic_year)
                 ->all();

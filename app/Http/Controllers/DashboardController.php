@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Support\DashboardStudentStatus;
 use App\Support\DashboardTeachingStaffCounts;
+use App\Support\LecturerName;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -214,15 +216,40 @@ class DashboardController extends Controller
                 'calendar.namatahun', 'calendar.tahun as calendar_year',
             ]);
         $latest = $history->first();
-        $courses = $calendar === null ? collect() : $connection->table('s1m4k_krs as krs')
-            ->join('s1m4k_mastermk as course', 'krs.id_matkul', '=', 'course.id_matkul')
+
+        $hasScheduleId = Schema::connection('simak_main')->hasColumn('s1m4k_krs', 'id_jadwal');
+        $hasLecturer = Schema::connection('simak_main')->hasTable('s1m4k_masterdosen')
+            && Schema::connection('simak_main')->hasColumn('s1m4k_masterdosen', 'nama_dosen');
+
+        $coursesQuery = $connection->table('s1m4k_krs as krs')
+            ->join('s1m4k_mastermk as course', 'krs.id_matkul', '=', 'course.id_matkul');
+
+        $selects = [
+            'course.kode_mata_kuliah', 'course.nama_mata_kuliah',
+            'course.sks_mata_kuliah', 'krs.nilai_huruf',
+        ];
+
+        if ($hasScheduleId && $hasLecturer) {
+            $coursesQuery->leftJoin('s1m4k_jadwal as schedule', 'krs.id_jadwal', '=', 'schedule.id_jadwal')
+                ->leftJoin('s1m4k_masterdosen as lecturer', 'schedule.dosen1', '=', 'lecturer.id_dosen');
+            $selects[] = 'lecturer.nama_dosen';
+            $selects[] = 'lecturer.gelar_depan';
+            $selects[] = 'lecturer.gelar_belakang';
+        }
+
+        $courses = $calendar === null ? collect() : $coursesQuery
             ->where('krs.id_mahasiswa', $student->id_mahasiswa)
             ->where('krs.id_kalender', $calendar->id_kalender)
             ->orderBy('course.nama_mata_kuliah')
-            ->get([
-                'course.kode_mata_kuliah', 'course.nama_mata_kuliah',
-                'course.sks_mata_kuliah', 'krs.nilai_huruf',
-            ]);
+            ->get($selects);
+
+        $courses->transform(function (object $course) use ($hasScheduleId, $hasLecturer): object {
+            $course->nama_dosen = ($hasScheduleId && $hasLecturer)
+                ? LecturerName::format($course->nama_dosen ?? null, $course->gelar_depan ?? null, $course->gelar_belakang ?? null)
+                : null;
+
+            return $course;
+        });
 
         return [
             'type' => 'student',
