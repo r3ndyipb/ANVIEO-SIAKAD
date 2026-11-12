@@ -3,33 +3,6 @@
 @section('title', 'Pengaturan Sistem | '.$siteConfiguration['app_name'])
 @section('topbar_title', 'Pengaturan Sistem')
 
-@push('styles')
-    <style>
-        .system-settings-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); gap:18px; }
-        .system-settings-grid > *, .system-settings-card { min-width:0; }
-        .system-settings-card { padding:20px; border:1px solid #e1e8df; border-radius:9px; background:#fff; }
-        .system-settings-card h2 { margin:0 0 7px; color:var(--brand-primary); font-size:17px; }
-        .system-settings-card > p { margin:0 0 16px; color:#69766a; font-size:11px; line-height:1.6; }
-        .system-settings-field { display:grid; gap:6px; margin:12px 0; }
-        .system-settings-field label { color:#405c45; font-size:11px; font-weight:700; }
-        .system-settings-field input, .system-settings-field select, .system-settings-field textarea { width:100%; min-height:38px; padding:8px 10px; border:1px solid #d5dfd3; border-radius:5px; background:#fff; color:#26392d; font:inherit; font-size:12px; }
-        .system-settings-field input[type="color"] { width:78px; min-height:44px; padding:4px; cursor:pointer; }
-        .system-settings-field textarea { min-height:76px; resize:vertical; }
-        .system-settings-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-        .system-settings-check { display:flex; align-items:center; gap:8px; margin:12px 0; color:#405c45; font-size:11px; font-weight:700; }
-        .system-settings-check input { width:16px; height:16px; }
-        .system-settings-help { display:block; color:#778276; font-size:10px; line-height:1.5; }
-        .system-settings-card code { display:block; max-width:100%; padding:8px 10px; overflow-wrap:anywhere; word-break:break-word; white-space:normal; background:#f7f9f5; border-radius:5px; font-size:11px; }
-        .system-settings-preview { display:block; width:100%; max-height:130px; margin:8px 0; border:1px solid #e5e9e3; border-radius:6px; object-fit:contain; background:#f6f8f5; }
-        .system-settings-slots { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin:0 0 20px; }
-        .system-settings-slot { padding:12px; border:1px solid #e5e9e3; border-radius:7px; }
-        .system-settings-slot h3 { margin:0; color:#405c45; font-size:12px; }
-        .system-settings-actions { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
-        .system-settings-actions .button { min-height:36px; }
-        @media (max-width:560px) { .system-settings-row { grid-template-columns:1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div><p class="eyebrow">Identitas & Integrasi</p><h1>Pengaturan Sistem</h1></div>

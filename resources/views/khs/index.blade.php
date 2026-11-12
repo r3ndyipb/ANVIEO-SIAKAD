@@ -3,28 +3,6 @@
 @section('title', 'Kartu Hasil Studi | SIAKAD')
 @section('topbar_title', 'Kartu Hasil Studi')
 
-@push('styles')
-    <style>
-        .khs-filters { display: grid; grid-template-columns: minmax(220px, 520px) max-content; align-items: end; gap: 12px; margin: 16px 0 20px; padding: 15px; border: 1px solid #e3e9e2; border-radius: 7px; background: #fbfdfb; }
-        .khs-filters > button { width: auto; white-space: nowrap; }
-        .khs-filters label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .khs-profile { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 18px 0; padding: 15px; border: 1px solid #e3e9e2; border-radius: 7px; background: #fbfdfb; }
-        .khs-profile strong { display: block; margin-bottom: 4px; color: #526546; font-size: 10px; text-transform: uppercase; }
-        .khs-profile span { color: #243b2a; font-weight: 700; }
-        .khs-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 16px 0; }
-        .khs-survey { min-width: 210px; }
-        .khs-survey summary { color: #356b45; cursor: pointer; font-weight: 700; }
-        .khs-survey-form { margin-top: 12px; padding: 12px; border: 1px solid #dce5d8; border-radius: 6px; background: #fbfdfb; }
-        .khs-question { padding: 10px 0; border-bottom: 1px solid #e5e9e2; }
-        .khs-options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 7px; }
-        .khs-options label { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; }
-        .khs-options input { width: 15px; height: 15px; }
-        .khs-grade-hidden { color: #7b8076; font-style: italic; }
-        .khs-results-pagination { margin-top: 14px; }
-        @media (max-width: 820px) { .khs-filters { grid-template-columns: 1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

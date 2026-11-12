@@ -79,33 +79,4 @@
     @endif
 @endsection
 
-@push('styles')
-<style>
-    .graduation-review-identity, .graduation-review-section, .graduation-review-decision { margin: 16px 0; padding: 18px; border: 1px solid #dce5e0; border-radius: 6px; background: #fff; }
-    .graduation-review-identity dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 22px; margin: 0; }
-    .graduation-review-identity dl > div { padding: 9px 0; border-bottom: 1px solid #edf1ee; }
-    .graduation-review-identity dt { color: #67766e; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-    .graduation-review-identity dd { margin: 4px 0 0; color: #273e33; font-size: 12px; overflow-wrap: anywhere; }
-    .graduation-review-section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .graduation-review-section h2, .graduation-review-decision h2 { margin: 0 0 12px; color: #244a3d; font-size: 16px; }
-    .graduation-validation-status { display: inline-flex; padding: 4px 8px; border-radius: 4px; background: #fff4d7; color: #725400; font-size: 11px; font-weight: 700; white-space: nowrap; }
-    .graduation-validation-status.is-pass { background: #e5f2e8; color: #27613a; }
-    .graduation-validation-status.is-fail { background: #fce9e6; color: #963f32; }
-    .graduation-validation-status.is-pending { background: #fff4d7; color: #725400; }
-    .graduation-review-decision form { display: grid; justify-items: start; gap: 14px; }
-    .graduation-review-decision fieldset { display: flex; flex-wrap: wrap; gap: 18px; padding: 0; border: 0; }
-    .graduation-review-decision legend { margin-bottom: 8px; color: #52645b; font-size: 11px; font-weight: 800; }
-    .graduation-review-decision fieldset label { display: inline-flex; align-items: center; gap: 7px; color: #334b3f; font-size: 12px; }
-    .graduation-review-decision input[type="radio"] { appearance: auto; width: 13px; height: 13px; flex: 0 0 13px; margin: 0; padding: 0; accent-color: #26724b; }
-    .graduation-review-comment { display: grid; width: min(100%, 720px); gap: 6px; color: #52645b; font-size: 11px; font-weight: 700; }
-    .graduation-review-comment textarea { width: 100%; padding: 10px; border: 1px solid #cbd8d1; border-radius: 5px; }
-    .graduation-review-muted { color: #718078; font-size: 11px; }
-    .graduation-document-dialog { position: fixed; inset: 0; width: min(980px, calc(100vw - 32px)); max-width: none; height: min(86dvh, 800px); max-height: none; margin: auto; flex-direction: column; gap: 12px; padding: 16px; overflow: hidden; border: 1px solid #d5e2ee; border-radius: 8px; background: #fff; box-shadow: 0 24px 80px rgba(16, 41, 25, .28); }
-    .graduation-document-dialog[open] { display: flex; }
-    .graduation-document-dialog::backdrop { background: rgba(20, 43, 29, .62); backdrop-filter: blur(3px); }
-    .graduation-document-dialog-head { display: flex; min-height: 38px; align-items: center; justify-content: space-between; gap: 14px; }
-    .graduation-document-dialog-head h2 { margin: 0; font-size: 16px; }
-    .graduation-document-dialog iframe { width: 100%; min-height: 0; flex: 1; border: 1px solid #dce5e0; border-radius: 4px; background: #f4f6f5; }
-    @media (max-width: 640px) { .graduation-review-identity dl { grid-template-columns: 1fr; } .graduation-review-decision fieldset { display: grid; } }
-</style>
-@endpush
+

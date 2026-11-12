@@ -3,19 +3,6 @@
 @section('title', 'Pengguna SIAKAD | SIAKAD')
 @section('topbar_title', 'Pengguna SIAKAD')
 
-@push('styles')
-    <style>
-        .simak-user-types { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 18px; }
-        .simak-user-types a { padding: 8px 11px; border: 1px solid #dfe7dc; border-radius: 5px; color: #52634b; text-decoration: none; font-size: 11px; font-weight: 700; }
-        .simak-user-types a[aria-current="page"] { border-color: #36784a; background: #eaf3e9; color: #285f39; }
-        .simak-user-table { min-width: 760px; }
-        .simak-user-status { white-space: nowrap; }
-        .simak-user-modal[hidden] { display: none; }
-        .simak-user-modal-error { margin: 0 0 14px; padding: 11px 13px; border: 1px solid #f0d0c7; border-radius: 6px; background: #fff5f2; color: #8c3c2c; font-size: 11px; }
-        .simak-user-modal-error[hidden] { display: none; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

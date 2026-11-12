@@ -3,19 +3,6 @@
 @section('title', 'Aktivitas Mengajar | SIAKAD')
 @section('topbar_title', 'Aktivitas Mengajar')
 
-@push('styles')
-    <style>
-        .teaching-filter { display: grid; grid-template-columns: minmax(240px, 520px) auto; align-items: end; gap: 10px; margin: 16px 0 20px; }
-        .teaching-filter label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .teaching-table { width: 100%; }
-        .teaching-table td { vertical-align: middle; }
-        .teaching-count-form { display: flex; align-items: center; gap: 6px; min-width: 130px; margin: 0; }
-        .teaching-count-form select { min-width: 90px; }
-        .teaching-teacher-row td { background: #fbfdfb; }
-        @media (max-width: 640px) { .teaching-filter { grid-template-columns: 1fr; } .teaching-count-form { min-width: 0; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

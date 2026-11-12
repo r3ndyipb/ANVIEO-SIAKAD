@@ -31,15 +31,4 @@
     @endif
 @endsection
 
-@push('styles')
-<style>
-    .kkn-form-actions { display: flex; justify-content: flex-end; margin: 14px 0; }
-    .kkn-search-form { display: grid; grid-template-columns: max-content minmax(220px, 1fr) max-content; align-items: center; gap: 10px; margin: 14px 0; }
-    .kkn-search-form label { color: #52645b; font-size: 11px; font-weight: 700; }
-    .kkn-search-form input { min-height: 38px; padding: 7px 10px; border: 1px solid #cbd8d1; border-radius: 5px; }
-    .kkn-student-checkbox { width: 14px !important; min-width: 14px; height: 14px !important; min-height: 14px !important; margin: 0; padding: 0 !important; accent-color: #2776b5; }
-    .kkn-pagination { margin-top: 14px; }
-    .kkn-empty-state { display: grid; gap: 5px; margin-top: 16px; padding: 24px; border: 1px dashed #cbd8d1; border-radius: 6px; color: #69786f; text-align: center; }
-    @media (max-width: 640px) { .kkn-search-form { grid-template-columns: 1fr; } .kkn-search-form button { width: 100%; } }
-</style>
-@endpush
+

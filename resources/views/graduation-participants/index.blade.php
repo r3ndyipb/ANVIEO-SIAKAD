@@ -63,31 +63,4 @@
     @endif
 @endsection
 
-@push('styles')
-<style>
-    .kkn-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 16px 0; padding: 14px; border: 1px solid #dce5e0; border-radius: 6px; background: #fff; }
-    .kkn-filter label { color: #52645b; font-size: 11px; font-weight: 700; }
-    .kkn-filter .ts-wrapper { flex: 1 1 260px; max-width: 420px; }
-    .kkn-filter select { min-width: min(100%, 320px); min-height: 38px; padding: 7px 9px; border: 1px solid #cbd8d1; border-radius: 5px; background: #fff; }
-    .kkn-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 14px 0; }
-    .kkn-dialog { position: fixed; inset: 0; width: min(1080px, calc(100vw - 28px)); max-width: none; max-height: min(90dvh, 820px); margin: auto; overflow-y: auto; padding: 20px; border: 1px solid #dce5e0; border-radius: 8px; background: #fff; box-shadow: 0 24px 70px rgba(15, 35, 28, .25); }
-    .kkn-dialog::backdrop { background: rgba(18, 38, 31, .5); backdrop-filter: blur(2px); }
-    .kkn-dialog[open] { display: block; }
-    .kkn-dialog-head, .kkn-dialog-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .kkn-dialog-head { margin-bottom: 12px; }
-    .kkn-dialog-head h2 { margin: 4px 0 0; color: #244a3d; font-size: 17px; }
-    .kkn-dialog-actions { justify-content: flex-end; margin-top: 14px; }
-    .kkn-search-form { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin: 14px 0; }
-    .kkn-search-form label { color: #52645b; font-size: 11px; font-weight: 700; }
-    .kkn-search-form input { min-height: 38px; flex: 1 1 240px; padding: 7px 10px; border: 1px solid #cbd8d1; border-radius: 5px; }
-    .kkn-form-actions { display: flex; justify-content: flex-end; margin: 14px 0; }
-    .kkn-muted { color: #718078; font-size: 11px; }
-    .kkn-status { display: inline-flex; padding: 4px 8px; border-radius: 4px; background: #fff4d7; color: #725400; font-size: 11px; font-weight: 700; white-space: nowrap; }
-    .kkn-status.is-active { background: #e5f2e8; color: #27613a; }
-    .kkn-empty, .kkn-empty-state { padding: 24px; color: #69786f; text-align: center; }
-    .kkn-empty-state { display: grid; gap: 5px; margin-top: 16px; border: 1px dashed #cbd8d1; border-radius: 6px; }
-    .kkn-pagination { margin-top: 14px; }
-    .kkn-student-checkbox { width: 14px !important; min-width: 14px; height: 14px !important; min-height: 14px !important; margin: 0; padding: 0 !important; accent-color: #2776b5; }
-    @media (max-width: 640px) { .kkn-filter { align-items: stretch; } .kkn-filter .ts-wrapper, .kkn-filter button { width: 100%; max-width: none; } .kkn-search-form > * { width: 100%; } .kkn-dialog { padding: 14px; } }
-</style>
-@endpush
+

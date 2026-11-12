@@ -3,16 +3,6 @@
 @section('title', 'Detail Verifikasi Judul | SIAKAD')
 @section('topbar_title', 'Detail Verifikasi Judul')
 
-@push('styles')
-    <style>
-        .thesis-title-alert { margin: 12px 0; padding: 12px 15px; border: 1px solid #e8c9bf; border-left: 4px solid #aa5038; border-radius: 6px; background: #fff8f5; color: #713b2c; }
-        .thesis-title-alert ul { margin: 0; padding-left: 20px; }
-        .thesis-title-form textarea { width: 100%; min-height: 130px; padding: 12px; border: 1px solid #c8cc9d; border-radius: 5px; background: #fffef6; color: #293c2c; font: inherit; font-size: 12px; resize: vertical; }
-        .thesis-title-proposal-copy { white-space: pre-wrap; overflow-wrap: anywhere; }
-        .thesis-title-form [data-title-assignment-fields][hidden] { display: none !important; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

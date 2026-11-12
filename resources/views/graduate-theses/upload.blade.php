@@ -3,20 +3,6 @@
 @section('title', 'Upload Data Tesis & Disertasi | SIAKAD')
 @section('topbar_title', 'Upload Data Tesis & Disertasi')
 
-@push('styles')
-    <style>
-        .thesis-upload-dropzone { position: relative; display: grid; min-height: 220px; align-content: center; justify-items: center; gap: 10px; padding: 24px; border: 2px dashed #b8cdb6; border-radius: 14px; background: #f7fbf6; color: #526b56; cursor: pointer; text-align: center; transition: border-color .18s ease, background .18s ease, transform .18s ease; }
-        .thesis-upload-dropzone:hover, .thesis-upload-dropzone.is-dragover { transform: translateY(-1px); border-color: #438052; background: #edf6eb; }
-        .thesis-upload-dropzone:focus-within { outline: 3px solid rgba(67, 128, 82, .2); outline-offset: 3px; }
-        .thesis-upload-dropzone input[type="file"] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap; }
-        .thesis-upload-dropzone svg { width: 30px; height: 30px; color: #438052; }
-        .thesis-upload-dropzone strong { color: #28543a; font-size: 15px; }
-        .thesis-upload-dropzone span { color: #718073; font-size: 12px; }
-        .thesis-upload-dropzone small { max-width: 100%; overflow-wrap: anywhere; color: #315e3c; font-size: 11px; font-weight: 700; }
-        .thesis-upload-error { margin: 10px 0 0; color: #a43d32; font-size: 12px; font-weight: 700; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading"><div><p class="eyebrow">Administrasi E-Tesis & Disertasi</p><h1>Upload Data Tesis & Disertasi</h1><p class="subtitle">Import NPM, judul, penugasan dosen berdasarkan NIDN, dan tahap tesis & disertasi sesuai template.</p></div><a class="button" href="{{ route('graduate_theses.upload.template') }}" data-page-loader-skip><span data-lucide="file-down"></span> Unduh Template</a></div>
     @if ($errors->any())<div class="calendar-modal-error" role="alert">{{ $errors->first() }}</div>@endif

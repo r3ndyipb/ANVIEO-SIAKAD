@@ -3,25 +3,6 @@
 @section('title', 'Usul Judul Skripsi | SIAKAD')
 @section('topbar_title', 'Usul Judul Skripsi')
 
-@push('styles')
-    <style>
-        .thesis-title-alert { margin: 12px 0; padding: 12px 15px; border: 1px solid #e8c9bf; border-left: 4px solid #aa5038; border-radius: 6px; background: #fff8f5; color: #713b2c; }
-        .thesis-title-alert ul { margin: 0; padding-left: 20px; }
-        .thesis-title-guidance { margin: 12px 0; }
-        .thesis-title-guidance ol { margin: 0; padding-left: 22px; }
-        .thesis-title-guidance li + li { margin-top: 5px; }
-        .thesis-title-submit { margin-top: 14px; }
-        .thesis-title-dialog { position: fixed; inset: 0; width: min(720px, calc(100vw - 28px)); max-height: min(86dvh, 760px); margin: auto; overflow-y: auto; box-sizing: border-box; padding: clamp(18px, 4vw, 28px); border: 1px solid #d5dfd3; border-radius: 12px; background: #fff; color: #293c2c; box-shadow: 0 20px 70px rgb(19 42 24 / 28%); }
-        .thesis-title-dialog::backdrop { background: rgb(14 31 22 / 58%); backdrop-filter: blur(2px); }
-        .thesis-title-dialog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
-        .thesis-title-dialog-header h2 { margin: 0; }
-        .thesis-title-dialog-header p { margin: 6px 0 0; color: #69745c; font-size: 12px; }
-        .thesis-title-form input, .thesis-title-form textarea { width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #c8cc9d; border-radius: 8px; background: #fffef6; color: #293c2c; font: inherit; font-size: 14px; }
-        .thesis-title-form input:focus, .thesis-title-form textarea:focus { border-color: #688f61; outline: 0; box-shadow: 0 0 0 3px rgb(104 143 97 / 16%); }
-        .thesis-title-form textarea { min-height: 150px; resize: vertical; line-height: 1.6; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

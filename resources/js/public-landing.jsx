@@ -30,7 +30,7 @@ const translations = {
 		navPrograms: 'Program Studi',
 		openMenu: 'Buka menu',
 		closeMenu: 'Tutup menu',
-		login: 'Login SIAKAD',
+		login: 'LOGIN PORTAL',
 		openDashboard: 'Buka dashboard',
 		heroEyebrow: 'ASEAN University International · Study From Anywhere',
 		faculties: 'Dashboard Fakultas',
@@ -960,7 +960,7 @@ function PublicLanding({ root, data }) {
 	const isAcademicDashboard = ['faculties', 'faculty', 'programs', 'program'].includes(currentView);
 
 	useEffect(() => {
-		if (!isAcademicDashboard) return;
+		if (!data?.dataUrl) return;
 		const abortController = new AbortController();
 		fetch(data.dataUrl, { headers: { Accept: 'application/json' }, signal: abortController.signal })
 			.then(async (response) => {
@@ -972,16 +972,28 @@ function PublicLanding({ root, data }) {
 				if (error.name !== 'AbortError') setDashboardError(error.message);
 			});
 		return () => abortController.abort();
-	}, [data.dataUrl, isAcademicDashboard]);
+	}, [data?.dataUrl]);
+
+	useEffect(() => {
+		if (data?.logoUrl) {
+			let link = document.querySelector("link[rel*='icon']");
+			if (!link) {
+				link = document.createElement('link');
+				link.rel = 'icon';
+				document.head.appendChild(link);
+			}
+			link.href = data.logoUrl;
+		}
+	}, [data?.logoUrl]);
 
 	const pageData = dashboard ? { ...data, ...dashboard } : null;
 
 	return (
 		<div className="public-page">
 			<UtilityBar onNavigate={navigateView} />
-			<Header currentView={currentView} onNavigate={navigateView} />
+			<Header currentView={currentView} onNavigate={navigateView} logoUrl={data?.logoUrl} />
 
-			{currentView === 'home' && <HomeView onNavigate={navigateView} />}
+			{currentView === 'home' && <HomeView onNavigate={navigateView} portalData={pageData || data} />}
 			{currentView === 'detail' && <AcademicDetailView onNavigate={navigateView} />}
 			{currentView === 'academic' && <AcademicView onNavigate={navigateView} />}
 			{currentView === 'about' && <AboutView onNavigate={navigateView} />}

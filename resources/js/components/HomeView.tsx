@@ -14,6 +14,7 @@ interface HomeViewProps {
       | 'academic'
       | 'accreditation'
   ) => void;
+  portalData?: any;
 }
 
 interface NewsItem {
@@ -105,11 +106,27 @@ const NEWS_CATEGORIES = [
   { id: 'partnerships', label: 'Partnerships' },
 ];
 
-export default function HomeView({ onNavigate }: HomeViewProps) {
+export default function HomeView({ onNavigate, portalData }: HomeViewProps) {
   const [activeAnn, setActiveAnn] = useState(0);
   const [progFilter, setProgFilter] = useState('all');
   const testiTrackRef = useRef<HTMLDivElement>(null);
   const homeRef = useRef<HTMLDivElement>(null);
+
+  // Derive dynamic portal metrics from SIAKAD
+  const metrics = portalData?.metrics || [];
+  const getMetricValue = (key: string, fallback: number) => {
+    const found = metrics.find((m: any) => m.key === key);
+    if (found && typeof found.value === 'number' && found.value >= 0) {
+      return found.value;
+    }
+    return fallback;
+  };
+
+  const studentCount = getMetricValue('students', portalData?.studentTotal ?? 3000);
+  const facultyCount = portalData?.unitRows?.length || 8;
+  const programCount = getMetricValue('programs', 24);
+  const lecturerCount = getMetricValue('lecturers', 12);
+  const courseCount = getMetricValue('courses', 26);
 
   // News running marquee states
   const [activeNewsFilter, setActiveNewsFilter] = useState('all');
@@ -169,7 +186,15 @@ export default function HomeView({ onNavigate }: HomeViewProps) {
       });
     }, { threshold: 0.3 });
 
-    countElements.forEach((el) => observer.observe(el));
+    countElements.forEach((el) => {
+      observer.observe(el);
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        const row = el.closest('.row') || el.parentElement;
+        const sym = row ? row.querySelector<HTMLElement>('[data-sym]') : null;
+        countUp(el, sym);
+      }
+    });
 
     // Scroll reveal observer
     const rvElements = homeRef.current.querySelectorAll<HTMLElement>('.rv:not(.in)');
@@ -188,7 +213,7 @@ export default function HomeView({ onNavigate }: HomeViewProps) {
       observer.disconnect();
       rvObserver.disconnect();
     };
-  }, []);
+  }, [studentCount, facultyCount, programCount, lecturerCount, courseCount]);
 
   const handleTestiScroll = (dir: 'prev' | 'next') => {
     if (!testiTrackRef.current) return;
@@ -207,7 +232,10 @@ export default function HomeView({ onNavigate }: HomeViewProps) {
                     <div className="hero-content">
                         <div className="eyebrow" style={{ color: "var(--gold-soft)" }}>ASEAN University International · Study From
                             Anywhere</div>
-                        <h1>Transformative Education,<br /><em>Unbelievable Impact</em></h1>
+                        <h1>
+                            Transformative Education,<br />
+                            <em>Unbelievable Impact</em>
+                        </h1>
                         <p className="lede">Learn how our transformative education and multidisciplinary research have
                             nurtured effective global leaders, impacted society and transformed lives for the better.
                         </p>
@@ -220,35 +248,35 @@ export default function HomeView({ onNavigate }: HomeViewProps) {
             </div>
         </section>
 
-        {/*  ===== STATS (FIXED: angka + simbol rapi) =====  */}
-        <div className="stats">
+        {/*  ===== STATS (Berbasis Data Portal SIAKAD) =====  */}
+        <div className="stats" id="portal-stats">
             <div className="wrap">
                 <div className="stat">
                     <div className="row">
-                        <b><span data-count="3000">0</span></b>
+                        <b><span data-count={studentCount}>0</span></b>
                         <span className="sym" data-sym>+</span>
                     </div>
                     <span className="lbl">students enrolled from<br />5+ countries</span>
                 </div>
                 <div className="stat">
                     <div className="row">
-                        <b><span data-count="5">0</span></b>
+                        <b><span data-count={facultyCount}>0</span></b>
                     </div>
-                    <span className="lbl">academic faculties and<br />20+ research centers</span>
+                    <span className="lbl">academic faculties and<br />{programCount}+ study programmes</span>
                 </div>
                 <div className="stat">
                     <div className="row">
-                        <b><span data-count="100">0</span></b>
+                        <b><span data-count={lecturerCount}>0</span></b>
                         <span className="sym" data-sym>+</span>
                     </div>
-                    <span className="lbl">Industry partnerships<br />worldwide</span>
+                    <span className="lbl">academic lecturers &amp;<br />faculty members</span>
                 </div>
                 <div className="stat">
                     <div className="row">
-                        <b><span data-count="90">0</span></b>
-                        <span className="sym" data-sym>%</span>
+                        <b><span data-count={courseCount}>0</span></b>
+                        <span className="sym" data-sym>+</span>
                     </div>
-                    <span className="lbl">graduate employability rate<br />within 6 months</span>
+                    <span className="lbl">accredited courses &amp;<br />curriculum subjects</span>
                 </div>
             </div>
         </div>

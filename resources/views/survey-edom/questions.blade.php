@@ -3,13 +3,6 @@
 @section('title', 'Instrumen Survey EDOM | SIAKAD')
 @section('topbar_title', 'Survey EDOM')
 
-@push('styles')
-    <style>
-        .edom-question-table { min-width: 640px; }
-        .edom-question-text { max-width: 780px; line-height: 1.6; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

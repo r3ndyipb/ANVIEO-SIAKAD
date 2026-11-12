@@ -56,18 +56,4 @@
     @endif
 @endsection
 
-@push('styles')
-<style>
-    .graduation-validation-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 16px 0; padding: 14px; border: 1px solid #dce5e0; border-radius: 6px; background: #fff; }
-    .graduation-validation-filter label { color: #52645b; font-size: 11px; font-weight: 700; }
-    .graduation-validation-filter select { min-width: min(100%, 320px); min-height: 38px; flex: 1 1 320px; padding: 7px 9px; border: 1px solid #cbd8d1; border-radius: 5px; background: #fff; }
-    .graduation-validation-period-label { color: #52645b; font-size: 12px; }
-    .graduation-validation-exports { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
-    .graduation-validation-doc-count, .graduation-validation-status { display: inline-flex; padding: 4px 8px; border-radius: 4px; background: #fff4d7; color: #725400; font-size: 11px; font-weight: 700; white-space: nowrap; }
-    .graduation-validation-doc-count.is-complete, .graduation-validation-status.is-pass { background: #e5f2e8; color: #27613a; }
-    .graduation-validation-status.is-fail { background: #fce9e6; color: #963f32; }
-    .graduation-validation-status.is-pending { background: #fff4d7; color: #725400; }
-    .graduation-validation-empty { padding: 22px; color: #69786f; text-align: center; }
-    @media (max-width: 640px) { .graduation-validation-filter { align-items: stretch; } .graduation-validation-filter select, .graduation-validation-filter button { width: 100%; } }
-</style>
-@endpush
+

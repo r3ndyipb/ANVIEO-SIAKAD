@@ -3,21 +3,6 @@
 @section('title', 'Monitoring KRS | SIAKAD')
 @section('topbar_title', 'Monitoring KRS')
 
-@push('styles')
-    <style>
-        .monitoring-krs-filters { display: grid; grid-template-columns: minmax(210px, 1fr) minmax(210px, 1fr) max-content; align-items: end; gap: 12px; margin: 16px 0 20px; padding: 15px; border: 1px solid #e3e9e2; border-radius: 7px; background: #fbfdfb; }
-        .monitoring-krs-filters > button { width: auto; white-space: nowrap; }
-        .monitoring-krs-table { width: 100%; min-width: 850px; }
-        .monitoring-krs-table th { color: #71805e; font-size: 9px; font-weight: 800; text-transform: uppercase; }
-        .monitoring-krs-status { font-weight: 700; }
-        .monitoring-krs-status.is-approved { color: #2e713d; }
-        .monitoring-krs-status.is-pending { color: #876419; }
-        .monitoring-krs-status.is-empty { color: #a33b30; }
-        .monitoring-krs-empty { padding: 32px; border: 1px dashed #dce5d8; border-radius: 8px; color: #71805e; text-align: center; }
-        @media (max-width: 820px) { .monitoring-krs-filters { grid-template-columns: 1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

@@ -3,22 +3,6 @@
 @section('title', 'Aktivitas Mahasiswa | SIAKAD')
 @section('topbar_title', 'Aktivitas Mahasiswa')
 
-@push('styles')
-    <style>
-        .student-activity-filter, .student-activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: end; gap: 12px; }
-        .student-activity-filter { margin: 16px 0 20px; }
-        .student-activity-field { display: flex; flex-direction: column; gap: 7px; }
-        .student-activity-field label { color: #43543c; font-size: 11px; font-weight: 800; }
-        .student-activity-panel { margin: 18px 0; padding: 18px; border: 1px solid #e3e9e0; border-radius: 7px; background: #fff; }
-        .student-activity-modal-backdrop[hidden] { display: none; }
-        .student-activity-modal { width: min(100%, 760px); }
-        .student-activity-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-        .student-activity-actions form { margin: 0; }
-        .student-activity-notice { margin: 14px 0; padding: 12px 15px; border: 1px solid #eadba5; border-radius: 7px; background: #fffae9; color: #695426; }
-        @media (max-width: 640px) { .student-activity-filter { grid-template-columns: 1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

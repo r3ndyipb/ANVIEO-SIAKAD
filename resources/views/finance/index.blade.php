@@ -6,39 +6,6 @@
 @php($canMutate = auth()->user()?->role === 'keuangan')
 @php($canUploadIpi = in_array(auth()->user()?->role, ['admin', 'keuangan'], true))
 
-@push('styles')
-    <style>
-        .finance-actions { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:0 0 16px; }
-        .finance-filters { display:flex; flex-wrap:wrap; align-items:end; gap:10px; margin:0 0 18px; }
-        .finance-filters label, .finance-dialog label { display:grid; gap:6px; color:#52634f; font-size:11px; font-weight:700; }
-        .finance-filters input, .finance-filters select, .finance-dialog input, .finance-dialog select { min-height:38px; padding:8px 10px; border:1px solid #d9e2d7; border-radius:5px; background:#fff; color:#354a38; }
-        .finance-table-wrap { overflow-x:auto; border:1px solid #e2e9e0; border-radius:7px; background:#fff; }
-        .finance-table { width:100%; border-collapse:collapse; font-size:11px; }
-        .finance-table th, .finance-table td { padding:10px 11px; border-bottom:1px solid #edf1eb; text-align:left; vertical-align:middle; }
-        .finance-table th { background:#f7f9f5; color:#63725e; font-size:9px; text-transform:uppercase; white-space:nowrap; }
-        .finance-table tr:last-child td { border-bottom:0; }
-        .finance-table-actions { display:flex; flex-wrap:wrap; align-items:center; gap:5px; }
-        .finance-status { display:inline-flex; padding:4px 8px; border-radius:99px; background:#fff1e9; color:#8d4c27; font-size:10px; font-weight:800; }
-        .finance-status.is-paid { background:#e8f4e9; color:#2a693c; }
-        .finance-muted { color:#71806e; font-size:10px; line-height:1.5; }
-        .finance-dialog { position:fixed; inset:auto; top:50%; left:50%; width:min(540px, calc(100vw - 28px)); max-height:calc(100vh - 32px); margin:0; overflow:auto; padding:0; transform:translate(-50%, -50%); border:1px solid #dce5d9; border-radius:9px; box-shadow:0 24px 80px #17251a40; }
-        .finance-dialog::backdrop { background:#17251a80; }
-        .finance-dialog-head, .finance-dialog-actions { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 18px; border-bottom:1px solid #e8ede6; }
-        .finance-dialog-head h2 { margin:0; color:#284a33; font-size:17px; }
-        .finance-dialog-body { display:grid; gap:13px; padding:18px; }
-        .finance-dialog-actions { justify-content:flex-end; border-top:1px solid #e8ede6; border-bottom:0; }
-        .finance-pagination { padding:14px 0 0; }
-        .finance-filter-inline { display:flex; flex-wrap:wrap; align-items:end; gap:10px; }
-        .finance-alert { margin:0 0 16px; }
-        .finance-dropzone { position:relative; display:grid; justify-items:center; gap:7px; padding:22px 16px; border:1px dashed #a9bca5; border-radius:7px; background:#f7faf5; color:#355b3c; text-align:center; cursor:pointer; }
-        .finance-dropzone:focus-within, .finance-dropzone.is-dragover { outline:2px solid #54835a; outline-offset:2px; background:#eef6eb; }
-        .finance-dropzone input[type="file"] { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0, 0, 0, 0); white-space:nowrap; }
-        .finance-dropzone strong { font-size:12px; }
-        .finance-dropzone-name { color:#6b7968; font-size:11px; }
-        @media (max-width:640px) { .finance-filters > label, .finance-filter-inline > label { flex:1 1 100%; } .finance-table th, .finance-table td { padding:8px; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

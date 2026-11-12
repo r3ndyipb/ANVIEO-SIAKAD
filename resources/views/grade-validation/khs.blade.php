@@ -54,17 +54,4 @@
     @endif
 @endsection
 
-@push('styles')
-<style>
-    .grade-validation-filter { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; margin: 16px 0; padding: 14px; border: 1px solid #dce5e0; border-radius: 6px; background: #fff; }
-    .grade-validation-filter label { flex: 0 0 100%; color: #52645b; font-size: 11px; font-weight: 700; }
-    .grade-validation-filter select { min-width: min(100%, 320px); min-height: 38px; flex: 1 1 320px; padding: 7px 9px; border: 1px solid #cbd8d1; border-radius: 5px; background: #fff; }
-    .grade-validation-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 12px; margin: 16px 0; padding: 16px; border: 1px solid #dce5e0; border-radius: 6px; background: #fff; }
-    .grade-validation-summary div { display: grid; gap: 4px; }
-    .grade-validation-summary strong { color: #66756d; font-size: 10px; text-transform: uppercase; }
-    .grade-validation-summary span { color: #294438; font-size: 12px; font-weight: 700; }
-    .grade-validation-empty { padding: 22px; color: #69786f; text-align: center; }
-    .grade-validation-total-label { text-align: right; }
-    @media (max-width: 640px) { .grade-validation-filter { align-items: stretch; } .grade-validation-filter > * { width: 100%; } }
-</style>
-@endpush
+

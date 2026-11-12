@@ -3,13 +3,6 @@
 @section('title', 'Detail Penugasan Dosen | SIAKAD')
 @section('topbar_title', 'Detail Penugasan Dosen')
 
-@push('styles')
-    <style>
-        .thesis-assignment-alert { margin: 12px 0; padding: 12px 15px; border: 1px solid #e8c9bf; border-left: 4px solid #aa5038; border-radius: 6px; background: #fff8f5; color: #713b2c; }
-        .thesis-assignment-alert ul { margin: 0; padding-left: 20px; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

@@ -3,25 +3,6 @@
 @section('title', $title.' | SIAKAD')
 @section('topbar_title', $title)
 
-@push('styles')
-    <style>
-        .midtrans-history-filters { display:flex; flex-wrap:wrap; align-items:end; gap:10px; margin:0 0 16px; }
-        .midtrans-history-filters label { display:grid; gap:6px; color:#52634f; font-size:11px; font-weight:700; }
-        .midtrans-history-filters input { min-height:38px; padding:8px 10px; border:1px solid #d9e2d7; border-radius:5px; background:#fff; color:#354a38; }
-        .midtrans-history-table { width:100%; min-width:980px; border-collapse:collapse; font-size:11px; }
-        .midtrans-history-table th, .midtrans-history-table td { padding:10px 11px; border-bottom:1px solid #edf1eb; text-align:left; vertical-align:middle; }
-        .midtrans-history-table th { background:#f7f9f5; color:#63725e; font-size:9px; text-transform:uppercase; white-space:nowrap; }
-        .midtrans-history-table tr:last-child td { border-bottom:0; }
-        .midtrans-history-status { display:inline-flex; padding:4px 8px; border-radius:99px; font-size:10px; font-weight:800; white-space:nowrap; }
-        .midtrans-history-status.is-paid { background:#e9f7ec; color:#176b2c; }
-        .midtrans-history-status.is-unpaid { background:#fff0f0; color:#b42318; }
-        .midtrans-history-note { margin:0 0 16px; }
-        .midtrans-history-empty { padding:22px; color:#69786f; text-align:center; }
-        .midtrans-history-pagination { padding:14px 0 0; }
-        @media (max-width:640px) { .midtrans-history-filters > label { flex:1 1 100%; } .midtrans-history-filters input, .midtrans-history-filters button { width:100%; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div><p class="eyebrow">Keuangan</p><h1>{{ $title }}</h1><p class="subtitle">Riwayat transaksi Midtrans yang dicatat SIAKAD pada rentang tanggal pilihan.</p></div>

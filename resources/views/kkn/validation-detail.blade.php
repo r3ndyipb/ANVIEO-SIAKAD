@@ -26,22 +26,3 @@
     </section>
 @endsection
 
-@push('styles')
-<style>
-    .kkn-section, .kkn-student-summary { margin: 16px 0; padding: 18px; border: 1px solid #dce5e0; border-radius: 7px; background: #fff; }
-    .kkn-section h2 { margin: 0 0 14px; color: #244a3d; font-size: 16px; }
-    .kkn-student-summary dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 22px; margin: 0; }
-    .kkn-student-summary dl > div { padding: 10px 0; border-bottom: 1px solid #edf1ee; }
-    .kkn-student-summary .wide { grid-column: 1 / -1; }
-    .kkn-student-summary dt, .kkn-comment span { color: #67766e; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-    .kkn-student-summary dd { margin: 4px 0 0; color: #273e33; font-size: 13px; overflow-wrap: anywhere; }
-    .kkn-report-links { display: flex; flex-wrap: wrap; gap: 8px; }
-    .kkn-verification-form { display: grid; gap: 15px; }
-    .kkn-verification-form fieldset { display: flex; flex-wrap: wrap; gap: 16px; padding: 13px; border: 1px solid #dce5e0; border-radius: 6px; }
-    .kkn-verification-form legend { padding: 0 5px; color: #52645b; font-size: 11px; font-weight: 800; }
-    .kkn-comment { display: grid; gap: 7px; }
-    .kkn-comment textarea { width: 100%; min-height: 100px; padding: 10px; border: 1px solid #cbd8d1; border-radius: 5px; resize: vertical; }
-    .kkn-current-status, .kkn-muted { color: #65756c; font-size: 12px; }
-    @media (max-width: 680px) { .kkn-student-summary dl { grid-template-columns: 1fr; } .kkn-student-summary .wide { grid-column: auto; } }
-</style>
-@endpush

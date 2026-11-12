@@ -65,20 +65,49 @@
         @forelse ($records as $record)
             <section class="master-identity-card" aria-label="Identitas perguruan tinggi">
                 <div class="master-identity-heading">
-                    <p class="eyebrow">Identitas institusi</p>
-                    <h2>{{ filled($record->nama_perguruan_tinggi ?? null) ? $record->nama_perguruan_tinggi : '-' }}</h2>
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                        <div>
+                            <p class="eyebrow">Identitas Institusi & Profil Kampus</p>
+                            <h2>{{ filled($record->nama_perguruan_tinggi ?? null) ? $record->nama_perguruan_tinggi : '-' }}</h2>
+                        </div>
+                        @if (filled($record->kode_perguruan_tinggi ?? null))
+                            <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: var(--gold-soft); border: 1px solid var(--gold); color: var(--gold-2); font-size: 0.78rem; font-weight: 700;">
+                                <span style="font-family: var(--font-mono); font-size: 0.85rem;">Kode PT: {{ $record->kode_perguruan_tinggi }}</span>
+                            </div>
+                        @endif
+                    </div>
                 </div>
                 <dl class="master-identity-grid">
                     @foreach ($columns as $field => $label)
                         <div>
                             <dt>{{ $label }}</dt>
-                            <dd>{{ filled($record->{$field} ?? null) ? $record->{$field} : '-' }}</dd>
+                            <dd>
+                                @php
+                                    $val = $record->{$field} ?? null;
+                                @endphp
+                                @if (filled($val))
+                                    @if ($field === 'email')
+                                        <a href="mailto:{{ $val }}" style="color: var(--info); text-decoration: underline;">{{ $val }}</a>
+                                    @elseif ($field === 'website')
+                                        <a href="{{ str_starts_with($val, 'http') ? $val : 'https://'.$val }}" target="_blank" rel="noopener" style="color: var(--info); text-decoration: underline;">{{ $val }}</a>
+                                    @elseif ($field === 'status_perguruan_tinggi')
+                                        <span class="chip chip-success" style="display: inline-flex; padding: 2px 8px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; background: var(--success-bg); color: var(--success);">{{ $val }}</span>
+                                    @else
+                                        {{ $val }}
+                                    @endif
+                                @else
+                                    <span style="color: var(--bx-muted);">—</span>
+                                @endif
+                            </dd>
                         </div>
                     @endforeach
                 </dl>
             </section>
         @empty
-            <div class="master-empty-state">Data identitas perguruan tinggi belum tersedia.</div>
+            <div class="master-empty-state">
+                <strong>Data identitas perguruan tinggi belum tersedia</strong>
+                <p>Data profil kampus bersumber dari Neo Feeder WebService. Silakan gunakan tombol sinkronisasi di atas untuk memperbarui profil institusi.</p>
+            </div>
         @endforelse
     @else
         @php

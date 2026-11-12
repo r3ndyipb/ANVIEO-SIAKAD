@@ -8,25 +8,6 @@
 @section('title', 'Input '.$gradeTitle.' | SIAKAD')
 @section('topbar_title', 'Input '.$gradeTitle)
 
-@push('styles')
-    <style>
-        .grade-grid-shell { height: min(66vh, 650px); min-height: 280px; margin-top: 12px; overflow: hidden; border: 1px solid #dfe7dc; border-radius: 6px; }
-        .grade-spreadsheet { width: 100%; height: 100%; font-size: 11px; --rdg-color: #24382d; --rdg-background-color: #fff; --rdg-header-background-color: #f3f7f1; --rdg-border-color: #e3e9e0; --rdg-selection-color: #3b7850; --rdg-font-size: 11px; }
-        .grade-spreadsheet .rdg-header-row { font-weight: 800; }
-        .grade-spreadsheet .grade-grid-editable { background: #fffef6; }
-        .grade-spreadsheet .grade-grid-disabled { background: #edf0ea; color: #858b81; }
-        .grade-spreadsheet .grade-grid-over { color: #a63b2c; }
-        .grade-spreadsheet .rdg-cell { padding-inline: 10px; }
-        .grade-grid-empty { padding: 24px; color: #69745c; }
-        .grade-paste-note { margin: 12px 0; color: #687563; font-size: 11px; }
-        .grade-progress-track { height: 10px; margin: 16px 0 8px; overflow: hidden; border-radius: 6px; background: #e8eee6; }
-        .grade-progress-track span { display: block; height: 100%; background: #4a8a58; transition: width .2s ease; }
-        .grade-progress-errors { max-height: 220px; overflow-y: auto; padding-left: 20px; color: #8c382e; font-size: 12px; line-height: 1.5; }
-        .grade-confirm-backdrop { position: fixed; inset: 0; z-index: 140; display: grid; overflow-y: auto; padding: 8vh 16px 20px; place-items: start center; background: rgba(16, 42, 66, .52); backdrop-filter: blur(3px); }
-        .grade-confirm-dialog { width: min(100%, 620px); padding: clamp(20px, 4vw, 34px); border: 1px solid #d5e2ef; border-radius: 9px; background: #fff; box-shadow: 0 24px 70px rgba(18, 44, 70, .25); }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

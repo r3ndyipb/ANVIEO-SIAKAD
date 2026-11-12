@@ -8,54 +8,6 @@
 @section('title', $scheduleTitle.' | SIAKAD')
 @section('topbar_title', $scheduleTitle)
 
-@push('styles')
-    <style>
-        .schedule-filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 320px)); align-items: end; gap: 12px; margin-bottom: 22px; }
-        .schedule-filters label, .schedule-copy label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .schedule-filters .ts-wrapper, .schedule-copy .ts-wrapper { width: 100%; }
-        .schedule-copy-field { width: min(100%, 320px); }
-        .schedule-toolbar { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 14px; margin-bottom: 18px; padding-bottom: 15px; border-bottom: 1px solid #e5e9e2; }
-        .schedule-krs-notice { margin: 12px 0; padding: 10px 12px; border-left: 3px solid #d1a53d; background: #fffae9; color: #695426; font-size: 11px; line-height: 1.5; }
-        .schedule-day { color: #315b3b; font-weight: 700; }
-        .schedule-teachers { max-width: 300px; color: #596b58; font-size: 10px; line-height: 1.5; }
-        .schedule-km { display: inline-block; padding: 4px 7px; border-radius: 4px; background: #eef3e8; color: #526546; font-size: 9px; font-weight: 700; }
-        .schedule-print-link { margin-left: auto; }
-        .schedule-modal-copy { margin: 0; color: #4c5e4b; font-size: 12px; line-height: 1.6; }
-        .schedule-feeder-status { display: grid; gap: 7px; min-width: 190px; }
-        .schedule-feeder-teacher { display: grid; gap: 4px; padding: 8px; border: 1px solid #e5e9e2; border-radius: 6px; background: #fbfcfa; }
-        .schedule-feeder-teacher .button { justify-self: start; min-height: 29px; padding: 5px 9px; font-size: 10px; }
-        .short-semester-student-list { display: grid; gap: 12px; }
-        .short-semester-student-tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-        .short-semester-student-table { width: 100%; border-collapse: collapse; }
-        .short-semester-student-table th, .short-semester-student-table td { padding: 8px 10px; border-bottom: 1px solid #e8eee5; text-align: left; }
-        .short-semester-student-table-wrap { max-height: min(48vh, 420px); overflow: auto; }
-        .short-semester-student-table thead { position: sticky; top: 0; z-index: 1; background: #fff; }
-        .short-semester-student-table tbody tr:hover { background: #f6faf4; }
-        .short-semester-student-table input[type="checkbox"] { width: 16px; height: 16px; }
-        .short-semester-student-empty { color: #5d6a5d; font-size: 12px; }
-        .short-semester-modal-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; color: #5d6a5d; font-size: 11px; }
-        .short-semester-modal-pagination[hidden] { display: none; }
-        .short-semester-modal-pagination-controls { display: flex; align-items: center; gap: 6px; }
-        .short-semester-modal-pagination button { min-height: 30px; padding: 4px 9px; border: 1px solid #d5dfd3; border-radius: 5px; background: #fff; color: #386345; cursor: pointer; }
-        .short-semester-modal-pagination button:disabled { color: #a5afa2; cursor: default; }
-        .short-semester-modal-pagination select { min-height: 30px; padding: 3px 6px; border: 1px solid #d5dfd3; border-radius: 5px; background: #fff; color: #386345; }
-        .schedule-participant-count { display: inline-flex; align-items: center; gap: 5px; min-width: 34px; }
-        [data-schedule-confirm-modal][hidden], [data-schedule-copy-modal][hidden] { display: none; }
-        .schedule-copy-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-        .schedule-copy-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 20px; }
-        .schedule-pagination .dt-paging-button { min-width: 32px; min-height: 30px; margin-left: 4px; padding: 0 9px; border: 1px solid #d5dfd3; border-radius: 5px; background: #fff; color: #386345; font-size: 10px; text-decoration: none; }
-        .schedule-pagination .dt-paging-button.current { border-color: #73a17b; background: #e8f2e7; color: #315b3b; font-weight: 700; }
-        .schedule-pagination .dt-paging-button.disabled { color: #a5afa2; cursor: default; }
-        .schedule-pagination .dt-paging { display: flex; justify-content: flex-end; align-items: center; gap: 4px; padding: 13px 0; }
-        @media (max-width: 620px) {
-            .schedule-toolbar { align-items: stretch; flex-direction: column; }
-            .schedule-copy-fields { grid-template-columns: 1fr; }
-            .schedule-copy-actions { justify-content: stretch; }
-            .schedule-copy-actions .button { flex: 1; }
-        }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

@@ -7,23 +7,6 @@
 @section('title', ($editing ? 'Ubah' : 'Tambah').' '.$scheduleTitle.' | SIAKAD')
 @section('topbar_title', ($editing ? 'Ubah' : 'Tambah').' '.$scheduleTitle)
 
-@if ($shortSemester)
-    @push('styles')
-        <style>
-            .schedule-progress-modal { display: grid; gap: 12px; width: min(440px, 100%); }
-            .schedule-progress-track { height: 12px; overflow: hidden; border-radius: 999px; background: #e4eed5; }
-            .schedule-progress-track span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #5c9b68, #efca47); transition: width .3s ease; }
-            .schedule-progress-track.is-pending span { width: 40%; animation: schedule-progress-pending 1.2s ease-in-out infinite alternate; }
-            @keyframes schedule-progress-pending { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
-            [data-short-schedule-progress-errors] { margin: 0; padding-left: 20px; color: #a13d32; font-size: 12px; line-height: 1.5; }
-            @media (prefers-reduced-motion: reduce) {
-                .schedule-progress-track span { transition: none; }
-                .schedule-progress-track.is-pending span { animation: none; }
-            }
-        </style>
-    @endpush
-@endif
-
 @section('content')
     <div class="page-heading">
         <div>

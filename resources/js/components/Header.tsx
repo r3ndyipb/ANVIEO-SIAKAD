@@ -19,9 +19,10 @@ export type AppView =
 interface HeaderProps {
   currentView?: AppView;
   onNavigate?: (view: AppView) => void;
+  logoUrl?: string;
 }
 
-export default function Header({ currentView = 'home', onNavigate }: HeaderProps) {
+export default function Header({ currentView = 'home', onNavigate, logoUrl }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -321,17 +322,38 @@ export default function Header({ currentView = 'home', onNavigate }: HeaderProps
       <div className="wrap">
         <Link
           href="/"
-          className="logo"
+          className="logo brand-header-logo"
           aria-label="ASEAN University International — Home"
           onClick={(e) => handleLinkClick(e, 'home')}
         >
           <img
-            src="/img/logo.png"
-            alt="ASEAN University International logo"
-            width={210}
-            height={54}
-            style={{ height: '54px', width: 'auto' }}
+            src={logoUrl || '/images/landing/default-campus-logo.png'}
+            alt="Logo ASEAN University International"
+            className="brand-logo-img"
+            width={48}
+            height={48}
           />
+          <div className="brand-text">
+            <span className="brand-title">
+              <span className="sr-only">ASEAN UNIVERSITU </span>
+              ASEAN UNIVERSITY
+            </span>
+            <div className="brand-subtitle" aria-label="INTERNATIONAL">
+              <span>I</span>
+              <span>N</span>
+              <span>T</span>
+              <span>E</span>
+              <span>R</span>
+              <span>N</span>
+              <span>A</span>
+              <span>T</span>
+              <span>I</span>
+              <span>O</span>
+              <span>N</span>
+              <span>A</span>
+              <span>L</span>
+            </div>
+          </div>
         </Link>
         <nav>
           <ul className="nav">
@@ -389,11 +411,6 @@ export default function Header({ currentView = 'home', onNavigate }: HeaderProps
                 Accreditation
               </Link>
             </li>
-            <li>
-              <a href="#students" onClick={() => setMobileMenuOpen(false)}>
-                Students
-              </a>
-            </li>
           </ul>
         </nav>
         <div className="hdr-cta">
@@ -419,9 +436,8 @@ export default function Header({ currentView = 'home', onNavigate }: HeaderProps
             </svg>
           </button>
           <a href="/login" className="btn btn-gold login-button" onClick={() => setMobileMenuOpen(false)}>
-            Login SIAKAD &rarr;
+            LOGIN PORTAL &rarr;
           </a>
-          <span className="lang">EN / 中文</span>
           <button
             type="button"
             className="burger"

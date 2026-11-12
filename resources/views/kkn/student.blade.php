@@ -36,22 +36,3 @@
     @endif
 @endsection
 
-@push('styles')
-<style>
-    .kkn-section, .kkn-student-summary { margin: 16px 0; padding: 18px; border: 1px solid #dce5e0; border-radius: 7px; background: #fff; }
-    .kkn-section h2 { margin: 0 0 8px; color: #244a3d; font-size: 16px; }
-    .kkn-section h3 { margin: 18px 0 8px; color: #355244; font-size: 13px; }
-    .kkn-student-summary dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 22px; margin: 0; }
-    .kkn-student-summary dl > div { padding: 9px 0; border-bottom: 1px solid #edf1ee; }
-    .kkn-student-summary dt { color: #67766e; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-    .kkn-student-summary dd { margin: 4px 0 0; color: #273e33; font-size: 13px; }
-    .kkn-period-dates, .kkn-current-status, .kkn-comment { color: #65756c; font-size: 12px; }
-    .kkn-requirements { display: grid; gap: 0; margin: 0 0 18px; padding: 0; list-style: none; }
-    .kkn-requirements li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 11px 0; border-bottom: 1px solid #edf1ee; color: #334b3f; font-size: 12px; }
-    .kkn-requirements strong { font-size: 11px; }
-    .kkn-requirements .is-met { color: #267245; }
-    .kkn-requirements .is-missing { color: #a34332; }
-    .kkn-empty-state { display: grid; gap: 5px; margin-top: 16px; padding: 24px; border: 1px dashed #cbd8d1; border-radius: 6px; color: #69786f; text-align: center; }
-    @media (max-width: 680px) { .kkn-student-summary dl { grid-template-columns: 1fr; } }
-</style>
-@endpush

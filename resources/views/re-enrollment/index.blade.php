@@ -3,34 +3,6 @@
 @section('title', 'Registrasi Ulang | SIAKAD')
 @section('topbar_title', 'Registrasi Ulang')
 
-@push('styles')
-    <style>
-        .reenrollment-search { display: grid; grid-template-columns: minmax(0, 380px) max-content; align-items: end; gap: 10px; margin-bottom: 26px; }
-        .reenrollment-search .button { justify-self: start; }
-        .reenrollment-search label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .reenrollment-search input { width: 100%; min-height: 42px; padding: 0 11px; border: 1px solid #c8cc9d; border-radius: 5px; background: #fffef6; color: #293c2c; font: inherit; font-size: 12px; }
-        .reenrollment-search input:focus { outline: 3px solid rgba(221,187,52,.28); border-color: #8a9e3e; }
-        .reenrollment-result { margin-top: 22px; }
-        .reenrollment-student { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(140px, .8fr); gap: 8px 18px; margin-bottom: 18px; padding: 15px 17px; border-left: 3px solid #6f9e73; background: #f4f8f2; }
-        .reenrollment-student strong { color: #2d5137; font-size: 13px; }
-        .reenrollment-student span { color: #68745e; font-size: 11px; }
-        .reenrollment-state { color: #6d775e; font-size: 12px; }
-        .reenrollment-status { display: inline-block; color: #68745e; font-size: 11px; line-height: 1.5; }
-        .reenrollment-status.is-registered { color: #315b3b; font-weight: 700; }
-        .reenrollment-status small { display: block; color: #77806b; font-size: 10px; font-weight: 400; }
-        .reenrollment-action { display: flex; flex-wrap: wrap; gap: 6px; }
-        .reenrollment-action form { margin: 0; }
-        .reenrollment-empty { padding: 18px 0; color: #6d775e; font-size: 12px; }
-        .reenrollment-confirm-copy { margin: 0; color: #4c5e4b; font-size: 12px; line-height: 1.6; }
-        [data-reenrollment-confirm-modal][hidden] { display: none; }
-        @media (max-width: 620px) {
-            .reenrollment-search { grid-template-columns: 1fr; }
-            .reenrollment-search .button { justify-self: start; }
-            .reenrollment-student { grid-template-columns: 1fr; }
-        }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

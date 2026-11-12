@@ -3,20 +3,7 @@
 @section('title', 'Aktivitas Kuliah Mahasiswa | SIAKAD')
 @section('topbar_title', 'Aktivitas Kuliah Mahasiswa')
 
-@push('styles')
-    <style>
-        .akm-filter { display: grid; grid-template-columns: minmax(220px, 1fr) max-content; align-items: end; gap: 12px; margin: 16px 0 20px; }
-        .akm-filter.with-program { grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr) max-content; }
-        .akm-filter > button { width: auto; white-space: nowrap; }
-        .akm-filter label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .akm-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0; }
-        .akm-actions form { margin: 0; }
-        .akm-status-form { display: flex; align-items: center; gap: 6px; }
-        .akm-status-form select { min-width: 190px; }
-        .akm-alert { margin: 14px 0; padding: 12px 15px; border: 1px solid #d8e4d3; border-radius: 7px; background: #f3f8f0; color: #395c3c; }
-        @media (max-width: 820px) { .akm-filter, .akm-filter.with-program { grid-template-columns: 1fr; } }
-    </style>
-@endpush
+
 
 @section('content')
     <div class="page-heading">

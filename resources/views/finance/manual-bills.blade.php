@@ -3,36 +3,6 @@
 @section('title', $title.' | SIAKAD')
 @section('topbar_title', $title)
 
-@push('styles')
-    <style>
-        .manual-bill-dialog { position:fixed; inset:50% auto auto 50%; width:min(680px, calc(100vw - 28px)); max-height:calc(100vh - 32px); margin:0; padding:0; overflow:auto; transform:translate(-50%, -50%); border:1px solid #dce5d9; border-radius:9px; box-shadow:0 24px 80px #17251a40; }
-        .manual-bill-dialog::backdrop { background:#17251a80; }
-        .manual-bill-dialog-head, .manual-bill-dialog-actions { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 18px; border-bottom:1px solid #e8ede6; }
-        .manual-bill-dialog-head h2 { margin:0; color:#284a33; font-size:17px; }
-        .manual-bill-form { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; padding:18px; }
-        .manual-bill-form label { display:grid; gap:6px; color:#52634f; font-size:11px; font-weight:700; }
-        .manual-bill-form input, .manual-bill-form textarea { width:100%; min-height:40px; padding:9px 10px; border:1px solid #d9e2d7; border-radius:5px; background:#fff; color:#354a38; font:inherit; }
-        .manual-bill-form textarea { min-height:76px; resize:vertical; }
-        .manual-bill-form .wide { grid-column:1 / -1; }
-        .manual-bill-dialog-actions { justify-content:flex-end; border-top:1px solid #e8ede6; border-bottom:0; }
-        .manual-bill-note { margin:0 0 16px; }
-        .manual-bill-actions { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
-        .manual-bill-url { width:min(520px,100%); min-height:36px; padding:7px 9px; border:1px solid #d9e2d7; border-radius:5px; }
-        .manual-bill-table { width:100%; min-width:940px; border-collapse:collapse; font-size:11px; }
-        .manual-bill-table th, .manual-bill-table td { padding:10px 11px; border-bottom:1px solid #edf1eb; text-align:left; vertical-align:top; }
-        .manual-bill-table th { background:#f7f9f5; color:#63725e; font-size:9px; text-transform:uppercase; white-space:nowrap; }
-        .manual-bill-table tr:last-child td { border-bottom:0; }
-        .manual-bill-payment-status { display:inline-flex; padding:4px 8px; border-radius:99px; font-size:10px; font-weight:800; white-space:nowrap; }
-        .manual-bill-payment-status.is-paid { background:#e9f7ec; color:#176b2c; }
-        .manual-bill-payment-status.is-unpaid { background:#fff0f0; color:#b42318; }
-        .manual-bill-process { display:flex; align-items:center; gap:6px; }
-        .manual-bill-process form { margin:0; }
-        .manual-bill-empty { padding:22px; color:#69786f; text-align:center; }
-        .manual-bill-pagination { padding:14px 0 0; }
-        @media (max-width:640px) { .manual-bill-form { grid-template-columns:1fr; } .manual-bill-form .wide { grid-column:auto; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div><p class="eyebrow">Keuangan</p><h1>{{ $title }}</h1><p class="subtitle">Buat tautan pembayaran Midtrans untuk uraian transaksi di luar UKT dan IPI.</p></div>

@@ -32,11 +32,4 @@
     @endif
 @endsection
 
-@push('styles')
-<style>
-    .grade-validation-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 12px; margin: 16px 0; padding: 16px; border: 1px solid #dce5e0; border-radius: 6px; background: #fff; }
-    .grade-validation-summary div { display: grid; gap: 4px; }
-    .grade-validation-summary strong { color: #66756d; font-size: 10px; text-transform: uppercase; }
-    .grade-validation-summary span { color: #294438; font-size: 12px; font-weight: 700; }
-</style>
-@endpush
+

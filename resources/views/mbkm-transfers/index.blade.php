@@ -3,27 +3,6 @@
 @section('title', 'Transfer Nilai MBKM | SIAKAD')
 @section('topbar_title', 'Transfer Nilai MBKM')
 
-@push('styles')
-    <style>
-        .mbkm-search, .mbkm-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: end; gap: 12px; }
-        .mbkm-search { grid-template-columns: minmax(220px, 380px) auto; max-width: 620px; margin: 16px 0 20px; }
-        .mbkm-search > button { width: auto; white-space: nowrap; }
-        .mbkm-form-grid { margin-top: 14px; }
-        .mbkm-field { display: flex; flex-direction: column; gap: 7px; }
-        .mbkm-field label { color: #43543c; font-size: 11px; font-weight: 800; }
-        .mbkm-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin: 18px 0; }
-        .mbkm-summary > div { padding: 13px 15px; border: 1px solid #e3e9e0; border-radius: 7px; background: #fbfdfb; }
-        .mbkm-summary small, .mbkm-summary strong { display: block; }
-        .mbkm-summary small { margin-bottom: 6px; color: #71805e; font-size: 10px; font-weight: 700; text-transform: uppercase; }
-        .mbkm-summary strong { color: #315b3b; font-size: 15px; }
-        .mbkm-instructions { margin: 14px 0; padding: 14px 17px; border: 1px solid #eadba5; border-radius: 7px; background: #fffae9; color: #695426; }
-        .mbkm-instructions ul { margin: 8px 0 0; padding-left: 20px; }
-        .mbkm-form-panel { margin: 18px 0; padding: 18px; border: 1px solid #e3e9e0; border-radius: 7px; background: #fff; }
-        .mbkm-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-        @media (max-width: 640px) { .mbkm-search { grid-template-columns: 1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

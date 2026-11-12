@@ -3,18 +3,6 @@
 @section('title', ($record ? 'Ubah' : 'Tambah').' Status Mahasiswa | SIAKAD')
 @section('topbar_title', 'Lulus, Cuti, DO')
 
-@push('styles')
-    <style>
-        .student-status-form { max-width: 900px; }
-        .student-status-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-        .student-status-form-field { display: flex; flex-direction: column; gap: 7px; }
-        .student-status-form-field label { color: #43543c; font-size: 11px; font-weight: 800; }
-        .student-status-form-field-wide { grid-column: 1 / -1; }
-        .student-status-form-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; padding-top: 17px; border-top: 1px solid #e3e9e2; }
-        @media (max-width: 640px) { .student-status-form-grid { grid-template-columns: 1fr; } .student-status-form-field-wide { grid-column: auto; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

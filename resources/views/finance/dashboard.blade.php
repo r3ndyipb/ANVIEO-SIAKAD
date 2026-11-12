@@ -3,29 +3,6 @@
 @section('title', $title.' | SIAKAD')
 @section('topbar_title', $title)
 
-@push('styles')
-    <style>
-        .finance-dashboard { display:grid; gap:22px; }
-        .finance-dashboard-filter { display:flex; flex-wrap:wrap; align-items:end; gap:10px; }
-        .finance-dashboard-filter label { display:grid; gap:6px; color:#52634f; font-size:11px; font-weight:700; }
-        .finance-dashboard-filter select { min-height:38px; min-width:240px; padding:8px 10px; border:1px solid #d9e2d7; border-radius:5px; background:#fff; }
-        .finance-dashboard-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; }
-        .finance-dashboard-card { padding:18px; border:1px solid #e2e9e0; border-radius:9px; background:#fff; box-shadow:0 5px 18px #284a3309; }
-        .finance-dashboard-card h2 { margin:0; color:#63725e; font-size:12px; }
-        .finance-dashboard-card strong { display:block; margin-top:12px; color:#284a33; font-size:23px; }
-        .finance-dashboard-card p { margin:8px 0 0; color:#71806e; font-size:11px; }
-        .finance-dashboard-section h2 { margin:0 0 12px; color:#284a33; font-size:17px; }
-        .finance-dashboard-table { width:100%; border-collapse:collapse; background:#fff; font-size:11px; }
-        .finance-dashboard-table th,.finance-dashboard-table td { padding:10px; border-bottom:1px solid #edf1eb; text-align:left; }
-        .finance-dashboard-table th { background:#f7f9f5; color:#63725e; font-size:9px; text-transform:uppercase; }
-        .finance-dashboard-welcome { margin-bottom:22px; padding:22px 26px; border:1px solid #dce8dc; border-radius:10px; background:linear-gradient(120deg,#f7fbf2,#fff9df); }
-        .finance-dashboard-welcome p { margin:0; color:#597a37; font-size:10px; font-weight:800; text-transform:uppercase; }
-        .finance-dashboard-welcome h2 { margin:8px 0 0; color:#214830; font:400 clamp(25px,3vw,34px)/1.15 Georgia,"Times New Roman",serif; }
-        .finance-dashboard-welcome span { display:block; margin-top:7px; color:#596a52; font-size:12px; }
-        @media (max-width:640px) { .finance-dashboard-table th,.finance-dashboard-table td { padding:8px; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

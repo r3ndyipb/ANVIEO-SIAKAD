@@ -41,14 +41,4 @@
     @endif
 @endsection
 
-@push('styles')
-<style>
-    .grade-validation-filter { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; margin: 16px 0 10px; padding: 14px; border: 1px solid #dce5e0; border-radius: 6px; background: #fff; }
-    .grade-validation-filter label { flex: 0 0 100%; color: #52645b; font-size: 11px; font-weight: 700; }
-    .grade-validation-filter input { min-width: min(100%, 320px); min-height: 38px; flex: 1 1 320px; padding: 7px 9px; border: 1px solid #cbd8d1; border-radius: 5px; }
-    .grade-validation-status-note { color: #65756c; font-size: 11px; }
-    .grade-validation-actions { display: flex; flex-wrap: wrap; gap: 6px; min-width: 210px; }
-    .grade-validation-pagination { margin-top: 14px; }
-    @media (max-width: 640px) { .grade-validation-filter { align-items: stretch; } .grade-validation-filter > * { width: 100%; } }
-</style>
-@endpush
+

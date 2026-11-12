@@ -4,11 +4,6 @@
 @section('topbar_title', 'Ujian Skripsi')
 
 @section('content')
-    <style>
-        .exam-grade-status { display: inline-flex; padding: 5px 9px; border-radius: 999px; font-size: 10px; font-weight: 800; white-space: nowrap; }
-        .exam-grade-status.is-missing { background: #f5cfcc; color: #8b302b; }
-        .exam-grade-status.is-entered { background: #c8ecd3; color: #205a35; }
-    </style>
     <div class="page-heading"><div><p class="eyebrow">E-Skripsi</p><h1>Jadwal & Penilaian Ujian</h1><p class="subtitle">Jadwal, nilai, dan catatan revisi mengikuti penugasan dosen dan cakupan program.</p></div><a class="button" href="{{ route('theses.dashboard') }}">Dashboard E-Skripsi</a></div>
     @if (session('status'))<div class="alert alert-success" role="status">{{ session('status') }}</div>@endif
     @if ($showProgramFilter)

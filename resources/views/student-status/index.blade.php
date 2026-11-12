@@ -3,20 +3,6 @@
 @section('title', 'Lulus, Cuti, DO | SIAKAD')
 @section('topbar_title', 'Lulus, Cuti, DO')
 
-@push('styles')
-    <style>
-        .student-status-filters { display: grid; grid-template-columns: minmax(220px, 1fr) max-content; align-items: end; gap: 12px; margin: 16px 0 20px; padding: 15px; border: 1px solid #e3e9e2; border-radius: 7px; background: #fbfdfb; }
-        .student-status-filters.with-program { grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr) max-content; }
-        .student-status-filters > button { width: auto; white-space: nowrap; }
-        .student-status-filters label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .student-status-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-        .student-status-pagination { margin-top: 14px; }
-        .student-status-actions form { margin: 0; }
-        [data-student-status-modal][hidden] { display: none; }
-        @media (max-width: 820px) { .student-status-filters, .student-status-filters.with-program { grid-template-columns: 1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

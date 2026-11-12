@@ -29,16 +29,3 @@
     @endif
 @endsection
 
-@push('styles')
-<style>
-    .kkn-filter { display: grid; grid-template-columns: max-content minmax(220px, 1fr) max-content; align-items: center; gap: 10px; margin: 16px 0; padding: 14px; border: 1px solid #dce5e0; border-radius: 6px; background: #fff; }
-    .kkn-filter label { color: #52645b; font-size: 11px; font-weight: 700; }
-    .kkn-filter select { min-width: min(100%, 320px); min-height: 38px; padding: 7px 9px; border: 1px solid #cbd8d1; border-radius: 5px; background: #fff; }
-    .kkn-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0; }
-    .kkn-inline-form { display: flex; min-width: 190px; align-items: center; gap: 6px; }
-    .kkn-inline-form select { min-width: 140px; }
-    .kkn-empty-state { display: grid; gap: 5px; margin-top: 16px; padding: 24px; border: 1px dashed #cbd8d1; border-radius: 6px; color: #69786f; text-align: center; }
-    .kkn-pagination { margin-top: 14px; }
-    @media (max-width: 640px) { .kkn-filter { grid-template-columns: 1fr; } .kkn-filter button { width: 100%; } }
-</style>
-@endpush

@@ -3,23 +3,6 @@
 @section('title', 'Absen Kuliah | SIAKAD')
 @section('topbar_title', 'Absen Kuliah')
 
-@push('styles')
-    <style>
-        .attendance-filter { display: grid; grid-template-columns: minmax(220px, 1.15fr) minmax(220px, 1fr) auto; align-items: end; gap: 10px; margin: 16px 0 20px; }
-        .attendance-filter.without-program { grid-template-columns: minmax(240px, 520px) auto; }
-        .attendance-filter > button { width: auto; white-space: nowrap; }
-        .attendance-filter label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .attendance-actions { display: flex; flex-wrap: wrap; gap: 6px; }
-        .attendance-actions a { min-width: 32px; }
-        .attendance-pending-button { padding: 0; border: 0; background: transparent; color: #356b45; font: inherit; font-weight: 800; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; cursor: pointer; }
-        .attendance-pending-button:hover { color: #214f36; }
-        .attendance-pending-button:focus-visible { outline: 3px solid rgba(53, 107, 69, .25); outline-offset: 3px; }
-        .attendance-pending-list { display: grid; gap: 8px; max-height: 48vh; overflow-y: auto; padding-left: 24px; color: #2c4932; font-size: 12px; }
-        .attendance-pending-state { color: #69745c; font-size: 12px; }
-        @media (max-width: 820px) { .attendance-filter, .attendance-filter.without-program { grid-template-columns: 1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

@@ -3,41 +3,7 @@
 @section('title', 'Dashboard E-Skripsi | SIAKAD')
 @section('topbar_title', 'Dashboard E-Skripsi')
 
-@push('styles')
-    <style>
-        .thesis-status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 10px; margin: 20px 0; }
-        .thesis-status-item { padding: 14px; border: 1px solid #e0e8e0; border-top: 3px solid #4b7ca8; border-radius: 6px; background: #fff; }
-        .thesis-status-item strong { display: block; color: #244a32; font: 400 25px/1.1 Georgia, serif; }
-        .thesis-status-item span { display: block; margin-top: 7px; color: #68745f; font-size: 10px; font-weight: 700; }
-        .thesis-section { margin-top: 18px; padding: 18px; border: 1px solid #e1e8e1; border-radius: 7px; background: #fff; }
-        .thesis-section h2 { margin: 0 0 14px; color: #294c35; font: 400 21px/1.2 Georgia, serif; }
-        .thesis-mini-bar { min-width: 80px; height: 7px; margin-top: 5px; border-radius: 5px; background: #edf1e9; overflow: hidden; }
-        .thesis-mini-bar i { display: block; height: 100%; background: #4b7ca8; }
-        .thesis-dashboard-chart { display: grid; gap: 10px; margin: 0 0 18px; }
-        .thesis-dashboard-chart-row { display: grid; grid-template-columns: minmax(130px, 220px) minmax(80px, 1fr) auto; align-items: center; gap: 12px; color: #52634e; font-size: 11px; }
-        .thesis-dashboard-chart-label { overflow-wrap: anywhere; }
-        .thesis-dashboard-chart-track { display: flex; height: 12px; overflow: hidden; border-radius: 99px; background: #edf1e9; }
-        .thesis-dashboard-chart-bar { display: block; min-width: 0; height: 100%; background: #4b7ca8; }
-        .thesis-dashboard-chart-bar.is-green { background: #4f9467; }
-        .thesis-dashboard-chart-bar.is-gold { background: #c9a13b; }
-        .thesis-dashboard-chart-bar.is-rust { background: #b86c56; }
-        .thesis-dashboard-chart-value { color: #354f3a; font-weight: 800; white-space: nowrap; }
-        .thesis-chart-legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: -4px 0 16px; color: #6c7865; font-size: 10px; }
-        .thesis-chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
-        .thesis-chart-legend i { width: 9px; height: 9px; border-radius: 50%; background: #4b7ca8; }
-        .thesis-chart-legend .is-green { background: #4f9467; }
-        .thesis-chart-legend .is-gold { background: #c9a13b; }
-        .thesis-chart-legend .is-rust { background: #b86c56; }
-        .thesis-dashboard-filter { display: grid; grid-template-columns: minmax(240px, 420px) auto; gap: 12px; align-items: end; margin: 18px 0; }
-        @media(max-width:640px) { .thesis-dashboard-filter { grid-template-columns: 1fr; } }
-    </style>
-@endpush
-
 @section('content')
-    <style>
-        .thesis-stagnation-week { background: #fff3cd !important; }
-        .thesis-stagnation-month { background: #f8d7da !important; }
-    </style>
     <div class="page-heading">
         <div>
             <p class="eyebrow">Pemantauan akademik</p>

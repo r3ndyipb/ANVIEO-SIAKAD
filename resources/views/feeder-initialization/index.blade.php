@@ -119,31 +119,6 @@
         </section>
     @endif
 
-    <style>
-        .feeder-tabs { display: flex; gap: 8px; overflow-x: auto; margin: 0 0 28px; padding: 0 0 8px; }
-        .feeder-tab { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid #d5e0d1; border-radius: 999px; color: var(--muted); background: #f7f9f5; font: inherit; font-size: 12px; }
-        .feeder-tab:not(:disabled) { cursor: pointer; }
-        .feeder-tab:disabled { cursor: not-allowed; opacity: .55; }
-        .feeder-tab[aria-current="step"] { border-color: var(--green-strong); color: #fff; background: var(--green-strong); font-weight: 700; }
-        .feeder-tab.is-complete:not([aria-current="step"]) { border-color: #9abf8c; color: var(--green-deep); background: #eef6e9; }
-        .feeder-tab-number { display: inline-grid; width: 20px; height: 20px; place-items: center; border-radius: 50%; background: rgba(0,0,0,.07); font-size: 11px; font-weight: 700; }
-        .feeder-job-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
-        .feeder-job-heading h2 { margin: 0; color: var(--green-deep); font-size: 20px; }
-        .feeder-job-heading strong { color: var(--green-strong); font-size: 24px; }
-        .feeder-progress-track { height: 15px; overflow: hidden; margin-top: 20px; border: 1px solid #d5e0d1; border-radius: 999px; background: #edf2e8; }
-        .feeder-progress-value { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #72ad63, #2e7447); transition: width .45s ease; }
-        .feeder-job-count { color: var(--muted); font-size: 13px; }
-        #feeder-error { margin-top: 14px; color: #842029; background: #f8d7da; border-color: #f5c2c7; }
-        .feeder-gate { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 18px; }
-        .feeder-gate .subtitle { flex: 1 1 100%; }
-        .feeder-actions { justify-content: space-between; }
-        #feeder-next:disabled { cursor: not-allowed; opacity: .55; }
-        @media (max-width: 640px) {
-            .feeder-job-heading { align-items: center; }
-            .feeder-job-heading h2 { font-size: 17px; }
-        }
-    </style>
-
     @if ($job)
         <script>
             (() => {

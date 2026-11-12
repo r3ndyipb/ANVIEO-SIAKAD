@@ -3,27 +3,6 @@
 @section('title', 'Log Aktivitas | SIAKAD')
 @section('topbar_title', 'Log Aktivitas')
 
-@push('styles')
-    <style>
-        .activity-log-filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); align-items: end; gap: 12px; margin-bottom: 20px; padding: 15px; border: 1px solid #e3e9e2; border-radius: 7px; background: #fbfdfb; }
-        .activity-log-wrap { overflow-x: auto; }
-        .activity-log-table { width: 100%; min-width: 1050px; border-collapse: collapse; }
-        .activity-log-table th, .activity-log-table td { padding: 11px 10px; border-bottom: 1px solid #edf0e8; text-align: left; vertical-align: top; font-size: 11px; }
-        .activity-log-table th { color: #71805e; font-size: 9px; font-weight: 800; text-transform: uppercase; }
-        .activity-log-user { min-width: 150px; color: #315b3b; font-weight: 700; }
-        .activity-log-user small { display: block; margin-top: 4px; color: #78816d; font-weight: 500; }
-        .activity-log-module { min-width: 130px; }
-        .activity-log-detail { min-width: 360px; }
-        .activity-log-detail summary { color: #376d42; font-weight: 700; cursor: pointer; }
-        .activity-log-identity { margin-top: 6px; color: #4d5d4b; line-height: 1.5; }
-        .activity-log-identity strong { color: #293c2d; }
-        .activity-log-identity small { display: block; color: #78816d; }
-        .activity-log-detail pre { max-width: 620px; max-height: 420px; overflow: auto; margin: 9px 0 0; padding: 12px; border: 1px solid #e3e9e2; border-radius: 5px; background: #f8faf6; color: #344535; font: 11px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
-        .activity-log-pagination { display: flex; justify-content: flex-end; margin-top: 10px; }
-        .activity-log-empty { padding: 34px; border: 1px dashed #dce5d8; border-radius: 8px; color: #71805e; text-align: center; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

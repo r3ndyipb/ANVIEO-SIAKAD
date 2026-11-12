@@ -3,20 +3,6 @@
 @section('title', 'Penghapusan Mata Kuliah | SIAKAD')
 @section('topbar_title', 'Penghapusan Mata Kuliah')
 
-@push('styles')
-    <style>
-        .course-removal-search { display: grid; grid-template-columns: minmax(240px, 1fr) auto; align-items: end; gap: 12px; margin: 16px 0 20px; padding: 15px; border: 1px solid #e3e9e2; border-radius: 7px; background: #fbfdfb; }
-        .course-removal-search label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .course-removal-pagination { margin-top: 14px; }
-        .course-removal-back { margin-bottom: 26px; }
-        .course-removal-student { margin-top: 0; padding-top: 20px; border-top: 1px solid #e3e9e2; }
-        .course-removal-action { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid #e1c2bd; border-radius: 5px; background: #fff8f6; color: #a74637; cursor: pointer; }
-        .course-removal-action svg { width: 14px; height: 14px; }
-        [data-course-removal-modal][hidden] { display: none; }
-        @media (max-width: 640px) { .course-removal-search { grid-template-columns: 1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

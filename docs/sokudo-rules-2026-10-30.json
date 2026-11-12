@@ -1,104 +1,80 @@
 {
   "version": 1,
   "kind": "sokudo-rules",
-  "exported_at": "2026-11-11T16:40:00.000000+07:00",
-  "workspace_id": "7cc4a749-80c8-40ba-86a8-a61d7b97e45e",
-  "count": 16,
+  "exported_at": "2026-11-12T07:10:00.000000+07:00",
+  "workspace_id": "08f9d671-0d66-4c1f-9c6f-eb1d685449fa",
+  "count": 12,
   "rules": [
     {
-      "name": "KRS War Concurrency & Row-Level Locking Mandate",
+      "name": "Scrum Swarm Task Breakdown & Mandatory Reviewer",
+      "category": "scrum-orchestration",
+      "definition": "All features and fixes must be decomposed into atomic Scrum tasks on the Kanban board, assigned to specialized agent skills, and must include a designated Reviewer agent before sign-off.",
+      "enabled": true
+    },
+    {
+      "name": "Pessimistic Row-Locking on Class Capacity",
       "category": "concurrency",
-      "definition": "All course class seat enrollment mutations must be wrapped in a database transaction and execute an explicit `SELECT ... FOR UPDATE` lock on `t_jadwal_kuliah` prior to evaluating capacity and inserting the KRS record. Overbooking is strictly forbidden.",
+      "definition": "Course enrollment must execute in an atomic transaction with SELECT ... FOR UPDATE on t_jadwal_kuliah. Overbooking class quota is strictly forbidden.",
       "enabled": true
     },
     {
-      "name": "Zero N+1 Query Policy in Academic Portals",
+      "name": "Zero N+1 Query & Eager Loading Policy",
       "category": "performance",
-      "definition": "All Eloquent queries in controllers and API endpoints must explicitly declare eager loading relationships via `with()` or `loadMissing()`. Lazy loading is strictly prohibited in development builds via `Model::preventLazyLoading()`.",
+      "definition": "All Eloquent queries in controllers and services must eager load relations via with() or loadMissing(). Lazy loading is disabled in non-production.",
       "enabled": true
     },
     {
-      "name": "Strict Multi-Role RBAC & Departmental Data Scoping",
+      "name": "Strict Multi-Role RBAC & Department Data Isolation",
       "category": "security-rbac",
-      "definition": "Access control must be enforced at both route middleware and controller query levels. Program study operators (`userprodi`, `usertu`) must never access or modify records outside their assigned `prodi_id`.",
+      "definition": "Enforce RBAC across 14+ roles at route and query levels. Department operators (userprodi, usertu) must never access records outside their assigned prodi_id.",
       "enabled": true
     },
     {
-      "name": "Immutable Grade Locking & Audit Trigger Verification",
+      "name": "Immutable Grade Locking & Audit Trigger",
       "category": "academic-integrity",
-      "definition": "Once gradebooks are submitted and approved, their status must transition to `LOCKED`. Any subsequent modification requires formal administrative approval and must be recorded by the PostgreSQL `simak_audit_log` trigger.",
+      "definition": "Finalized gradebooks must transition to LOCKED. Revisions require Dean authorization and must record modifier identity in PostgreSQL simak_audit_log triggers.",
       "enabled": true
     },
     {
-      "name": "PDDIKTI Neo Feeder Atomic Batching & Error Rollback",
-      "category": "pddikti-compliance",
-      "definition": "All feeder synchronization jobs must execute in checkpointed batches with local validation pre-checks. If an external API batch fails, the local sync state must roll back gracefully to the last known valid checkpoint.",
+      "name": "Checkpointed Neo Feeder Batch Sync & Pre-validation",
+      "category": "pddikti-sync",
+      "definition": "Neo Feeder sync must validate NIK, SKS, and IPK locally before API dispatch and record checkpoints in feeder_sync_checkpoints to guarantee zero rejected batches.",
       "enabled": true
     },
     {
-      "name": "Financial Clearance Precondition for Academic Actions",
-      "category": "financial-guardrail",
-      "definition": "Students cannot enroll in KRS, register for final thesis defense, or print official examination cards unless their semester tuition (UKT/IPI) status is verified as `SETTLEMENT` by the billing system.",
+      "name": "Financial Clearance Gate for KRS & Graduation",
+      "category": "financial-gate",
+      "definition": "Students cannot enroll in KRS, sit for exams, or submit thesis defense without verified SETTLEMENT status on semester tuition (UKT/IPI) via Midtrans billing.",
       "enabled": true
     },
     {
-      "name": "OBE CPL-CPMK Mathematical Sum Consistency (100% Weight)",
+      "name": "OBE 100% Weight Mathematical Consistency",
       "category": "obe-curriculum",
-      "definition": "Assessment component weightings mapped to CPMK within any course syllabus (RPS) must sum to exactly 100%. The system must reject curricula with incomplete or mathematically mismatched assessment weights.",
+      "definition": "Assessment component weights mapped to CPMK in syllabus (RPS) must sum to exactly 100.00%. Incomplete or mismatched weights must be mathematically rejected.",
       "enabled": true
     },
     {
-      "name": "Declarative Table Partitioning for High-Volume Records",
-      "category": "database-architecture",
-      "definition": "High-volume operational tables including `t_presensi_perkuliahan` and `simak_audit_log` must be partitioned declaratively by semester or calendar year in PostgreSQL to preserve sub-second query performance.",
+      "name": "Declarative Partitioning & Non-Destructive Migrations",
+      "category": "database-arch",
+      "definition": "Partition t_presensi_perkuliahan and simak_audit_log declaratively by semester or year. Production migrations must never execute destructive DROP operations.",
       "enabled": true
     },
     {
-      "name": "WCAG 2.1 AA Accessibility & Color Contrast in Academic UI",
-      "category": "uiux-accessibility",
-      "definition": "All academic interfaces, data tables, buttons, and alert badges must maintain a minimum color contrast ratio of 4.5:1 against their backgrounds and provide full keyboard navigation support in both Light and Dark modes.",
+      "name": "WCAG 2.1 AA & Accessible Academic Interface",
+      "category": "uiux-wcag",
+      "definition": "Academic data tables, schedule matrices, and form badges must maintain minimum 4.5:1 color contrast and full keyboard navigation in both Light and Dark themes.",
       "enabled": true
     },
     {
-      "name": "Diátaxis Quadrant Separation in Technical Writing",
-      "category": "documentation-diataxis",
-      "definition": "Technical documentation must strictly segregate content into Tutorials (learning), How-To Guides (tasks), Reference (information), and Explanation (conceptual) without mixing instructional styles within a single document.",
+      "name": "Service-Action Pattern & Thin Controllers",
+      "category": "backend-arch",
+      "definition": "Keep Laravel controllers thin (request validation and response dispatch). Encapsulate all business rules, transactions, and calculations in Services and Actions.",
       "enabled": true
     },
     {
-      "name": "Service-Action-Controller Architecture & Thin Controller Rule",
-      "category": "backend-architecture",
-      "definition": "Laravel controllers must remain thin, limited to request validation and response delegation. All business logic, transaction boundaries, and calculations must reside in dedicated Service and Action classes.",
-      "enabled": true
-    },
-    {
-      "name": "Asynchronous Queueing for Heavy PDF/Excel Generation",
+      "name": "Asynchronous Queues for Heavy Documents & Feeder Jobs",
       "category": "queue-processing",
-      "definition": "Bulk PDF transcript compilation, grade ledger generation, and PDDIKTI exports must never run synchronously within HTTP request cycles; they must be dispatched to Redis background queues.",
-      "enabled": true
-    },
-    {
-      "name": "Zero Plaintext Credentials & Sensitive Data Masking",
-      "category": "data-privacy",
-      "definition": "API tokens, payment gateway server keys, and database credentials must never be committed to repository code. Student personal identification numbers (NIK) and phone numbers must be masked in compliance with UU PDP.",
-      "enabled": true
-    },
-    {
-      "name": "Safe Non-Destructive PostgreSQL Migrations",
-      "category": "database-migration",
-      "definition": "Database migrations must never execute destructive `DROP COLUMN` or `DROP TABLE` operations on production schemas without a documented two-stage deprecation cycle and tested rollback methods.",
-      "enabled": true
-    },
-    {
-      "name": "E-Skripsi Plagiarism & Defense Prerequisite Gatekeeping",
-      "category": "academic-clearance",
-      "definition": "Undergraduate and postgraduate students cannot be scheduled for final thesis defense without passing minimum credit requirements (min 144 SKS), zero grade E, and verified Turnitin plagiarism similarity under 20%.",
-      "enabled": true
-    },
-    {
-      "name": "REST API Bearer Token Authentication & Rate Limiting",
-      "category": "api-security",
-      "definition": "All external API endpoints under `/api/v1` must require authenticated Sanctum Bearer tokens with fine-grained ability scopes and enforce token bucket rate limiting to prevent denial-of-service attempts.",
+      "definition": "Bulk PDF transcript exports, grade ledger compilations, and Neo Feeder synchronizations must be dispatched to Redis background queues, never run synchronously.",
       "enabled": true
     }
   ]

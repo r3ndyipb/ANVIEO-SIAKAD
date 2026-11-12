@@ -9,14 +9,6 @@
 @section('title', ($isEditing ? 'Ubah' : 'Tambah').' '.$typeLabel.' | SIAKAD')
 @section('topbar_title', 'Pengguna SIAKAD')
 
-@push('styles')
-    <style>
-        .simak-user-form { max-width: 920px; }
-        .simak-user-form .field-grid { margin-bottom: 18px; }
-        .simak-user-form .field-error { display: block; margin-top: 5px; color: #a33b30; font-size: 11px; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

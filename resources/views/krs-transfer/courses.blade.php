@@ -3,16 +3,6 @@
 @section('title', 'Pilih Mata Kuliah Transfer | SIAKAD')
 @section('topbar_title', 'KRS Transfer')
 
-@push('styles')
-    <style>
-        .transfer-course-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin: 16px 0; }
-        .transfer-selected-row { background: #eaf6f1; }
-        .transfer-credit-warning { color: #9b4535; font-weight: 700; }
-        #transfer-course-table input[type="checkbox"] { width: 16px; height: 16px; margin: 0; padding: 0; vertical-align: middle; accent-color: #356b45; }
-        #transfer-course-table td:last-child { text-align: center; vertical-align: middle; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div><p class="eyebrow">KRS Transfer</p><h1>Pilih Mata Kuliah yang Diakui</h1><p class="subtitle">{{ $student->nama_mahasiswa }} · {{ $student->nim }} · {{ $student->nama_program_studi }}</p></div>

@@ -115,40 +115,4 @@
     @endif
 @endsection
 
-@push('styles')
-<style>
-    .graduation-student-identity, .graduation-student-period { margin: 16px 0; padding: 18px; border: 1px solid #dce5e0; border-radius: 6px; background: #fff; }
-    .graduation-student-identity dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 22px; margin: 0; }
-    .graduation-student-identity dl > div { padding: 9px 0; border-bottom: 1px solid #edf1ee; }
-    .graduation-student-identity dt { color: #67766e; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-    .graduation-student-identity dd { margin: 4px 0 0; color: #273e33; font-size: 13px; }
-    .graduation-student-period h2 { margin: 0 0 7px; color: #244a3d; font-size: 17px; }
-    .graduation-student-dates, .graduation-student-comment { color: #65756c; font-size: 12px; }
-    .graduation-documents-table small { display: block; margin-top: 4px; color: #718078; font-size: 11px; }
-    .graduation-document-status { display: inline-flex; padding: 4px 8px; border-radius: 4px; background: #fff4d7; color: #725400; font-size: 11px; font-weight: 700; white-space: nowrap; }
-    .graduation-document-status.is-uploaded { background: #e5f2e8; color: #27613a; }
-    .graduation-document-status.is-legacy { background: #fce9e6; color: #963f32; }
-    .graduation-document-actions { min-width: 240px; }
-    .graduation-student-verified-note { color: #8a4135; font-size: 11px; }
-    .graduation-upload-dialog { position: fixed; inset: 0; width: min(560px, calc(100vw - 28px)); max-width: none; max-height: min(90dvh, 760px); margin: auto; overflow-y: auto; padding: 22px; border: 1px solid #dce5e0; border-radius: 8px; background: #fff; box-shadow: 0 24px 70px rgba(15, 35, 28, .25); }
-    .graduation-upload-dialog::backdrop { background: rgba(18, 38, 31, .5); backdrop-filter: blur(2px); }
-    .graduation-upload-dialog[open] { display: block; }
-    .graduation-upload-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
-    .graduation-upload-head h2 { margin: 4px 0 0; color: #244a3d; font-size: 18px; }
-    .graduation-upload-document-label { margin: 0 0 12px; color: #334b3f; font-size: 13px; font-weight: 800; }
-    .graduation-upload-dropzone { position: relative; display: grid; min-height: 190px; align-content: center; justify-items: center; gap: 10px; padding: 24px; border: 2px dashed #b8cdb6; border-radius: 8px; background: #f7fbf6; color: #526b56; cursor: pointer; text-align: center; transition: border-color .18s ease, background .18s ease; }
-    .graduation-upload-dropzone:hover, .graduation-upload-dropzone.is-dragover { border-color: #438052; background: #edf6eb; }
-    .graduation-upload-dropzone:focus-within { outline: 3px solid rgba(67, 128, 82, .2); outline-offset: 3px; }
-    .graduation-upload-dropzone input[type="file"] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap; }
-    .graduation-upload-icon svg { width: 30px; height: 30px; color: #438052; }
-    .graduation-upload-dropzone strong { color: #28543a; font-size: 14px; }
-    .graduation-upload-dropzone span { max-width: 100%; overflow-wrap: anywhere; color: #718073; font-size: 12px; }
-    .graduation-upload-dropzone small { color: #315e3c; font-size: 11px; font-weight: 700; }
-    .graduation-skripsi-fields { display: grid; gap: 12px; margin-top: 14px; }
-    .graduation-skripsi-fields[hidden] { display: none; }
-    .graduation-skripsi-fields label { display: grid; gap: 5px; color: #52645b; font-size: 11px; font-weight: 700; }
-    .graduation-skripsi-fields input, .graduation-skripsi-fields textarea { width: 100%; padding: 9px; border: 1px solid #cbd8d1; border-radius: 5px; }
-    .graduation-upload-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 9px; margin-top: 16px; }
-    @media (max-width: 680px) { .graduation-student-identity dl { grid-template-columns: 1fr; } .graduation-document-actions { min-width: 0; } .graduation-upload-dialog { padding: 16px; } .graduation-upload-actions > button { flex: 1 1 100%; } }
-</style>
-@endpush
+

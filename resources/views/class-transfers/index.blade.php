@@ -3,18 +3,6 @@
 @section('title', 'Transfer Kelas | SIAKAD')
 @section('topbar_title', 'Transfer Kelas')
 
-@push('styles')
-    <style>
-        .class-transfer-search { display: grid; grid-template-columns: minmax(220px, 360px) auto; align-items: end; gap: 10px; max-width: 620px; margin: 16px 0 20px; }
-        .class-transfer-search > button { width: auto; white-space: nowrap; }
-        .class-transfer-search label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .class-transfer-actions form { display: grid; grid-template-columns: minmax(140px, 220px) 34px; align-items: center; gap: 7px; margin: 0; }
-        .class-transfer-actions select { min-width: 0; width: 100%; }
-        .class-transfer-actions .table-icon-button { width: 34px; height: 34px; }
-        @media (max-width: 640px) { .class-transfer-search { grid-template-columns: 1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

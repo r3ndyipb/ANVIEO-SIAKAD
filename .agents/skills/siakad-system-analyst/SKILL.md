@@ -1,14 +1,14 @@
 ---
 name: siakad-system-analyst
 description: >-
-  Architect, analyze, and specify academic business logic, multi-role RBAC matrices (14+ roles), BPMN workflows, data dictionaries, API contracts, and edge cases for SIAKAD Kampus (KRS prerequisites, OBE/CPL-CPMK curriculum, credit transfer, grading curves, graduation clearance, and PDDIKTI Feeder sync contracts). Use this skill whenever writing functional requirements (FR/NFR), modeling academic business processes, designing database entity mappings, specifying role permissions, or defining integration contracts.
+  Architect, analyze, and specify academic business logic, multi-role RBAC matrices (14+ roles), BPMN workflows, data dictionaries, API contracts, and edge cases for SIAKAD Kampus (KRS prerequisites, OBE/CPL-CPMK curriculum, MBKM 20 SKS conversions, E-Skripsi defense rubrics, Midtrans webhook idempotency, grading curves, graduation clearance, and PDDIKTI Feeder sync contracts). Use this skill whenever writing functional requirements (FR/NFR), modeling academic business processes, designing database entity mappings, specifying role permissions, or defining integration contracts.
 ---
 
 # SIAKAD System Analyst & Academic Architecture Skill
 
 Panduan keahlian dan spesifikasi arsitektur fungsional bagi **Senior System Analyst & Academic Solution Architect** pada platform **Sistem Informasi Akademik Kampus (SIAKAD/SIMAK)**.
 
-Keahlian ini menetapkan standar pemodelan logika bisnis akademik, matriks hak akses multi-role (14+ peran), diagram alur proses bisnis (BPMN), aturan validasi akademik (aturan SKS, prasyarat, OBE), penanganan kasus khusus (*edge cases* seperti cuti, transfer, MBKM), serta kontrak spesifikasi API dan pemetaan entitas ke **PDDIKTI Neo Feeder**.
+Keahlian ini menetapkan standar pemodelan logika bisnis akademik, matriks hak akses multi-role (14+ peran), diagram alur proses bisnis (BPMN), aturan validasi akademik (aturan SKS, prasyarat, OBE), penanganan kasus khusus (*edge cases* seperti cuti, transfer, MBKM 20 SKS), mesin ujian skripsi/tesis, rekonsiliasi pembayaran Midtrans, pemantauan status retensi AKM, serta kontrak spesifikasi API dan pemetaan entitas ke **PDDIKTI Neo Feeder**.
 
 ---
 
@@ -25,10 +25,10 @@ Sistem Informasi Akademik mengintegrasikan siklus hidup akademik mahasiswa dari 
 
 ### Entitas Bisnis Utama (Core Domain Entities):
 1. **Periode Akademik (`academic_periods`):** Tahun ajaran (misal: 2026/2027), semester (Ganjil, Genap, Pendek), tanggal buka/tutup pengisian KRS, revisi KRS, input nilai, dan pelaporan PDDIKTI.
-2. **Kurikulum & OBE (`curricula`, `cpl`, `cpmk`):** Struktur mata kuliah, capaian pembelajaran lulusan (CPL), sub-CPMK, jenis mata kuliah (wajib institusi, wajib prodi, pilihan, MBKM).
+2. **Kurikulum & OBE (`curricula`, `obe_cpl`, `obe_cpmk`):** Struktur mata kuliah, capaian pembelajaran lulusan (CPL), sub-CPMK, jenis mata kuliah (wajib institusi, wajib prodi, pilihan, MBKM).
 3. **Kelas Kuliah & Jadwal (`class_schedules`):** Kombinasi mata kuliah, dosen pengampu, kuota mahasiswa, ruangan, hari, jam mulai-selesai.
 4. **KRS & KHS (`krs`, `krs_details`, `khs`):** Pendaftaran mata kuliah per mahasiswa per semester beserta status approval Dosen PA dan rincian nilai akhir.
-5. **Keuangan & Tagihan (`student_billings`, `payments`):** Penetapan nominal UKT/IPI, status pembayaran lunas/belum/dispensasi sebagai pintu gerbang (*gatekeeper*) pengisian KRS.
+5. **Keuangan & Tagihan (`student_billings`, `payment_transactions`):** Penetapan nominal UKT/IPI, status pembayaran lunas/belum/dispensasi sebagai pintu gerbang (*gatekeeper*) pengisian KRS.
 
 ---
 
@@ -53,35 +53,38 @@ SIAKAD mendukung sedikitnya **14 peran pengguna** dengan batas wewenang yang ter
 | `perpustakaan`| Petugas Perpustakaan | Validasi surat keterangan bebas tanggungan pustaka sebagai syarat yudisium. |
 | `alumni` | Alumni / Lulusan | Akses legalisir ijazah online, pengisian kuesioner tracer study Kemendiktisaintek. |
 
+### Aturan Isolasi Data Departemen (Data Scoping Rule):
+Akun dengan peran `kaprodi` atau staf tata usaha prodi (`usertu`) **terisolasi ketat secara programatis pada `prodi_id` masing-masing**. Mereka diblokir secara total dari kemampuan melihat, mengubah, atau menyetujui jadwal, kelas kuliah, dan nilai mahasiswa di luar departemen mereka.
+
 ---
 
-## 3. Logika Bisnis & Diagram Alur Alur Kerja (Workflow Specifications)
+## 3. Logika Bisnis & Diagram Alur Kerja (Workflow Specifications)
 
 ### 3.1 Alur Registrasi KRS & Validasi Prasyarat Beban Studi
 
 ```
-[Mahasiswa Login] ──> [Cek Status Keuangan (Lunas UKT?)]
-                              │
-                    ┌─────────┴─────────┐
-                   TIDAK                YA
-                    │                   │
-             [Tolak Akses KRS]   [Cek Batas Maksimum SKS (Berdasarkan IPS Semester Lalu)]
-                                        │
-                                 [Pilih Kelas Kuliah]
-                                        │
-                           ┌────────────┴────────────┐
-                         VALID                     INVALID
-                           │                         │
-                  [Cek Prasyarat MK]          [Tampilkan Error]
-                  [Cek Jadwal Bentrok]        - Kuota Penuh
-                  [Cek Kuota Kelas]           - Bentrok Waktu
-                           │                  - SKS Melebihi Batas
-                           ▼
-                  [Submit Rencana Studi]
-                           │
-                  [Status: Menunggu ACC PA]
-                           │
-                  [Dosen PA Approval] ──> [Status: Disetujui (KRS Terkunci)]
+[Mahasiswa Login] ──> [Cek Status Keuangan (is_financial_cleared == true)]
+                               │
+                     ┌─────────┴─────────┐
+                    TIDAK                YA
+                     │                   │
+              [Tolak Akses KRS]   [Cek Batas Maksimum SKS (Berdasarkan IPS Semester Lalu)]
+                                         │
+                                  [Pilih Kelas Kuliah]
+                                         │
+                            ┌────────────┴────────────┐
+                          VALID                     INVALID
+                            │                         │
+                   [Cek Prasyarat MK]          [Tampilkan Error]
+                   [Cek Jadwal Bentrok]        - Kuota Penuh
+                   [Cek Kuota Kelas]           - Bentrok Waktu
+                            │                  - SKS Melebihi Batas
+                            ▼
+                   [Submit Rencana Studi]
+                            │
+                   [Status: Menunggu ACC PA]
+                            │
+                   [Dosen PA Approval] ──> [Status: Disetujui (KRS Terkunci)]
 ```
 
 #### Aturan Beban Studi Maksimum (Berdasarkan Standar SN-Dikti):
@@ -93,33 +96,61 @@ SIAKAD mendukung sedikitnya **14 peran pengguna** dengan batas wewenang yang ter
 
 ---
 
-### 3.2 Alur Penilaian Dosen & Finalisasi KHS
+### 3.2 Alur Konversi Nilai & Ekuivalensi 20 SKS MBKM (Kampus Merdeka)
 
-1. **Komponen Penilaian:**
-   $$\text{Nilai Akhir} = (K \times \%K) + (T \times \%T) + (\text{UTS} \times \%\text{UTS}) + (\text{UAS} \times \%\text{UAS})$$
-2. **Aturan Presensi Kuliah:**
-   - Mahasiswa dengan kehadiran $< 75\%$ dari total pertemuan efektif (misal: hadir kurang dari 12 dari 16 pertemuan) **otomatis diblokir** dari ujian akhir semester (UAS) dan memperoleh grade maksimal **D/E**.
-3. **Kunci Nilai (Grade Locking):**
-   - Setelah dosen menekan tombol *Finalisasi Nilai*, status kelas menjadi `locked`. Nilai tidak dapat diubah kecuali melalui prosedur resmi *Buka Kunci Nilai* dengan persetujuan Kaprodi dan Dekan yang tercatat di audit log.
+Program Merdeka Belajar Kampus Merdeka (Magang Bersertifikat, Studi Independen, Kampus Mengajar, PMM, dll.):
+
+```
+[Mahasiswa Diterima MBKM Mitra] ──> [Pengajuan Program MBKM di Portal SIAKAD]
+                                                │
+                                                ▼
+                                    [Review & ACC Kaprodi]
+                                                │
+                                                ▼
+                            [Matriks Pemetaan 20 SKS Mata Kuliah Konversi]
+                            - MK Konversi 1 (4 SKS)
+                            - MK Konversi 2 (4 SKS)
+                            - MK Konversi 3 (4 SKS)
+                            - MK Konversi 4 (4 SKS)
+                            - MK Konversi 5 (4 SKS)
+                                                │
+                                                ▼
+[Pelaksanaan & Logbook Mingguan] ──> [Laporan Akhir & Penilaian Mentor Mitra]
+                                                │
+                                                ▼
+                                    [Input Nilai Mutu oleh Kaprodi]
+                                                │
+                                                ▼
+                            [Nilai Masuk Transkrip dengan Label MBKM]
+```
 
 ---
 
-### 3.3 Alur Kurikulum Outcome-Based Education (OBE)
+### 3.3 Alur Penilaian Sidang Tugas Akhir (E-Skripsi & Tesis)
+
+1. **Komposisi Dewan Penguji:** 1 Ketua Penguji, 1 Sekretaris Penguji, dan 1-2 Anggota Penguji (Pembimbing).
+2. **Pengisian Rubrik Sidang:** Tiap penguji mengisi lembar rubrik digital independen di portal dosen.
+3. **Agregasi Nilai:** Sistem menghitung rata-rata skor penguji secara tertimbang:
+   $$\text{Skor Akhir} = \frac{\sum \text{Skor Penguji}}{N}$$
+4. **Penandatanganan Berita Acara Ujian (BAU):** Dosen menandatangani dengan PIN/tanda tangan digital, mengunci nilai sidang secara permanen.
+
+---
+
+### 3.4 Alur Rekonsiliasi Webhook Pembayaran Midtrans (State Machine)
 
 ```
-[Profil Lulusan] ──> [Capaian Pembelajaran Lulusan (CPL)]
-                               │
-                               ▼
-                   [CPMK (Capaian MK)]
-                               │
-                               ▼
-                   [Sub-CPMK / Indikator]
-                               │
-                               ▼
-                 [Asesmen: Tugas / UTS / UAS]
+[Invoice Created] ──> [Status: PENDING] (Generate Snap Token / VA / QRIS)
+                              │
+                    ┌─────────┴─────────────────────┐
+             Webhook POST                      Webhook POST
+          (settlement / capture)            (expire / cancel / deny)
+                    │                               │
+                    ▼                               ▼
+          [Status: SETTLEMENT]              [Status: EXPIRED / FAILED]
+          - Log transaction ID              - Batalkan invoice
+          - Set is_financial_cleared=true   - Mahasiswa harus re-generate
+          - Unblock KRS portal
 ```
-- Setiap butir soal ujian atau penugasan wajib dipetakan ke minimal satu **Sub-CPMK**.
-- Nilai akhir mahasiswa terdisagregasi ke dalam grafik radar capaian CPL untuk portofolio lulusan.
 
 ---
 
@@ -129,14 +160,14 @@ SIAKAD mendukung sedikitnya **14 peran pengguna** dengan batas wewenang yang ter
 - **Cuti Akademik Resmi:** Mahasiswa mengajukan via portal $\rightarrow$ diverifikasi BAAK $\rightarrow$ diterbitkan SK Rektor. Tagihan UKT disesuaikan (biasanya 0% atau biaya administrasi cuti), status di PDDIKTI tercatat `C` (Cuti), masa studi tidak bertambah.
 - **Mahasiswa Non-Aktif (Mangkir):** Tidak registrasi ulang dan tidak mengajukan cuti resmi selama 2 semester berturut-turut $\rightarrow$ sistem mengirim peringatan SP1, SP2 $\rightarrow$ rekomendasi otomatis berstatus `Drop Out (DO)`.
 
-### 4.2 Konversi Nilai & SKS Program MBKM
-- Mahasiswa mengikuti program Kampus Merdeka (Magang / Studi Independen) setara maksimal 20 SKS.
-- Analis harus mendesain modul **Ekuivalensi MK MBKM** di mana Kaprodi dapat memetakan aktivitas mitra ke 4-6 mata kuliah internal dengan nilai akhir dari mentor industri.
-
-### 4.3 Mahasiswa Mengulang Mata Kuliah
+### 4.2 Mahasiswa Mengulang Mata Kuliah
 - Jika mahasiswa mengambil ulang mata kuliah yang sudah pernah ditempuh:
   - Kebijakan Umum: Sistem mengambil **Nilai Tertinggi (Best Grade)** atau **Nilai Terakhir (Latest Grade)** sesuai ketetapan statuta kampus.
   - SKS tidak dihitung ganda pada kalkulasi SKS Kumulatif Transkrip.
+
+### 4.3 Pemantauan Retensi & Early Warning System (AKM)
+- Sistem menghitung IPS, IPK, dan akumulasi SKS per semester (Aktivitas Kuliah Mahasiswa).
+- Mahasiswa dengan IPK $< 2.00$ selama dua semester berturut-turut otomatis diberi penanda *Academic Warning* dan DPA menerima notifikasi peringatan bimbingan wajib.
 
 ---
 

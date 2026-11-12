@@ -490,44 +490,6 @@ export default function PaymentView({ onNavigate }: PaymentViewProps) {
           </div>
         </div>
       </section>
-
-      {/* ============================================================
-          CONTACT BAND
-          ============================================================ */}
-      <section className="cband" id="contact">
-        <div className="wrap">
-          <div className="cband-grid rv">
-            <div className="cband-item">
-              <div className="ic">✉</div>
-              <div>
-                <b>Email</b>
-                <a href="mailto:admin@aui.university">admin@aui.university</a>
-              </div>
-            </div>
-            <div className="cband-item">
-              <div className="ic">☎</div>
-              <div>
-                <b>Phone / WhatsApp</b>
-                <a href="tel:+60165680906">+60 165 680 906</a>
-              </div>
-            </div>
-            <div className="cband-item">
-              <div className="ic">◎</div>
-              <div>
-                <b>Student Portal</b>
-                <a href="#students">portal-aui</a>
-              </div>
-            </div>
-            <div className="cband-item">
-              <div className="ic">⌂</div>
-              <div>
-                <b>Address</b>
-                <span>F-2-23, Jalan BG 3B/1 Bangi Gateway 3B, Seksyen 15, 43650 Bandar Baru Bangi, Selangor, Malaysia</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }

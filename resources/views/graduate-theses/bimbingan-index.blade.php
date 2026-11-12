@@ -3,16 +3,6 @@
 @section('title', 'Bimbingan Tesis & Disertasi | SIAKAD')
 @section('topbar_title', 'Bimbingan Tesis & Disertasi')
 
-@push('styles')
-    <style>
-        .thesis-role-tabs { display: flex; gap: 8px; margin: 0 0 18px; border-bottom: 1px solid #dce6dc; }
-        .thesis-role-tab { min-height: 42px; padding: 0 16px; border: 0; border-bottom: 3px solid transparent; background: transparent; color: #607065; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
-        .thesis-role-tab[aria-selected="true"] { border-bottom-color: #315b3b; color: #315b3b; }
-        .thesis-role-panel[hidden] { display: none; }
-        .thesis-unread-badge { display: inline-flex; align-items: center; margin: 5px 0 0; padding: 4px 9px; border: 1px solid #b91c1c; border-radius: 999px; background: #dc2626; color: #fff; font-size: 11px; font-weight: 800; line-height: 1.2; box-shadow: 0 1px 4px #991b1b55; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

@@ -21,22 +21,6 @@
     </div>
 @endsection
 
-@push('styles')
-    <style>
-        .lms-attendance-page .subtitle{color:#64748b}
-        .lms-attendance-page .lms-panel{display:grid;gap:1rem;padding:1.25rem;background:#fff;border:1px solid #dbe3ee;border-radius:14px}
-        .lms-attendance-toggle{position:relative;display:inline-flex;width:42px;height:24px;align-items:center;cursor:pointer}
-        .lms-attendance-toggle input{position:absolute;width:1px;height:1px;opacity:0}
-        .lms-attendance-slider{position:absolute;inset:0;border-radius:999px;background:#cbd5e1;transition:background .18s ease}
-        .lms-attendance-slider::before{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;content:"";box-shadow:0 1px 3px #0003;transition:transform .18s ease}
-        .lms-attendance-toggle input:checked+.lms-attendance-slider{background:#27804a}
-        .lms-attendance-toggle input:checked+.lms-attendance-slider::before{transform:translateX(18px)}
-        .lms-attendance-toggle input:focus-visible+.lms-attendance-slider{outline:2px solid #2563eb;outline-offset:2px}
-        .lms-attendance-toggle input:disabled+.lms-attendance-slider{opacity:.6;cursor:wait}
-        .lms-attendance-page table.dataTable td:last-child{text-align:center}
-    </style>
-@endpush
-
 @push('scripts')
     <script>
         document.querySelectorAll('[data-lms-attendance-toggle]').forEach((toggle) => {

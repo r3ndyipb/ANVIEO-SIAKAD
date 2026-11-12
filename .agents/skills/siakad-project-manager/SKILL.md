@@ -1,27 +1,27 @@
 ---
 name: siakad-project-manager
 description: >-
-  Orchestrate, govern, and deliver academic information system (SIAKAD Kampus) engineering projects, sprint milestones aligned with national academic calendar (KRS rush, UTS/UAS, Yudisium, PDDIKTI reporting cutoffs), scope control, risk mitigation, stakeholder management (Rektorat, Dekan, BAAK, Keuangan, Dosen, Mahasiswa), and quality sign-offs. Use this skill whenever planning sprints, managing software roadmaps, evaluating change requests, preparing academic rollout schedules, tracking budgets and milestones, or orchestrating UAT for SIAKAD.
+  Orchestrate, govern, and deliver academic information system (SIAKAD Kampus) engineering projects, sprint milestones aligned with national academic calendar (KRS rush, UTS/UAS, Yudisium, PDDIKTI reporting cutoffs), scope control, risk mitigation, stakeholder management (Rektorat, Dekan, BAAK, Keuangan, Dosen, Mahasiswa), multi-agent swarm task delegation across all 15 specialized agents with atomic Scrum breakdown and mandatory peer review gates, and quality sign-offs. Use this skill whenever planning sprints, managing software roadmaps, evaluating change requests, preparing academic rollout schedules, tracking budgets and milestones, or orchestrating UAT for SIAKAD.
 ---
 
 # SIAKAD Project Manager & Academic Delivery Lead Skill
 
 Panduan keahlian dan tata kelola manajemen proyek perangkat lunak (*software project governance & delivery leadership*) bagi **Lead Project Manager & Academic Product Delivery Lead** pada pengembangan dan operasionalisasi platform **Sistem Informasi Akademik Kampus (SIAKAD/SIMAK)**.
 
-Keahlian ini menetapkan standar pengelolaan sprint berbasis ritme kalender akademik nasional (Kemendiktisaintek/PDDIKTI), pengendalian ruang lingkup (*scope governance*), manajemen risiko lonjakan trafik (*peak academic concurrency*), koordinasi lintas pemangku kepentingan (Rektorat, Dekan, Kaprodi, BAAK, Dosen, Mahasiswa), serta jaminan kualitas (*Definition of Done & UAT*).
+Keahlian ini menetapkan standar pengelolaan sprint berbasis ritme kalender akademik nasional (Kemendiktisaintek/PDDIKTI), pengendalian ruang lingkup (*scope governance*), manajemen risiko lonjakan trafik (*peak academic concurrency*), koordinasi lintas pemangku kepentingan (Rektorat, Dekan, Kaprodi, BAAK, Dosen, Mahasiswa), orkestrasi pendelegasian tugas ke **15 Agen Spesialis SIAKAD** dengan pemecahan task Scrum atomik, serta penegakan **Reviewer Wajib (Mandatory Peer Review Gate)** pada setiap tiket.
 
 ---
 
 ## 1. Peran & Prinsip Tata Kelola Proyek SIAKAD
 
 Pengembangan SIAKAD memiliki karakteristik unik yang membedakannya dari sistem korporat umum:
-1. **Hard Deadlines Terikat Regulasi:** Periode pelaporan PDDIKTI Feeder (Semester Ganjil, Genap, Antara) memiliki batas waktu nasional mutlak dari kementerian. Keterlambatan berimplikasi langsung pada sanksi administratif dan akreditasi kampus.
+1. **Hard Deadlines Terikat Regulasi:** Periode pelaporan PDDIKTI Feeder (Semester Ganjil, Genap, Antara) memiliki batas waktu nasional mutlak dari kementerian. Keterlambatan berimplikasi langsung pada sanksi administratif dan penurunan akreditasi kampus.
 2. **Lonjakan Trafik Siklikal Ekstrem (*Traffic Spikes*):** Momen pendaftaran KRS serentak ribuan mahasiswa dalam hitungan detik dan tenggat input nilai dosen semesteran menuntut kesiapan sistem 99.9% uptime.
 3. **Kompleksitas Multi-Stakeholder:** Mengakomodasi 14+ peran pengguna dengan kepentingan berbeda (Rektorat butuh KPI dashboard, BAAK butuh fleksibilitas penjadwalan, Keuangan butuh akurasi rekonsiliasi kas, Dosen butuh kemudahan input nilai, Mahasiswa butuh stabilitas portal).
 
 ---
 
-## 2. Kalender Siklus Akademik & Sprint Milestones
+## 2. Kalender Siklus Akademik & Sprint Milestones (6-Phase WBS)
 
 Setiap proyek SIAKAD wajib dipetakan ke dalam 6 fase siklus akademik tahunan:
 
@@ -32,77 +32,70 @@ Setiap proyek SIAKAD wajib dipetakan ke dalam 6 fase siklus akademik tahunan:
 [Fase 6: Feeder PDDIKTI] <── [Fase 5: Yudisium & Wisuda] <── [Fase 4: Ujian & Finalisasi Nilai]
 ```
 
-### 2.1 Pemetaan Fase & Target Rilis Fitur
+### 2.1 Pemetaan Fase, Agen Pelaksana & Target Deliverable Kunci
 
-| Fase Akademik | Milestone Sprint | Deliverable Kunci | Kriteria Keberhasilan |
-| :--- | :--- | :--- | :--- |
-| **Fase 1: Admisi & Tagihan** | Sprint PMB & Billing | Portal Camaba, Setting Tarif UKT/IPI, Integrasi Payment Gateway / H2H Bank | Pembayaran realtime, auto-generate NIM & akun SIAKAD |
-| **Fase 2: Registrasi KRS** | Sprint KRS Engine | Plotting Kurikulum/Jadwal, Validasi Prasyarat SKS, Fitur Kuota Kelas, Approval PA | Latensi < 250ms saat 5.000 concurrent user pendaftaran KRS |
-| **Fase 3: Masa Kuliah** | Sprint Perkuliahan | Presensi QR Code/Mobile, E-Learning/LMS, Monitoring Jurnal Dosen, Survei EDOM | Akumulasi kehadiran otomatis terhitung untuk syarat ikut UTS/UAS |
-| **Fase 4: Evaluasi & Ujian** | Sprint Grade Engine | Kartu Ujian (KPU), Lembar Nilai Dosen, Kalkulasi Bobot OBE, Kunci Nilai Otomatis | 100% nilai terkunci sesuai jadwal; transkrip semester (KHS) terbit |
-| **Fase 5: Kelulusan** | Sprint Wisuda | Pendaftaran Skripsi/Tesis, Ujian Sidang, Validasi Bebas Pustaka/Keuangan, Yudisium, Penomoran PIN/SIVIL | Verifikasi transkrip akhir lengkap; bebas komplain data ijazah |
-| **Fase 6: Pelaporan Nasional**| Sprint PDDIKTI Sync | Ekspor-Impor Neo Feeder (AKM, Kelas Kuliah, Nilai, Dosen Pengajar, Mahasiswa Lulus/DO) | 100% status validasi Feeder hijau tanpa invalid record |
+| Fase Akademik | Sprint Milestone | Agen Spesialis Terkait | Deliverable Kunci | Kriteria Keberhasilan |
+| :--- | :--- | :--- | :--- | :--- |
+| **Fase 1: Admisi & Tagihan** | Sprint PMB & Billing | `siakad-finance-billing-auditor`<br>`siakad-academic-registrar` | Penetapan Tarif UKT/IPI, Integrasi Midtrans Snap/Core API, auto-clearance status | Pembayaran realtime, auto-generate NIM, `is_financial_cleared = true` |
+| **Fase 2: Registrasi KRS** | Sprint KRS Engine & Concurrency | `siakad-krs-concurrency-guard`<br>`siakad-dbms-postgresql`<br>`siakad-system-analyst` | Virtual Waiting Room Redis, Row-Level Lock `FOR UPDATE`, Validasi Prasyarat & SKS limit | Latensi < 250ms saat 5.000 concurrent user pendaftaran KRS tanpa overbooking |
+| **Fase 3: Masa Kuliah** | Sprint LMS & Presensi | `siakad-lms-virtual-classroom`<br>`siakad-uiux-designer` | Presensi QR Code bergulir 30 detik + Geofencing GPS, 16 Pertemuan LMS, Jurnal Dosen | Akumulasi kehadiran otomatis terhitung untuk syarat ikut UTS/UAS ($\ge 75\%$) |
+| **Fase 4: Evaluasi & Ujian** | Sprint Penilaian & Kurikulum OBE | `siakad-obe-curriculum-specialist`<br>`siakad-security-compliance-auditor` | Lembar Nilai Dosen OBE, Kalkulasi Bobot Sub-CPMK, Kunci Nilai Otomatis, KHS | 100% nilai terkunci sesuai jadwal; transkrip KHS terbit; audit log WORM |
+| **Fase 5: Kelulusan** | Sprint E-Skripsi & Wisuda | `siakad-thesis-graduation-manager`<br>`siakad-academic-registrar` | Pendaftaran Skripsi, Sidang Munaqasyah, Validasi Bebas Pustaka/Keuangan, Yudisium, PIN/SKPI | Verifikasi transkrip akhir lengkap; turnitin < 20%; bebas komplain ijazah |
+| **Fase 6: Pelaporan Nasional**| Sprint PDDIKTI Feeder Sync | `siakad-pddikti-feeder-officer`<br>`siakad-fullstack-laravel` | Ekspor-Impor Neo Feeder (AKM, Kelas Kuliah, Nilai, Dosen Pengajar, Lulus/DO) ber-checkpoint | 100% status validasi Feeder hijau tanpa invalid record |
 
 ---
 
-## 3. Manajemen Ruang Lingkup & Penanganan Change Request (CR)
+## 3. Tata Kelola Scrum: Dekomposisi Task Atomik & Reviewer Wajib
 
-Untuk mencegah pembengkakan ruang lingkup (*scope creep*) yang membahayakan tenggat akademik, terapkan matriks klasifikasi Change Request:
+Sebagai Scrum Master & Delivery Lead, Project Manager memastikan seluruh pekerjaan dipecah menjadi task Scrum yang terdefinisi rapi di papan Kanban:
 
-### 3.1 Matriks Evaluasi Change Request (CR)
+### 3.1 Aturan Pembagian Task Scrum
+1. **Dekomposisi Atomik**: Setiap user story dipecah menjadi sub-pekerjaan independen yang dapat diselesaikan dan diverifikasi dalam satu sesi kerja agen.
+2. **Penetapan Implementer & Reviewer Berpasangan**:
+   - Tiket WAJIB memuat **Assigned Implementer** dan **Mandatory Reviewer**.
+   - Reviewer bertanggung jawab melakukan audit silang (*peer review*) terhadap kode, tes, dan kriteria penerimaan.
 
-```markdown
-### Prosedur Evaluasi Perubahan (CR Assessment)
-1. **Tingkat 1: Regulasi Mandatori Nasional (Wajib & Prioritas Tertinggi)**
-   - Perubahan format Feeder PDDIKTI terbaru, skema penomoran ijazah nasional (PIN/SIVIL), atau format pelaporan Kemendikbud.
-   - Tindakan: *Fast-track sprint*, sesuaikan alokasi developer segera.
-2. **Tingkat 2: Kebijakan Khusus Senat / Pimpinan Kampus (Medium)**
-   - Perubahan aturan dispensasi pembayaran UKT, kebijakan semester antara, atau konversi SKS kurikulum OBE.
-   - Tindakan: Buat Impact Analysis (Dampak ke modul KRS & Transkrip), ajukan ke sprint review berikutnya.
-3. **Tingkat 3: Preferensi Kosmetik / Alur Prodi Non-Standar (Rendah / Backlog)**
-   - Permintaan penambahan field kustom prodi tertentu yang tidak ada di standar PDDIKTI.
-   - Tindakan: Masukkan ke *Post-Rollout Enhancement Backlog*.
+### 3.2 Matriks Pasangan Implementer-Reviewer
+- **Backend Laravel** $\rightarrow$ Reviewer: `siakad-security-compliance-auditor` (Audit SQL, IDOR, N+1, tests).
+- **Database / PostgreSQL** $\rightarrow$ Reviewer: `siakad-krs-concurrency-guard` (Uji lock, indeks, EXPLAIN).
+- **UI / Blade / CSS** $\rightarrow$ Reviewer: `siakad-system-analyst` (Kontras warna, navigasi keyboard, responsivitas).
+- **Concurrency & KRS** $\rightarrow$ Reviewer: `siakad-dbms-postgresql` (Deadlock prevention, stress test).
+- **PDDIKTI Neo Feeder** $\rightarrow$ Reviewer: `siakad-academic-registrar` (Kesesuaian format kementerian).
+- **Billing & Midtrans** $\rightarrow$ Reviewer: `siakad-security-compliance-auditor` (Validasi signature hash SHA-512).
+- **OBE Curriculum** $\rightarrow$ Reviewer: `siakad-system-analyst` (Normalisasi bobot 100%).
+- **E-Skripsi & Wisuda** $\rightarrow$ Reviewer: `siakad-academic-registrar` (Syarat SKS & batas plagiarisme).
+- **LMS & Presensi QR** $\rightarrow$ Reviewer: `siakad-fullstack-laravel` (Integritas TOTP & geofence).
+- **Dokumentasi Diátaxis** $\rightarrow$ Reviewer: `siakad-project-manager` (Akurasi teknis & kuadran Diátaxis).
+
+---
+
+## 4. Alur Kerja Status Kanban & Quality Gates
+
 ```
-
-### 3.2 Form Standar Dampak Perubahan (Impact Assessment Sheet)
-
-Saat pemangku kepentingan meminta fitur baru di tengah periode berjalan, PM wajib merumuskan:
-- **Nama Permintaan & Pengusul:** (Contoh: BAAK - Dispensasi KRS Manual lewat Kuota)
-- **Modul Terdampak:** `KrsController`, Database Table `krs_details`, `ClassScheduleController`.
-- **Dampak Kinerja & Risiko:** Potensi ketidaksesuaian rasio dosen:mahasiswa di PDDIKTI Feeder.
-- **Estimasi Man-Days:** 3 Hari Kerja.
-- **Keputusan:** Ditolak/Diterima dengan persetujuan Wakil Rektor I (Bidang Akademik).
-
----
-
-## 4. Manajemen Risiko Lonjakan Trafik & High-Concurrency
-
-| Skenario Risiko | Dampak | Level | Rencana Mitigasi Proaktif & Kontinjensi |
-| :--- | :--- | :--- | :--- |
-| **KRS Rush Hour (Server Down)** | Ribuan mahasiswa gagal ambil mata kuliah, protes massal | **KRITIS** | - Jadwal pembukaan KRS bertahap per angkatan/fakultas.<br>- Optimasi database query (hindari lock tabel penuh, gunakan row-level locking `FOR UPDATE SKIP LOCKED`).<br>- Redis caching untuk jadwal mata kuliah statis. |
-| **Dosen Terlambat Input Nilai** | KHS tidak terbit, pelaporan Feeder tertunda | **TINGGI** | - Notifikasi WhatsApp/Email berkala H-7, H-3, H-1 tenggat.<br>- Auto-lock system dengan eskalasi laporan rekap ke Dekan & Kaprodi.<br>- Fitur perpanjangan masa nilai berbasis izin tertulis Dekan. |
-| **Ketidaksesuaian Data Feeder PDDIKTI** | Rekap AKM bermasalah, sanksi Pangkalan Data Dikti | **TINGGI** | - Fitur Pre-validation Check di SIAKAD sebelum ekspor ke Feeder.<br>- Sinkronisasi berkala per minggu, bukan di akhir batas penutupan.<br>- Log audit error sync dengan rincian NIM dan field bermasalah. |
-| **Data Pembayaran UKT Gagal Sinkron** | Mahasiswa terblokir KRS padahal sudah membayar | **SEDANG** | - Webhook retry mechanism dengan idempoten key pada payment gateway.<br>- Fitur override manual dari kasir keuangan berizin khusus dengan audit log. |
+[1. Backlog] ───> [2. In Progress] ───> [3. Under Review] ───> [4. Done]
+```
+- **Backlog**: Tiket baru dengan spesifikasi Markdown lengkap.
+- **In Progress**: Dikerjakan oleh Implementer pada worktree git terpisah.
+- **Under Review**: Tahap evaluasi oleh Reviewer yang ditunjuk. Reviewer memvalidasi:
+  - Kelulusan pengujian otomatis (`phpunit`, `pest`, atau feature test).
+  - Ketiadaan N+1 query (`preventLazyLoading`).
+  - Zero lint/LSP error.
+  - Kepatuhan Definition of Done (DoD).
+- **Done**: Tiket disetujui reviewer dan dimerge oleh user.
 
 ---
 
-## 5. Matriks Komunikasi & Rapat Kerja Tim
+## 5. Definition of Done (DoD) & Reviewer Verification Checklist
 
-1. **Daily Standup (15 Menit):** Fokus pada blocker hari ini, status tiket di Kanban, kesiapan rilis modul.
-2. **Sprint Planning (Awal Sprint):** Breakdown backlog fitur akademik ke dalam tiket dengan estimasi *story points*.
-3. **Stakeholder Alignment Meeting (Mingguan):** Update kemajuan ke BAAK, Keuangan, dan Tim IT Internal Kampus.
-4. **Post-Mortem & Retrospective (Pasca KRS War / Pasca Rilis):** Analisis performa server, bottleneck query, dan feedback komplain tiket helpdesk mahasiswa.
+Sebelum suatu tiket fitur SIAKAD dipindahkan ke status **Done** atau dirilis ke lingkungan production, wajib memenuhi kriteria kepatuhan:
 
----
-
-## 6. Definition of Done (DoD) & Checklist Kualitas Rilis
-
-Sebelum suatu tiket fitur SIAKAD dipindahkan ke status **Done** atau dirilis ke lingkungan production:
-
-- [ ] **Functional Integrity:** Alur bisnis utama lolos uji skenario positif dan negatif (misal: mahasiswa dengan IPK 2.5 tidak bisa mengambil lebih dari 20 SKS).
-- [ ] **Multi-Role Permission Check:** Hanya role yang berhak yang bisa mengakses endpoint (misal: Dosen tidak bisa mengedit nilai mata kuliah dosen lain).
-- [ ] **Database Integrity:** Foreign key, transactional boundary (`DB::transaction()`), dan rollback aman saat terjadi kegagalan sistem.
-- [ ] **Audit Trail:** Aksi penting (ubah nilai, approve KRS, ubah status bayar) tercatat di tabel `activity_logs`.
-- [ ] **UI Responsiveness:** Tampilan dashboard dan tabel berjalan optimal di desktop dan mobile.
-- [ ] **Feeder Compatibility:** Skema data mahasiswa/kelas/nilai konsisten dengan spesifikasi field PDDIKTI.
-- [ ] **UAT Sign-Off:** Ditandatangani / disetujui oleh penanggung jawab modul (BAAK / Keuangan / Dekanat).
+- [ ] **Pessimistic Row-Locking**: Seluruh transaksi reservasi kuota kelas tervalidasi menggunakan `SELECT ... FOR UPDATE`.
+- [ ] **Zero N+1 Query**: Seluruh pemanggilan relasi Eloquent wajib menyertakan `with()` atau `loadMissing()`.
+- [ ] **Data Scoping & RBAC**: Route dan controller terlindungi middleware role dan policy check anti-IDOR.
+- [ ] **OBE Mathematical Integrity**: Seluruh bobot CPMK terverifikasi tepat 100.00%.
+- [ ] **Cryptographic Audit Trail**: Aksi penting tercatat di tabel `simak_audit_log` dengan rantai hash SHA-256.
+- [ ] **Feeder Schema Compatibility**: Tipe data dan panjang karakter field konsisten dengan spesifikasi Neo Feeder Kemendiktisaintek.
+- [ ] **WCAG 2.1 AA Compliance**: Kontras warna minimal 4.5:1 dan tabel high-density mendukung navigasi keyboard penuh.
+- [ ] **UU PDP Compliance**: NIK, nomor telepon, dan data finansial tersamarkan (*masked*) pada tampilan publik/dosen.
+- [ ] **Diátaxis Documentation**: Fitur baru terdokumentasi dalam salah satu kuadran (Tutorial, How-To, Reference, Explanation).
+- [ ] **Reviewer Sign-Off**: Disetujui secara tertulis oleh agen Reviewer yang ditunjuk.

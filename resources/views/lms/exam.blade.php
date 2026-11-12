@@ -159,52 +159,6 @@
     @endif
 @endsection
 
-@push('styles')
-<style>
-    .lms-exam-results-page{display:grid;gap:1.25rem}.lms-exam-results-page .subtitle{color:#64748b}
-    .lms-exam-results-page .lms-panel{display:grid;gap:1rem;padding:1.25rem;background:#fff;border:1px solid #dbe3ee;border-radius:10px}
-    .lms-exam-results-page .lms-meta{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;color:#475569}
-    .lms-exam-meta-alert{display:flex;align-items:flex-start;gap:.65rem;margin:0;padding:.75rem .9rem;border:1px solid #bae6fd;border-left:4px solid #0284c7;border-radius:8px;background:#f0f9ff;color:#0c4a6e;line-height:1.5}
-    .lms-exam-meta-alert p{margin:0}
-    .lms-exam-meta-alert .lms-info-alert-icon{display:grid;flex:0 0 1.15rem;width:1.15rem;height:1.15rem;place-items:center;margin-top:.08rem;border:1.5px solid currentColor;border-radius:50%;font-size:.75rem;font-weight:700;line-height:1}
-    .lms-exam-edit-modal{position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);margin:0;padding:0;width:min(900px,calc(100vw - 2rem));max-height:min(90vh,900px);overflow:hidden;border:1px solid #dbe3ee;border-radius:16px;background:#fff;color:#243447;box-shadow:0 24px 80px #0f172a40}
-    .lms-exam-edit-modal::backdrop{background:#0f172a80;backdrop-filter:blur(2px)}
-    .lms-exam-edit-modal[open]{display:flex;flex-direction:column}
-    .lms-exam-edit-form{display:flex;min-height:0;flex-direction:column}
-    .lms-exam-edit-form .lms-dialog-heading,.lms-exam-edit-form .lms-dialog-actions{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.25rem}
-    .lms-exam-edit-form .lms-dialog-heading{border-bottom:1px solid #e2e8f0}
-    .lms-exam-edit-form .lms-dialog-heading h2{margin:0}
-    .lms-exam-edit-form .lms-dialog-body{display:grid;min-height:0;gap:1rem;overflow:auto;padding:1.25rem}
-    .lms-exam-edit-form [hidden]{display:none!important}
-    .lms-exam-edit-form label{display:grid;min-width:0;gap:.4rem;color:#334155;font-weight:600}
-    .lms-exam-edit-form input,.lms-exam-edit-form textarea,.lms-exam-edit-form select{box-sizing:border-box;width:100%;min-width:0;padding:.65rem .75rem;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#0f172a;font:inherit}
-    .lms-exam-edit-form textarea{resize:vertical}
-    .lms-exam-edit-form .lms-inline-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.85rem}
-    .lms-exam-edit-form .lms-info-alert{margin:1.25rem 1.25rem 0}
-    .lms-exam-edit-form>label{margin:1.25rem 1.25rem 0}
-    .lms-exam-edit-form .lms-info-alert{padding:.8rem 1rem;border:1px solid #bae6fd;border-left:4px solid #0284c7;border-radius:8px;background:#f0f9ff;color:#0c4a6e}
-    .lms-exam-edit-form .lms-info-alert p{margin:0;line-height:1.5}
-    .lms-exam-edit-form .lms-dialog-body>.lms-info-alert{display:flex;align-items:flex-start;gap:.65rem;margin:0;padding:.75rem .9rem}
-    .lms-exam-edit-form .lms-dialog-body>.lms-info-alert .lms-info-alert-icon{display:grid;flex:0 0 1.15rem;width:1.15rem;height:1.15rem;place-items:center;margin-top:.08rem;border:1.5px solid currentColor;border-radius:50%;font-size:.75rem;font-weight:700;line-height:1}
-    .lms-exam-edit-form .lms-dialog-actions{justify-content:flex-end;border-top:1px solid #e2e8f0}
-    .lms-exam-edit-form .ts-wrapper{width:100%}
-    .lms-exam-edit-form .ts-control{min-height:42px;border-color:#cbd5e1;border-radius:8px;padding:.55rem .7rem}
-    .lms-exam-edit-modal .ts-dropdown{z-index:2}
-    .lms-exam-edit-modal .ts-dropdown-content{max-height:min(240px,40vh);overflow-y:auto}
-    .lms-attempt-review{min-width:180px}
-    .lms-attempt-review>summary{color:#14532d;font-weight:700;cursor:pointer}
-    .lms-answer{padding:.8rem 0;border-bottom:1px solid #e2e8f0;white-space:normal}
-    .lms-answer h3{margin:0 0 .5rem;font-size:.95rem}
-    .lms-answer p{margin:.4rem 0;line-height:1.5}
-    .lms-answer-question,.lms-answer-response{overflow-wrap:anywhere}
-    .lms-attempt-grade,.lms-answer-empty{margin:.8rem 0 0}
-    .lms-inline-form{display:flex;flex-wrap:wrap;align-items:end;gap:.65rem}
-    .lms-inline-form label{display:grid;gap:.3rem}
-    .lms-inline-form input,.lms-inline-form textarea{padding:.55rem;border:1px solid #cbd5e1;border-radius:7px}
-    @media(max-width:600px){.lms-exam-edit-modal{width:calc(100vw - 1rem);max-height:calc(100dvh - 1rem)}.lms-exam-edit-form .lms-dialog-heading,.lms-exam-edit-form .lms-dialog-body,.lms-exam-edit-form .lms-dialog-actions{padding:.85rem}.lms-exam-edit-form .lms-inline-fields{grid-template-columns:1fr}}
-</style>
-@endpush
-
 @push('scripts')
 <script>
     document.querySelectorAll('[data-lms-open]').forEach((button) => button.addEventListener('click', () => {

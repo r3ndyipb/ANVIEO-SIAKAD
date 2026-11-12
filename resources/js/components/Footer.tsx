@@ -96,7 +96,7 @@ export default function Footer({ onNavigate }: FooterProps) {
               <li><a href="#network">AUI Network</a></li>
               <li><a href="#tuition">Scholarship Available</a></li>
               <li><a href="#anywhere">Study From Anywhere</a></li>
-              <li><a href="/login" style={{ color: 'var(--gold-soft)', fontWeight: 600 }}>Login SIAKAD &rarr;</a></li>
+              <li><a href="/login" style={{ color: 'var(--gold-soft)', fontWeight: 600 }}>LOGIN PORTAL &rarr;</a></li>
             </ul>
           </div>
           <div>

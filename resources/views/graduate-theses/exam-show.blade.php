@@ -3,15 +3,6 @@
 @section('title', 'Detail Ujian Tesis & Disertasi | SIAKAD')
 @section('topbar_title', 'Manajemen Ujian Tesis & Disertasi')
 
-@push('styles')
-    <style>
-        .thesis-revision-field { grid-column: 1 / -1; }
-        .thesis-revision-field textarea { width: 100%; min-height: 190px; padding: 14px 16px; border: 1px solid #bdcddd; border-radius: 10px; background: linear-gradient(145deg, #fff, #f7faff); color: #23384c; font: 500 14px/1.7 system-ui, sans-serif; resize: vertical; box-shadow: inset 0 1px 2px rgb(28 69 105 / 5%); transition: border-color .18s ease, box-shadow .18s ease; }
-        .thesis-revision-field textarea:focus { border-color: #3985c2; outline: 0; box-shadow: 0 0 0 4px rgb(57 133 194 / 14%); }
-        .thesis-revision-field small { display: block; margin-top: 6px; color: #6d7f90; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading"><div><p class="eyebrow">{{ $exam->nama_program_studi }} · {{ $statusLabel }}</p><h1>Ujian {{ strtoupper($exam->jenis_ujian) }}</h1><p class="subtitle">{{ $exam->nim }} · {{ $exam->nama_mahasiswa }}</p></div><a class="button" href="{{ route('graduate_theses.exams.index') }}">Kembali</a></div>
     @if (session('status'))<div class="alert alert-success" role="status">{{ session('status') }}</div>@endif

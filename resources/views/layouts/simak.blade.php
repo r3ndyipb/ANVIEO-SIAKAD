@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ app()->getLocale() }}" data-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,398 +7,85 @@
     <meta name="application-name" content="siakad smartkampus.id">
     <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Early Theme Setter: Default Light Theme (FOUC Prevention) -->
     <script>
+        (function() {
+            try {
+                if (!localStorage.getItem('aui_simak_theme_default_light_v1')) {
+                    localStorage.setItem('simak_theme', 'light');
+                    localStorage.setItem('anvieo_theme', 'light');
+                    localStorage.setItem('aui_simak_theme_default_light_v1', '1');
+                }
+                var savedTheme = localStorage.getItem('simak_theme') || localStorage.getItem('anvieo_theme');
+                if (savedTheme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    localStorage.setItem('simak_theme', 'light');
+                    localStorage.setItem('anvieo_theme', 'light');
+                }
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
         window.simakLocale = @json(app()->getLocale());
         window.simakTranslationsUrl = @json(route('locale.translations', ['v' => md5_file(lang_path('en/ui.php'))]));
     </script>
+
     <link rel="icon" type="image/png" href="{{ $siteConfiguration['logo_url'] }}">
+    <link rel="shortcut icon" href="{{ $siteConfiguration['logo_url'] }}">
+    <link rel="apple-touch-icon" href="{{ $siteConfiguration['logo_url'] }}">
     <title>@yield('title', $siteConfiguration['app_name'])</title>
+
+    <!-- Google Fonts: Fraunces, Karla, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,600;1,9..144,700&family=Karla:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    @stack('styles')
+    @vite(['resources/css/app.css', 'resources/css/simak-theme.css', 'resources/js/app.js'])
+
     <style>
         :root {
-            color-scheme: light;
             --brand-primary: {{ $siteConfiguration['primary_color'] }};
             --brand-primary-foreground: {{ $siteConfiguration['primary_foreground'] }};
-            --ink: #24382d;
-            --muted: #657365;
-            --green: #356b45;
-            --green-strong: #214f36;
-            --green-deep: #183a2b;
-            --green-pale: #e4eed5;
-            --yellow: #efca47;
-            --yellow-bright: #f7d856;
-            --yellow-pale: #fff3b6;
-            --surface: #fff;
-            --line: #e3e9e0;
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color: var(--ink);
-            font-synthesis: none;
-            text-rendering: optimizeLegibility;
         }
-        * { box-sizing: border-box; }
-        body {
-            min-width: 320px;
-            min-height: 100vh;
-            margin: 0;
-            background: linear-gradient(128deg, #c8ddc9 0%, #e3eddf 45%, #b9d3c2 100%);
-            background-size: 150% 150%;
-            animation: wash 20s ease-in-out infinite alternate;
-        }
-        button, input, select { font: inherit; }
-        a { color: inherit; }
-        .simak-shell { display: grid; grid-template-columns: 286px minmax(0, 1fr); min-height: 100vh; }
-        .simak-sidebar {
-            position: sticky;
-            top: 0;
-            display: flex;
-            flex-direction: column;
-            width: 286px;
-            height: 100vh;
-            overflow: hidden;
-            padding: 22px 16px 16px;
-            background: linear-gradient(160deg, #2e6842 0%, var(--green-deep) 82%);
-            color: #f8f5dc;
-            box-shadow: 8px 0 30px rgba(39, 69, 40, .12);
-            z-index: 30;
-        }
-        .brand-link { display: flex; align-items: center; gap: 12px; padding: 4px 8px 20px; color: inherit; text-decoration: none; }
-        .brand-link img { width: 46px; height: 46px; object-fit: contain; }
-        .brand-title { display: block; font-size: 13px; font-weight: 800; }
-        .brand-subtitle { display: block; margin-top: 4px; color: #d4dfb8; font-size: 11px; font-weight: 500; }
-        .account-mark { display: flex; align-items: center; gap: 11px; margin: 0 2px 20px; padding: 13px 10px; border-top: 1px solid rgba(247, 216, 86, .26); border-bottom: 1px solid rgba(247, 216, 86, .26); }
-        .account-avatar { display: grid; width: 36px; height: 36px; flex: 0 0 36px; place-items: center; border: 1px solid rgba(247, 216, 86, .8); border-radius: 50%; background: rgba(247, 216, 86, .16); color: var(--yellow-bright); font-family: Georgia, serif; font-size: 17px; }
-        .account-name { overflow: hidden; color: #fffdf1; font-size: 12px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
-        .account-role { display: block; margin-top: 4px; color: #d4dfb8; font-size: 10px; }
-        .side-nav { flex: 1; overflow-y: auto; padding: 0 2px 8px; scrollbar-color: rgba(241, 220, 125, .38) transparent; scrollbar-width: thin; }
-        .nav-group { margin-bottom: 7px; }
-        .nav-group-toggle { display: flex; width: 100%; min-height: 35px; align-items: center; justify-content: space-between; padding: 0 9px; border: 0; background: transparent; color: #d5dfa9; font-size: 10px; font-weight: 800; text-align: left; text-transform: uppercase; cursor: pointer; }
-        .nav-group-label { display: inline-flex; min-width: 0; align-items: center; gap: 8px; }
-        .nav-group-icon { display: inline-flex; flex: 0 0 15px; color: #f4dc82; }
-        .nav-group-icon svg { width: 15px; height: 15px; }
-        .nav-group-toggle::after { width: 6px; height: 6px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; content: ""; transform: rotate(45deg) translateY(-2px); transition: transform .22s ease; }
-        .nav-group-toggle[aria-expanded="false"]::after { transform: rotate(-45deg); }
-        .nav-group-items { display: grid; gap: 3px; overflow: hidden; max-height: 1000px; opacity: 1; transition: max-height .26s ease, opacity .2s ease; }
-        .nav-group-items.is-collapsed { max-height: 0; opacity: 0; pointer-events: none; }
-        .nav-link { position: relative; display: flex; min-height: 37px; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 9px 7px 25px; border-radius: 5px; color: #e6ead7; font-size: 12px; text-decoration: none; transition: background .2s ease, color .2s ease, transform .2s ease; }
-        .nav-link::before { position: absolute; left: 10px; width: 5px; height: 5px; border-radius: 50%; background: #b5c98e; content: ""; transition: transform .2s ease, background .2s ease; }
-        .nav-link:hover { transform: translateX(2px); background: rgba(255, 242, 183, .1); color: #fff9d3; }
-        .nav-link[aria-current="page"] { background: linear-gradient(100deg, #d9ead5, #c9e0ce); color: #254832; font-weight: 800; box-shadow: 0 5px 14px rgba(19, 42, 24, .16); }
-        .nav-link[aria-current="page"]::before { background: var(--green-strong); transform: scale(1.35); }
-        .nav-link-disabled { color: rgba(230, 234, 215, .65); cursor: default; }
-        .nav-link-disabled::before { background: #8eaa7d; }
-        .nav-status { flex: 0 0 auto; color: #f4dc82; font-size: 9px; font-weight: 700; }
-        .sidebar-foot { padding: 12px 9px 2px; border-top: 1px solid rgba(247, 216, 86, .22); color: #c4d3af; font-size: 10px; }
-        .site-footer { padding: 0 24px 20px; color: #536b58; font-size: 11px; text-align: center; }
-        .profile-link { color: var(--green-strong); font-size: 11px; font-weight: 700; text-decoration: none; }
-        .profile-link:hover { text-decoration: underline; }
-        .topbar-account-menu { position: relative; }
-        .topbar-account-menu > summary { list-style: none; }
-        .topbar-account-menu > summary::-webkit-details-marker { display: none; }
-        .topbar-account-trigger { display: flex; min-width: 0; align-items: center; gap: 11px; padding: 7px 10px; border: 1px solid #dbe4e7; border-radius: 10px; background: #fff; color: #24382d; box-shadow: 0 2px 6px rgba(31, 69, 44, .05); cursor: pointer; }
-        .topbar-account-trigger:focus-visible { outline: 3px solid rgba(53, 107, 69, .25); outline-offset: 2px; }
-        .topbar-account-avatar { display: grid; width: 38px; height: 38px; flex: 0 0 38px; place-items: center; border: 1px solid color-mix(in srgb, var(--brand-primary), white 55%); border-radius: 9px; background: var(--brand-primary); color: var(--brand-primary-foreground); font: 700 15px Georgia, serif; }
-        .topbar-account-trigger-copy { display: grid; min-width: 0; gap: 2px; text-align: left; }
-        .topbar-account-trigger-copy strong { max-width: 235px; overflow: hidden; color: #263b50; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-        .topbar-account-trigger-copy small { color: #718096; font-size: 10px; white-space: nowrap; }
-        .topbar-account-chevron { width: 16px; height: 16px; flex: 0 0 16px; color: #8492a6; transition: transform .18s ease; }
-        .topbar-account-menu[open] .topbar-account-chevron { transform: rotate(180deg); }
-        .topbar-account-panel { position: absolute; top: calc(100% + 8px); right: 0; z-index: 50; width: min(350px, calc(100vw - 24px)); overflow: hidden; border: 1px solid #dce4ec; border-radius: 10px; background: #fff; box-shadow: 0 14px 32px rgba(24, 42, 69, .16); }
-        .topbar-account-identity { padding: 16px 18px; border-bottom: 1px solid #e7edf2; background: #fbfcfd; }
-        .topbar-account-identity strong { display: block; color: #19283d; font-size: 14px; line-height: 1.35; overflow-wrap: anywhere; }
-        .topbar-account-identity span { display: block; margin-top: 5px; color: #65758b; font-size: 11px; line-height: 1.45; overflow-wrap: anywhere; }
-        .topbar-account-role { display: inline-flex !important; margin-top: 10px !important; padding: 5px 9px; border: 1px solid #a7ebca; border-radius: 6px; background: #effcf5; color: #087c56 !important; font-size: 10px !important; font-weight: 700; }
-        .topbar-account-actions { display: grid; gap: 3px; padding: 8px 12px; }
-        .topbar-account-actions form { margin: 0; }
-        .topbar-account-action { display: flex; width: 100%; min-height: 42px; align-items: center; gap: 10px; padding: 6px 9px; border: 0; border-radius: 7px; background: transparent; color: var(--green-strong); font: inherit; font-size: 12px; font-weight: 700; text-align: left; text-decoration: none; cursor: pointer; }
-        .topbar-account-action:hover { background: #f2f7f2; }
-        .topbar-account-action svg { width: 19px; height: 19px; flex: 0 0 19px; }
-        .topbar-account-action.is-logout { color: #bd2445; }
-        .topbar-account-action.is-logout:hover { background: #fff4f5; }
-        .account-profile-modal-backdrop { position: fixed; inset: 0; z-index: 130; display: grid; overflow-y: auto; padding: clamp(20px, 6vh, 56px) 16px 20px; place-items: start center; background: rgba(20, 43, 29, .5); backdrop-filter: blur(3px); }
-        .account-profile-modal-backdrop[hidden] { display: none; }
-        .account-profile-modal { width: min(100%, 680px); max-height: calc(100dvh - clamp(20px, 6vh, 56px) - 20px); overflow-y: auto; padding: clamp(18px, 3vw, 28px); border: 1px solid #dfe8df; border-radius: 10px; background: #fff; box-shadow: 0 22px 64px rgba(16, 41, 25, .25); }
-        .account-profile-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
-        .account-profile-modal-head h2 { margin: 0; color: #244a32; font-size: 25px; font-weight: 650; line-height: 1.2; letter-spacing: -.025em; }
-        .account-profile-modal-head p { margin: 6px 0 0; color: #69745c; font-size: 11px; line-height: 1.5; }
-        .account-profile-modal-close { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border: 1px solid #dce5dc; border-radius: 50%; background: #fff; color: #315b3b; cursor: pointer; }
-        .account-profile-modal-close svg { width: 17px; height: 17px; }
-        .account-profile-modal-content .profile-edit-form { margin: 0; }
-        .account-profile-modal-content .calendar-modal-actions { margin-top: 18px; }
-        .simak-workspace { min-width: 0; background: linear-gradient(145deg, rgba(228, 239, 225, .55), rgba(212, 231, 216, .34)); }
-        .topbar { position: sticky; top: 0; z-index: 20; display: flex; min-height: 74px; align-items: center; justify-content: space-between; gap: 20px; padding: 12px clamp(20px, 4vw, 60px); border-bottom: 1px solid #e0e8df; background: rgba(255, 255, 255, .96); box-shadow: 0 3px 14px rgba(26, 57, 36, .06); backdrop-filter: blur(16px); }
-        .topbar-left { display: flex; align-items: center; gap: 14px; }
-        .topbar-kicker { color: #76805c; font-size: 10px; font-weight: 800; letter-spacing: 0; text-transform: uppercase; }
-        .topbar-title { margin-top: 4px; color: #284734; font-size: 14px; font-weight: 700; }
-        .topbar-user { display: flex; align-items: center; gap: 14px; }
-        .language-switcher { display: flex; align-items: center; gap: 4px; padding: 3px; border: 1px solid #dbe4e7; border-radius: 9px; background: #fff; }
-        .language-switcher form { margin: 0; }
-        .language-switcher button { display: inline-flex; min-height: 32px; align-items: center; gap: 5px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: #536579; font-size: 10px; font-weight: 800; cursor: pointer; }
-        .language-switcher button[aria-pressed="true"] { background: var(--green-pale); color: var(--green-strong); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand-primary), white 74%); }
-        .language-switcher button:focus-visible { outline: 2px solid #478055; outline-offset: 2px; }
-        .notification-center { position: relative; flex: 0 0 auto; }
-        .notification-trigger { position: relative; display: grid; width: 48px; height: 48px; place-items: center; border: 1px solid #dce4ec; border-radius: 12px; background: #f8fafc; color: #536174; cursor: pointer; }
-        .notification-trigger:hover, .notification-trigger:focus-visible { border-color: #b7c8dc; background: #eef3f8; outline: 0; }
-        .notification-trigger svg { width: 21px; height: 21px; fill: currentColor; }
-        .notification-trigger.has-unread { color: #273b56; }
-        .notification-count { position: absolute; top: -5px; right: -5px; display: grid; min-width: 19px; height: 19px; place-items: center; padding: 0 5px; border: 2px solid #fff; border-radius: 20px; background: #dc3545; color: #fff; font-size: 9px; font-weight: 900; }
-        .notification-count[hidden] { display: none; }
-        .notification-panel { position: absolute; top: calc(100% + 14px); right: 0; z-index: 70; display: grid; grid-template-rows: auto minmax(120px, 1fr) auto; width: min(640px, calc(100vw - 24px)); max-height: min(520px, calc(100dvh - 100px)); overflow: hidden; border: 1px solid #dce4ec; border-radius: 20px; background: #fff; box-shadow: 0 18px 48px rgba(24, 42, 69, .2); }
-        .notification-panel[hidden] { display: none; }
-        .notification-panel-head, .notification-panel-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 17px 22px; background: #f8fafc; }
-        .notification-panel-head { border-bottom: 1px solid #edf1f5; }
-        .notification-panel-head h2 { display: flex; align-items: center; gap: 10px; margin: 0; color: #172338; font-size: 16px; font-weight: 700; line-height: 1.25; }
-        .notification-panel-head h2 svg { width: 19px; height: 19px; fill: #23438f; color: #23438f; }
-        .notification-mark-button { min-height: 38px; padding: 0 14px; border: 1px solid #9aebc8; border-radius: 24px; background: #f4fcf8; color: #4e5968; font-size: 11px; font-weight: 800; cursor: pointer; }
-        .notification-mark-button:disabled { opacity: .6; cursor: wait; }
-        .notification-list { min-height: 0; overflow-y: auto; }
-        .notification-item { position: relative; display: flex; align-items: flex-start; gap: 11px; padding: 16px 22px; border-bottom: 1px solid #edf1f5; color: #536174; text-decoration: none; text-align: left; }
-        .notification-item-content { display: flex; flex: 1 1 auto; min-width: 0; color: inherit; text-align: left; text-decoration: none; }
-        .notification-item-content:hover .notification-item-copy strong { text-decoration: underline; }
-        .notification-panel, .notification-panel-head, .notification-panel-foot, .notification-item, .notification-item-copy, .notification-item-copy > * { text-align: left; }
-        .notification-item:hover { background: #f8fbff; }
-        .notification-item.is-unread { background: #fffafa; color: #253247; }
-        .notification-item-copy { display: grid; flex: 1; gap: 5px; min-width: 0; text-align: left; }
-        .notification-item-copy strong { color: #1c2b41; font-size: 12px; line-height: 1.4; }
-        .notification-item.is-unread .notification-item-copy strong { color: #a72b3a; }
-        .notification-item-copy > span { font-size: 11px; line-height: 1.55; overflow-wrap: anywhere; }
-        .notification-item-copy small { color: #8190a1; font-size: 9px; }
-        .notification-unread-dot { width: 9px; height: 9px; flex: 0 0 9px; margin: 5px 0 0; border-radius: 50%; background: #dc3545; }
-        .notification-item-action { flex: 0 0 auto; padding: 6px 10px; border: 1px solid #d8e2ec; border-radius: 7px; background: #fff; color: #23438f; font-size: 10px; font-weight: 800; cursor: pointer; }
-        .notification-item-action:hover { border-color: #a9c1df; background: #f2f7fc; }
-        .notification-item-action:disabled { opacity: .6; cursor: wait; }
-        .notification-empty { display: grid; min-height: 220px; align-content: center; justify-items: center; gap: 12px; padding: 26px; color: #6f8098; text-align: center; }
-        .notification-empty p { margin: 0; font-size: 15px; }
-        .notification-empty-check { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 50%; background: #10b981; color: #fff; font-size: 28px; font-weight: 800; }
-        .notification-error { margin: 0; padding: 22px; color: #9d2838; font-size: 12px; line-height: 1.6; }
-        .notification-panel-foot { justify-content: center; border-top: 1px solid #edf1f5; }
-        .notification-panel-foot .notification-mark-button { border: 0; background: transparent; color: #23438f; font-size: 13px; }
-        .topbar-user-name { color: #354b37; font-size: 12px; font-weight: 700; }
-        .topbar-role { display: block; margin-top: 3px; color: #77805f; font-size: 10px; text-align: right; }
-        .signout { min-height: 38px; padding: 0 13px; border: 1px solid #b3bf8e; border-radius: 5px; background: #fffdf0; color: #315b3b; font-size: 11px; font-weight: 800; cursor: pointer; transition: background .2s ease, border-color .2s ease; }
-        .signout:hover { border-color: var(--green); background: #edf3d0; }
-        .mobile-toggle { display: none; min-height: 38px; padding: 0 12px; border: 1px solid #bbc78f; border-radius: 5px; background: #fffdf0; color: #315b3b; font-size: 11px; font-weight: 800; cursor: pointer; }
-        .simak-content { width: auto; min-height: calc(100vh - 112px); margin: 20px 26px 30px; padding: clamp(25px, 3vw, 42px) clamp(20px, 3.2vw, 48px) 48px; border: 1px solid #e3e9e2; border-radius: 10px; background: #fff; box-shadow: 0 12px 34px rgba(31, 69, 44, .1); animation: content-arrive .42s ease-out both; }
-        .page-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 25px; }
-        .page-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
-        .eyebrow { margin: 0 0 7px; color: #68873c; font-size: 10px; font-weight: 800; letter-spacing: 0; text-transform: uppercase; }
-        h1 { margin: 0; color: #244a32; font-size: 40px; font-weight: 650; line-height: 1.12; letter-spacing: -.035em; }
-        h2 { color: #2a4b33; }
-        .subtitle { margin: 10px 0 0; color: #69745c; font-size: 13px; line-height: 1.6; }
-        .module-alert { margin-top: 12px; padding: 10px 13px; border: 1px solid #d9e6d5; border-left: 3px solid #7fa276; border-radius: 5px; background: #f3f8f0; }
-        .module-alert .subtitle { margin: 0; font-size: 12px; }
-        .button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; padding: 0 14px; border: 1px solid #aeba82; border-radius: 5px; background: #fffcec; color: #315b3b; font-size: 12px; font-weight: 800; text-decoration: none; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
-        .button:hover { transform: translateY(-1px); box-shadow: 0 7px 18px rgba(50, 77, 41, .12); background: #fff6c9; }
-        .button-primary { border-color: #367347; background: linear-gradient(110deg, #4e914e, #39734a); color: #fffbea; }
-        .button-primary:hover { background: linear-gradient(110deg, #5a9e53, #3d7f4c); }
-        .button-small { min-height: 31px; padding: 0 10px; font-size: 10px; }
-        .form-section { padding: 21px 0; border-top: 1px solid var(--line); }
-        .form-section h2 { margin: 0 0 15px; font-size: 13px; }
-        .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px 20px; }
-        label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        input, select { width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid #c8cc9d; border-radius: 5px; background: #fffef6; color: #293c2c; font: inherit; font-size: 12px; }
-        input:focus, select:focus { outline: 3px solid rgba(221, 187, 52, .28); border-color: #8a9e3e; }
-        .field-error { margin: 6px 0 0; color: #9d3e28; font-size: 11px; }
-        .form-actions { display: flex; justify-content: flex-end; gap: 9px; padding-top: 18px; border-top: 1px solid var(--line); }
-        .master-data-filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); align-items: end; gap: 10px; margin-bottom: 20px; padding: 15px; border: 1px solid #e3e9e2; border-radius: 7px; background: #fbfdfb; }
-        .master-data-filters .button { justify-self: start; }
-        .master-identity-card { margin-bottom: 22px; padding: clamp(20px, 3vw, 32px); border: 1px solid #e3e9e2; border-radius: 10px; background: #fff; box-shadow: 0 10px 28px rgba(31, 69, 44, .08); }
-        .master-identity-heading { padding-bottom: 18px; border-bottom: 1px solid #e5ebe4; }
-        .master-identity-heading h2 { margin: 0; font-size: clamp(24px, 3vw, 32px); font-weight: 650; line-height: 1.2; letter-spacing: -.025em; }
-        .master-identity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 18px 28px; margin: 0; padding-top: 21px; }
-        .master-identity-grid dt { margin-bottom: 5px; color: #738069; font-size: 9px; font-weight: 800; text-transform: uppercase; }
-        .master-identity-grid dd { margin: 0; color: #2e4d36; font-size: 12px; font-weight: 700; overflow-wrap: anywhere; }
-        .master-empty-state { padding: 42px 16px; border: 1px dashed #d5dfd3; border-radius: 8px; color: #6b745e; text-align: center; }
-        .master-data-modal { max-width: 760px; }
-        .master-data-field-grid { padding: 2px 5px 12px 0; }
-        .master-checkbox-heading { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .master-checkbox-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 12px; max-height: 190px; overflow-y: auto; padding: 10px; border: 1px solid #c8cc9d; border-radius: 5px; background: #fffef6; }
-        .master-checkbox-option { display: flex; align-items: flex-start; gap: 7px; margin: 0; color: #293c2c; font-size: 11px; font-weight: 500; }
-        .master-checkbox-option input[type="checkbox"] { flex: 0 0 auto; width: 15px; min-height: 15px; height: 15px; margin: 0; padding: 0; accent-color: #39734a; }
-        .master-checkbox-empty, .master-checkbox-help { color: #6b745e; font-size: 10px; }
-        .master-checkbox-help { display: block; margin-top: 5px; }
-        .period-strip { padding: 13px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: #48633b; font-size: 12px; font-weight: 800; }
-        .table-wrap { overflow-x: auto; border-top: 1px solid #e5e9e2; border-bottom: 1px solid #e5e9e2; background: #fff; }
-        table { width: 100%; min-width: 850px; border-collapse: collapse; }
-        th, td { padding: 12px 11px; border-bottom: 1px solid rgba(92, 102, 61, .13); text-align: left; vertical-align: middle; font-size: 11px; }
-        th { color: #6a7651; font-size: 9px; font-weight: 800; text-transform: uppercase; }
-        tbody tr:last-child td { border-bottom: 0; }
-        tbody tr { transition: background .18s ease; }
-        tbody tr:hover { background: #f0f6f0; }
-        .period { color: #345c3a; font-weight: 800; }
-        .subtext { display: block; margin-top: 4px; color: #79806a; font-size: 10px; }
-        .status-chip { display: inline-flex; min-width: 65px; justify-content: center; padding: 5px 7px; border-radius: 99px; background: #ecebd5; color: #6b704d; font-size: 9px; font-weight: 800; }
-        .status-chip.active { background: #deedc5; color: #30653c; }
-        .row-actions { display: flex; flex-wrap: wrap; gap: 6px; }
-        .empty-state { padding: 48px 16px; color: #6b745e; text-align: center; }
-        .empty-state strong { display: block; margin-bottom: 7px; color: #31583a; font-size: 23px; font-weight: 650; letter-spacing: -.02em; }
-        .pagination { display: flex; justify-content: flex-end; align-items: center; gap: 14px; padding: 13px 0; color: #71805b; font-size: 10px; }
-        .pagination a { color: #376d42; font-weight: 800; text-decoration: none; }
-        .dt-paging { display: flex; justify-content: flex-end; align-items: center; gap: 4px; padding: 13px 0; }
-        .dt-paging-button { min-width: 32px; min-height: 30px; margin-left: 4px; padding: 0 9px; border: 1px solid #d5dfd3; border-radius: 5px; background: #fff; color: #1e64a1; font-size: 10px; text-decoration: none; }
-        .dt-paging-button.current { border-color: #8eb8d9; background: #eaf3fb; color: #1e64a1; font-weight: 700; }
-        .dt-paging-button.disabled { color: #a5afa2; cursor: default; }
-        .sidebar-scrim { display: none; }
-        @keyframes wash { from { background-position: 0% 20%; } to { background-position: 100% 80%; } }
-        @keyframes content-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes toast-in { from { opacity: 0; transform: translateY(-12px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes toast-out { to { opacity: 0; transform: translateY(-8px) scale(.98); } }
-        @media (max-width: 1100px), (hover: none) and (pointer: coarse) and (max-width: 1400px) {
-            .simak-shell { display: block; }
-            .simak-sidebar { position: fixed; left: 0; width: min(292px, calc(100vw - 54px)); transform: translateX(-103%); transition: transform .3s cubic-bezier(.2,.8,.2,1); }
-            .simak-shell.is-nav-open .simak-sidebar { transform: translateX(0); }
-            .sidebar-scrim { position: fixed; inset: 0; z-index: 25; display: block; background: rgba(23, 47, 31, .42); opacity: 0; pointer-events: none; transition: opacity .25s ease; }
-            .simak-shell.is-nav-open .sidebar-scrim { opacity: 1; pointer-events: auto; }
-            .mobile-toggle { display: inline-flex; align-items: center; gap: 8px; }
-            .simak-content { min-height: calc(100vh - 92px); margin: 14px 14px 24px; padding: 25px 20px 36px; border-radius: 8px; }
-            .notification-panel { position: fixed; top: calc(74px + env(safe-area-inset-top, 0px)); right: 12px; width: min(640px, calc(100vw - 24px)); max-height: min(520px, calc(100dvh - 90px - env(safe-area-inset-top, 0px))); }
-        }
-        @media (max-width: 580px) {
-            .topbar { min-height: 64px; gap: 10px; padding: 10px 14px; }
-            .topbar-left { gap: 9px; }
-            .topbar-kicker { display: none; }
-            .topbar-title { margin: 0; font-size: 11px; }
-            .topbar-user { gap: 7px; }
-            .topbar-account-trigger { gap: 7px; padding: 5px 7px; }
-            .topbar-account-avatar { width: 34px; height: 34px; flex-basis: 34px; }
-            .topbar-account-trigger-copy strong { max-width: 115px; font-size: 10px; }
-            .topbar-account-trigger-copy small { max-width: 115px; overflow: hidden; font-size: 9px; text-overflow: ellipsis; }
-            .topbar-account-chevron { width: 13px; height: 13px; flex-basis: 13px; }
-            .topbar-account-panel { right: -5px; width: min(350px, calc(100vw - 24px)); }
-            .account-profile-modal-backdrop { padding: 8vh 12px 12px; }
-            .account-profile-modal { max-height: 86dvh; }
-            .topbar-user-name { max-width: 90px; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
-            .topbar-role { display: none; }
-            .signout { min-height: 35px; padding: 0 9px; font-size: 10px; }
-            .mobile-toggle { min-height: 35px; padding: 0 9px; font-size: 10px; }
-            .page-heading { align-items: flex-start; flex-direction: column; gap: 15px; }
-            h1 { font-size: 34px; }
-            .field-grid { grid-template-columns: 1fr; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
-        }
-    </style>
-    @stack('styles')
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        .dt-container { color: var(--ink); font: inherit; font-size: 11px; }
+        /* Specific page components styling in line with AUI design system */
+        .dt-container { color: var(--bx-ink); font: inherit; font-size: 11px; }
         .dt-layout-row { display: flex; align-items: center; gap: 12px; margin: 0 0 12px !important; }
         .dt-layout-cell { min-width: 0; }
-        .dt-container .dt-search, .dt-container .dt-length { display: flex; align-items: center; gap: 8px; color: #5e6c50; font-size: 10px; }
-        .dt-container .dt-search input, .dt-container .dt-length select { min-height: 36px; margin: 0; padding: 0 10px; border: 1px solid #d5dfd3; border-radius: 5px; background: #fff; color: var(--ink); font: inherit; font-size: 11px; }
+        .dt-container .dt-search, .dt-container .dt-length { display: flex; align-items: center; gap: 8px; color: var(--bx-muted); font-size: 10px; }
+        .dt-container .dt-search input, .dt-container .dt-length select { min-height: 34px; margin: 0; padding: 0 10px; border: 1px solid var(--bx-border); border-radius: 6px; background: var(--bx-surface); color: var(--bx-ink); font: inherit; font-size: 11px; outline: none; }
+        .dt-container .dt-search input:focus, .dt-container .dt-length select:focus { border-color: var(--gold); }
         .dt-container .dt-search input { width: min(270px, 42vw); }
         .dt-buttons { display: flex; flex-wrap: wrap; gap: 7px; }
-        .dt-container .dt-button.dt-export-button { display: inline-flex; min-height: 35px; align-items: center; gap: 7px; padding: 0 11px; border: 1px solid #d1ddd0; border-radius: 5px; background: #fff; background-image: none; color: #315d3b; font: inherit; font-size: 10px; font-weight: 800; box-shadow: none; transition: background .18s ease, border-color .18s ease; }
-        .dt-container .dt-button.dt-export-button:hover { border-color: #83a38b; background: #f2f7f2; }
-        .dt-export-button svg { width: 15px; height: 15px; }
-        .dt-container .dt-info { padding-top: 0; color: #728070; font-size: 10px; }
-        .dt-container .dt-paging .dt-paging-button { min-width: 32px; min-height: 30px; margin-left: 4px; padding: 0 9px; border: 1px solid #d5dfd3; border-radius: 5px; background: #fff; background-image: none; color: #386345 !important; font-size: 10px; box-shadow: none; }
-        .dt-container .dt-paging .dt-paging-button.current { border-color: #73a17b; background: #e8f2e7; color: #315b3b !important; }
-        .dt-container .dt-paging .dt-paging-button:hover { border-color: #83a38b; background: #f2f7f2; color: #315b3b !important; }
-        .table-wrap table.dataTable thead th { border-bottom: 1px solid #e2e9e2; }
-        .table-wrap table.dataTable tbody td { border-bottom: 1px solid #edf1ed; }
-        .table-icon-button { display: inline-grid; width: 34px; height: 34px; place-items: center; border: 1px solid var(--green-pale); border-radius: 6px; background: #fff; color: var(--green); text-decoration: none; cursor: pointer; transition: transform .18s ease, background .18s ease, border-color .18s ease; }
-        .table-icon-button:hover { transform: translateY(-1px); border-color: #78a282; background: #eef5ee; }
-        .table-icon-button.activate { border-color: #bbd39e; background: #eff6e7; color: #31633b; }
-        .table-icon-button.reset { border-color: #e5c7bd; background: #fff7f3; color: #9b4535; }
-        .table-icon-button.reset:hover { border-color: #c9806d; background: #fff0e9; }
-        .table-icon-button svg { width: 16px; height: 16px; }
+        .dt-container .dt-button.dt-export-button { display: inline-flex; min-height: 34px; align-items: center; gap: 7px; padding: 0 11px; border: 1px solid var(--bx-border); border-radius: 6px; background: var(--bx-surface); color: var(--brand); font: inherit; font-size: 10px; font-weight: 700; box-shadow: none; cursor: pointer; transition: all .15s ease; }
+        .dt-container .dt-button.dt-export-button:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-soft); }
+        [data-theme="dark"] .dt-container .dt-button.dt-export-button { color: var(--gold); }
+        .dt-export-button svg { width: 14px; height: 14px; }
+        .dt-container .dt-info { padding-top: 0; color: var(--bx-muted); font-size: 10px; }
+        .dt-container .dt-paging .dt-paging-button { min-width: 30px; min-height: 28px; margin-left: 4px; padding: 0 8px; border: 1px solid var(--bx-border); border-radius: 5px; background: var(--bx-surface); color: var(--bx-ink) !important; font-size: 10px; box-shadow: none; cursor: pointer; }
+        .dt-container .dt-paging .dt-paging-button.current { border-color: var(--gold); background: var(--gold-soft); color: var(--gold-2) !important; font-weight: 700; }
+        [data-theme="dark"] .dt-container .dt-paging .dt-paging-button.current { color: var(--gold) !important; }
+        .table-wrap table.dataTable thead th { border-bottom: 1px solid var(--bx-border); background: var(--bx-bg); color: var(--bx-muted); font-size: 10px; text-transform: uppercase; }
+        .table-wrap table.dataTable tbody td { border-bottom: 1px solid var(--bx-border); color: var(--bx-ink); }
+        .table-icon-button { display: inline-grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--bx-border); border-radius: 6px; background: var(--bx-surface); color: var(--bx-ink); text-decoration: none; cursor: pointer; transition: all .15s ease; }
+        .table-icon-button:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
+        .table-icon-button.activate { border-color: var(--success); color: var(--success); background: var(--success-bg); }
+        .table-icon-button.reset { border-color: var(--danger); color: var(--danger); background: var(--danger-bg); }
+        .table-icon-button svg { width: 15px; height: 15px; }
         .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
-        .calendar-modal-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; overflow-y: auto; padding: clamp(24px, 7vh, 64px) 24px 24px; place-items: start center; background: rgba(20, 43, 29, .52); backdrop-filter: blur(3px); }
-        .calendar-modal { width: min(100%, 650px); max-height: calc(100dvh - clamp(24px, 7vh, 64px) - 24px); overflow-y: auto; padding: clamp(22px, 4vw, 36px); border: 1px solid #dfe8df; border-radius: 12px; background: #fff; box-shadow: 0 24px 80px rgba(16, 41, 25, .28); animation: content-arrive .18s ease-out both; }
-        .calendar-modal h2 { margin: 0; font-size: 27px; font-weight: 650; line-height: 1.2; letter-spacing: -.025em; }
-        .calendar-modal-copy { margin: 8px 0 22px; color: var(--muted); font-size: 12px; line-height: 1.6; }
-        .calendar-modal-head { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
-        .calendar-modal-close { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; color: var(--green-strong); font-size: 20px; cursor: pointer; }
-        .calendar-modal-error { margin: 14px 0 0; padding: 11px 13px; border: 1px solid #f0d0c7; border-radius: 6px; background: #fff5f2; color: #8c3c2c; font-size: 12px; line-height: 1.5; }
-        .calendar-process-progress { margin-top: 18px; padding: 14px; border: 1px solid #dce7da; border-radius: 10px; background: #fbfdf9; color: #294633; }
-        .calendar-process-progress-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 9px; font-size: 12px; }
-        .calendar-process-progress-head > span { display: inline-flex; align-items: center; gap: 8px; }
-        .calendar-process-progress-head strong { font-size: 14px; }
-        .calendar-process-track { overflow: hidden; height: 12px; border-radius: 99px; background: #e8eee6; }
-        .calendar-process-bar { position: relative; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #356b45, #8cb64e); transition: width .35s ease; }
-        .calendar-process-bar::after { position: absolute; inset: 0; background: linear-gradient(100deg, transparent 20%, rgba(255,255,255,.55) 50%, transparent 80%); content: ""; transform: translateX(-100%); }
-        .calendar-process-progress.is-active .calendar-process-bar::after { animation: calendar-process-shimmer 1.4s ease-in-out infinite; }
-        .calendar-process-spinner { display: none; width: 14px; height: 14px; flex: 0 0 14px; border: 2px solid #cbd9c7; border-top-color: #356b45; border-radius: 50%; animation: calendar-process-spin .8s linear infinite; }
-        .calendar-process-progress.is-active .calendar-process-spinner { display: inline-block; }
-        .calendar-process-progress p { margin: 8px 0 0; color: var(--muted); font-size: 11px; }
-        @keyframes calendar-process-spin { to { transform: rotate(360deg); } }
-        @keyframes calendar-process-shimmer { to { transform: translateX(100%); } }
-        .calendar-confirm-detail { margin: 16px 0; padding: 13px 15px; border-left: 3px solid #6f9e73; background: #f2f7f1; color: #3e5942; font-size: 12px; line-height: 1.6; }
-        .calendar-modal-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 22px; padding-top: 17px; border-top: 1px solid var(--line); }
-        .button-danger { border-color: #a74637; background: #a74637; color: #fff; }
-        .button-danger:hover { border-color: #8f382b; background: #8f382b; }
-        .flash-toast { position: fixed; top: 88px; right: 24px; z-index: 120; display: flex; width: min(420px, calc(100vw - 36px)); align-items: flex-start; gap: 11px; padding: 14px 15px; border: 2px solid #367347; border-radius: 9px; background: linear-gradient(115deg, #e5f4d8, #cbe8ce); color: #214b2d; box-shadow: 0 16px 42px rgba(33, 72, 39, .3); animation: toast-in .25s ease-out both; }
-        .flash-toast.is-error { border-color: #a74637; background: linear-gradient(115deg, #fff0d8, #f7d4c9); color: #752b24; }
-        .flash-mark { display: grid; width: 24px; height: 24px; flex: 0 0 24px; place-items: center; border-radius: 50%; background: #b8d99d; color: #214b2d; font-size: 11px; font-weight: 900; }
-        .flash-toast.is-error .flash-mark { background: #edb9a9; color: #752b24; }
-        .flash-message { flex: 1; margin: 2px 0 0; font-size: 12px; font-weight: 700; line-height: 1.55; }
-        .flash-close { width: 28px; height: 28px; flex: 0 0 28px; border: 0; border-radius: 50%; background: transparent; color: inherit; font-size: 19px; cursor: pointer; }
-        .flash-toast.is-leaving { animation: toast-out .2s ease-in both; }
-        .ts-wrapper { width: 100%; }
-        .ts-wrapper .ts-control { min-height: 44px; padding: 9px 12px; border: 1px solid #c8cc9d; border-radius: 5px; background: #fffef6; color: #293c2c; font: inherit; font-size: 12px; }
-        .ts-dropdown { z-index: 120; border-color: #c8cc9d; background: #fffef6; color: #293c2c; }
-        @media (max-width: 760px) { .dt-layout-row { flex-wrap: wrap; } .dt-container .dt-search input { width: min(220px, 55vw); } }
-        @media (prefers-reduced-motion: reduce) { .calendar-process-bar { transition: none; } .calendar-process-progress.is-active .calendar-process-spinner { animation-duration: 2s; } .calendar-process-progress.is-active .calendar-process-bar::after { animation-duration: 3s; } }
-        @media (max-width: 580px) { .calendar-modal-backdrop { padding: 7vh 12px 12px; } .calendar-modal { max-height: 86dvh; border-radius: 12px; } .flash-toast { top: 74px; right: 12px; } .page-actions { width: 100%; } .notification-trigger { width: 42px; height: 42px; } .notification-panel { top: calc(68px + env(safe-area-inset-top, 0px)); right: 10px; width: calc(100vw - 20px); max-height: calc(100dvh - 82px - env(safe-area-inset-top, 0px)); border-radius: 14px; } .notification-panel-head, .notification-panel-foot { padding: 13px 15px; } .notification-item { padding: 14px 15px; } }
-    </style>
-    <style>
-        :root {
-            --ink: #203a55;
-            --muted: #61758a;
-            --green: var(--brand-primary);
-            --green-strong: color-mix(in srgb, var(--brand-primary), #102f51 24%);
-            --green-deep: color-mix(in srgb, var(--brand-primary), #102f51 58%);
-            --green-pale: color-mix(in srgb, var(--brand-primary), white 84%);
-            --line: #d8e3ee;
-        }
-        body { background: linear-gradient(128deg, color-mix(in srgb, var(--brand-primary), white 83%) 0%, #fff0bd 50%, color-mix(in srgb, var(--brand-primary), white 75%) 100%); }
-        .simak-sidebar { background: linear-gradient(160deg, color-mix(in srgb, var(--brand-primary), white 8%) 0%, var(--green-strong) 56%, var(--green-deep) 100%); color: #f7fbff; }
-        .brand-subtitle, .account-role { color: #dbeaff; }
-        .nav-group-toggle { color: #ffe08a; }
-        .nav-link::before { background: #f2d36c; }
-        .nav-link:hover { background: rgba(255, 224, 138, .14); color: #fff7db; }
-        .nav-link[aria-current="page"] { background: linear-gradient(100deg, #fff0b2, var(--green-pale)); color: var(--green-deep); }
-        .nav-link[aria-current="page"]::before { background: var(--green-strong); }
-        .nav-status { color: #ffe08a; }
-        .sidebar-foot { border-color: rgba(255, 224, 138, .3); color: #d5e7f8; }
-        .profile-link, .topbar-title, h1, h2 { color: var(--green-deep); }
-        .topbar-kicker, .eyebrow { color: var(--green-strong); }
-        .topbar-role, .subtitle { color: #62768b; }
-        .simak-workspace { background: linear-gradient(145deg, rgba(218, 235, 255, .68), rgba(255, 241, 198, .42)); }
-        .module-alert, .akm-alert { border-color: var(--green-pale); border-left-color: #e1bf43; background: color-mix(in srgb, var(--brand-primary), white 94%); color: var(--green-deep); }
-        .button { border-color: #ddc65f; background: #fff7d8; color: var(--green-deep); }
-        .button:hover { background: #fff0b5; }
-        .button-primary { border-color: var(--green-strong); background: linear-gradient(110deg, var(--green-strong), var(--brand-primary)); color: var(--brand-primary-foreground); }
-        .button-primary:hover { background: linear-gradient(110deg, var(--green-deep), var(--green-strong)); }
-        label { color: #294d70; }
-        input, select { border-color: #b8cde0; background: #fbfdff; color: #243c55; }
-        input:focus, select:focus { outline-color: color-mix(in srgb, var(--brand-primary), transparent 78%); border-color: var(--brand-primary); }
-        .field-grid input:focus, .field-grid select:focus { outline: 3px solid color-mix(in srgb, var(--brand-primary), transparent 78%); }
-        .master-identity-grid dt, .subtext { color: #6d7f92; }
-        .master-identity-grid dd, .period { color: #214f79; }
-        .master-empty-state, .empty-state { border-color: #cbdced; color: #647a90; }
-        .empty-state strong { color: #245b8c; }
-        table th { color: #52718f; }
-        tbody tr:hover { background: color-mix(in srgb, var(--brand-primary), white 94%); }
-        .status-chip { background: #edf2f7; color: #52667a; }
-        .status-chip.active { background: var(--green-pale); color: var(--green-strong); }
-        .pagination, .student-status-pagination { color: #647b91; }
-        .pagination a { color: #1e64a1; }
-        .dt-container .dt-search, .dt-container .dt-length { color: #526d87; }
-        .dt-container .dt-paging .dt-paging-button { border-color: var(--green-pale); color: var(--green-strong) !important; }
-        .dt-container .dt-paging .dt-paging-button.current { border-color: color-mix(in srgb, var(--brand-primary), white 55%); background: var(--green-pale); color: var(--green-deep) !important; }
-        .dt-container .dt-paging .dt-paging-button:hover { border-color: color-mix(in srgb, var(--brand-primary), white 42%); background: color-mix(in srgb, var(--brand-primary), white 93%); color: var(--green-deep) !important; }
-        .table-icon-button { border-color: var(--green-pale); color: var(--green); }
-        .table-icon-button:hover { border-color: color-mix(in srgb, var(--brand-primary), white 42%); background: color-mix(in srgb, var(--brand-primary), white 93%); }
-        .table-icon-button.activate { border-color: #e2cc67; background: #fff8dc; color: #725c16; }
-        .calendar-confirm-detail { border-left-color: #d4b744; background: #f0f6ff; color: #2b4d6d; }
-        .calendar-modal { border-color: #d5e2ee; }
-        .calendar-modal-close { color: var(--green-strong); }
-        .flash-toast { border-color: #2f76ae; background: linear-gradient(115deg, #d8eaff, #fff0b8); color: #173f65; }
-        .flash-mark { background: #f2d46c; color: #284a6b; }
-        .ts-wrapper .ts-control, input, select { accent-color: var(--brand-primary); }
-        .ts-wrapper .ts-control { border-color: #b8cde0; background: #fbfdff; color: #243c55; }
-        .ts-dropdown { border-color: #b8cde0; background: #fff; color: #243c55; }
+
+        /* Profile Modal */
+        .account-profile-modal-backdrop { position: fixed; inset: 0; z-index: 120; display: grid; overflow-y: auto; padding: clamp(20px, 6vh, 60px) 20px 20px; place-items: start center; background: rgba(11, 15, 23, .65); backdrop-filter: blur(3px); }
+        .account-profile-modal { width: min(100%, 600px); max-height: calc(100dvh - 80px); overflow-y: auto; padding: 24px; border: 1px solid var(--bx-border); border-radius: 12px; background: var(--bx-surface); color: var(--bx-ink); box-shadow: var(--shadow-lg); }
+        .account-profile-modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 18px; border-bottom: 1px solid var(--bx-border); padding-bottom: 14px; }
+        .account-profile-modal-head h2 { margin: 0; font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; color: var(--brand); }
+        [data-theme="dark"] .account-profile-modal-head h2 { color: #FFFFFF; }
+        .account-profile-modal-head p { margin: 4px 0 0; font-size: 0.78rem; color: var(--bx-muted); }
+        .account-profile-modal-close { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--bx-border); background: var(--bx-bg); color: var(--bx-muted); display: grid; place-items: center; cursor: pointer; transition: all 0.15s ease; }
+        .account-profile-modal-close:hover { border-color: var(--gold); color: var(--gold); }
     </style>
 </head>
 <body data-route-name="{{ request()->route()?->getName() }}" data-user-id="{{ auth()->id() }}">
@@ -406,6 +93,7 @@
         <span class="simak-page-loader-mark"><img src="{{ $siteConfiguration['preloader_logo_url'] }}" alt=""><span class="simak-page-loader-orbit" aria-hidden="true"></span></span>
         <span class="simak-page-loader-label">loading<span class="simak-page-loader-dots"></span></span>
     </div>
+
     @php
         $currentUser = auth()->user();
         $currentRole = (string) $currentUser->role;
@@ -428,29 +116,57 @@
         $roleLabel = app()->getLocale() === 'en'
             ? trans('ui.roles.'.$currentRole, [], 'en')
             : config('simak.role_labels.'.$currentRole, ucfirst($currentRole));
+
+        // Helper to recursively filter items based on degree track
+        $filterDegreeItems = static function (array $items) use ($degreeTrack, &$filterDegreeItems): array {
+            $filtered = [];
+            foreach ($items as $item) {
+                if (!is_array($item)) continue;
+                $route = (string) ($item['route'] ?? '');
+                if (str_starts_with($route, 'theses.') && !($degreeTrack === null || in_array($degreeTrack, ['S1', 'D3'], true))) {
+                    continue;
+                }
+                if (str_starts_with($route, 'graduate_theses.') && !($degreeTrack === null || in_array($degreeTrack, ['S2', 'S3'], true))) {
+                    continue;
+                }
+                if (!empty($item['items']) && is_array($item['items'])) {
+                    $item['items'] = $filterDegreeItems($item['items']);
+                }
+                if (!empty($item['children']) && is_array($item['children'])) {
+                    $item['children'] = $filterDegreeItems($item['children']);
+                }
+                $filtered[] = $item;
+            }
+            return array_values($filtered);
+        };
+
+        // Group navigation items
         $menuGroups = collect(config('simak.navigation.'.$currentRole, []))
-            ->map(function (array $group) use ($degreeTrack): array {
-                $group['items'] = array_values(array_filter(
-                    $group['items'],
-                    static function (array $item) use ($degreeTrack): bool {
-                        $route = (string) ($item['route'] ?? '');
-                        if (str_starts_with($route, 'theses.')) {
-                            return $degreeTrack === null || in_array($degreeTrack, ['S1', 'D3'], true);
-                        }
-                        if (str_starts_with($route, 'graduate_theses.')) {
-                            return $degreeTrack === null || in_array($degreeTrack, ['S2', 'S3'], true);
-                        }
-
-                        return true;
-                    }
-                ));
-
+            ->map(function (array $group) use ($filterDegreeItems): array {
+                $group['items'] = $filterDegreeItems($group['items'] ?? []);
                 return $group;
             })
-            ->filter(static fn (array $group): bool => $group['items'] !== [])
+            ->filter(static fn (array $group): bool => !empty($group['items']))
             ->values()
             ->all();
-        $navigationGroupIcons = config('simak.navigation_group_icons', []);
+
+        // Helper to check if an item or any of its descendants is currently active
+        $isItemActive = static function (array $item) use (&$isItemActive): bool {
+            $route = (string) ($item['route'] ?? '');
+            if ($route !== '' && request()->routeIs($route)) {
+                return true;
+            }
+            $children = !empty($item['items']) && is_array($item['items'])
+                ? $item['items']
+                : (!empty($item['children']) && is_array($item['children']) ? $item['children'] : []);
+            foreach ($children as $child) {
+                if (is_array($child) && $isItemActive($child)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
         $accountEmail = isset($currentUser->email) ? (string) $currentUser->email : '';
         $accountIdentifierLabel = match ($accountType) {
             'dosen' => 'NIDN',
@@ -459,155 +175,493 @@
             default => 'Username',
         };
         $accountName = (string) (data_get($currentUser, 'name') ?: $accountLogin ?: 'Pengguna SIAKAD');
-        $accountInitials = collect(preg_split('/\s+/', trim((string) $accountName)))
+        $splitNames = preg_split('/\s+/', trim((string) $accountName));
+        $accountInitials = collect(is_array($splitNames) ? $splitNames : [])
             ->filter()->take(2)->map(fn (string $part): string => mb_strtoupper(mb_substr($part, 0, 1)))->implode('');
-    @endphp
-    <div class="simak-shell" id="simak-shell">
-        <button class="sidebar-scrim" type="button" data-close-navigation aria-label="Tutup navigasi"></button>
-        <aside class="simak-sidebar" id="simak-navigation" aria-label="Navigasi SIAKAD">
-            <a class="brand-link" href="{{ route('dashboard') }}">
-                <img src="{{ $siteConfiguration['logo_url'] }}" alt="">
-                <span><span class="brand-title">{{ $siteConfiguration['app_name'] }}</span><span class="brand-subtitle">{{ $siteConfiguration['app_full_name'] }}</span></span>
-            </a>
-            <div class="account-mark">
-                <span class="account-avatar" aria-hidden="true">{{ mb_strtoupper(mb_substr($accountName, 0, 1)) }}</span>
-                <span><span class="account-name">{{ $accountName }}</span><span class="account-role">{{ $roleLabel }}</span></span>
-            </div>
-            <nav class="side-nav">
-                @php
-                    $isActiveNavigationItem = static function (array $item): bool {
-                        if (! isset($item['route'])) {
-                            return false;
-                        }
 
-                        return request()->routeIs($item['route'])
-                            || request()->routeIs(\Illuminate\Support\Str::beforeLast($item['route'], '.').'.*')
-                            || ($item['route'] === 'academic-calendars.index' && request()->routeIs('academic-calendars.*'))
-                            || ($item['route'] === 're-enrollment.index' && request()->routeIs('re-enrollment.*'))
-                            || ($item['route'] === 'krs-transfer.index' && request()->routeIs('krs-transfer.*'))
-                            || ($item['route'] === 'khs.index' && request()->routeIs('khs.*'))
-                            || ($item['route'] === 'student-status.index' && request()->routeIs('student-status.*'))
-                            || ($item['route'] === 'transcripts.index' && request()->routeIs('transcripts.*'))
-                            || ($item['route'] === 'course-removals.index' && request()->routeIs('course-removals.*'));
-                    };
-                @endphp
-                @foreach ($menuGroups as $group)
-                    @php
-                        $groupHasActiveItem = collect($group['items'])->contains($isActiveNavigationItem);
-                    @endphp
-                    <section class="nav-group">
-                        <button class="nav-group-toggle" type="button" aria-expanded="{{ $groupHasActiveItem ? 'true' : 'false' }}" aria-controls="nav-group-{{ $loop->index }}" data-nav-toggle>
-                            <span class="nav-group-label"><span class="nav-group-icon"><span data-lucide="{{ $navigationGroupIcons[$group['label']] ?? 'layout-dashboard' }}"></span></span><span>{{ $group['label'] }}</span></span>
-                        </button>
-                        <div class="nav-group-items @if (! $groupHasActiveItem)is-collapsed @endif" id="nav-group-{{ $loop->index }}" data-nav-items @unless ($groupHasActiveItem)inert @endunless>
-                            @foreach ($group['items'] as $item)
-                                @if (isset($item['route']))
-                                    <a class="nav-link" href="{{ route($item['route'], $item['parameters'] ?? []) }}" @if ($isActiveNavigationItem($item)) aria-current="page" @endif>{{ $item['label'] }}</a>
-                                @else
-                                    <span class="nav-link nav-link-disabled" aria-disabled="true" title="{{ $item['status'] ?? 'Dalam pengembangan' }}">
-                                        <span>{{ $item['label'] }}</span><span class="nav-status">{{ $item['status'] ?? 'Segera' }}</span>
-                                    </span>
-                                @endif
-                            @endforeach
+        // Domain category metadata helper
+        $getCategoryMeta = function(string $label) {
+            return match($label) {
+                'Dashboard' => ['badge' => 'Core', 'icon' => 'layout-dashboard', 'roles' => 'ALL,ADMIN,BAAK,BAUK,PRODI,DOSEN,REVIEWER'],
+                'Data Master' => ['badge' => 'PDDIKTI', 'icon' => 'database', 'roles' => 'ALL,ADMIN,BAAK,PRODI'],
+                'Akademik' => ['badge' => 'KRS', 'icon' => 'graduation-cap', 'roles' => 'ALL,ADMIN,BAAK,DOSEN,PRODI'],
+                'Semester Pendek' => ['badge' => 'SP', 'icon' => 'calendar-days', 'roles' => 'ALL,ADMIN,BAAK,DOSEN,PRODI'],
+                'LMS Virtual Class' => ['badge' => 'LMS', 'icon' => 'book-open-check', 'roles' => 'ALL,ADMIN,DOSEN,REVIEWER,PRODI'],
+                'E-Skripsi' => ['badge' => 'Skripsi', 'icon' => 'scroll-text', 'roles' => 'ALL,ADMIN,BAAK,DOSEN,REVIEWER,PRODI'],
+                'E-Tesis & Disertasi' => ['badge' => 'Tesis', 'icon' => 'award', 'roles' => 'ALL,ADMIN,BAAK,DOSEN,REVIEWER,PRODI'],
+                'Keuangan' => ['badge' => 'Snap', 'icon' => 'wallet-cards', 'roles' => 'ALL,ADMIN,BAUK'],
+                'Kuliah Kerja Nyata (KKN)' => ['badge' => 'LPPM', 'icon' => 'map-pinned', 'roles' => 'ALL,ADMIN,BAAK'],
+                'Validasi Nilai' => ['badge' => 'Review', 'icon' => 'clipboard-check', 'roles' => 'ALL,ADMIN,REVIEWER,BAAK'],
+                'Data Wisuda', 'Wisuda' => ['badge' => 'Wisuda', 'icon' => 'award', 'roles' => 'ALL,ADMIN,BAAK'],
+                'Administrasi & Tools' => ['badge' => 'SecOps', 'icon' => 'settings', 'roles' => 'ALL,ADMIN'],
+                'Evaluasi' => ['badge' => 'EDOM', 'icon' => 'chart-no-axes-column-increasing', 'roles' => 'ALL,ADMIN,DOSEN,PRODI'],
+                'Layanan Mahasiswa' => ['badge' => 'Mhs', 'icon' => 'heart-handshake', 'roles' => 'ALL,BAAK,PRODI'],
+                'Layanan Prodi' => ['badge' => 'Prodi', 'icon' => 'building-2', 'roles' => 'ALL,ADMIN,PRODI'],
+                default => ['badge' => 'Modul', 'icon' => 'folder', 'roles' => 'ALL,ADMIN,BAAK'],
+            };
+        };
+
+        try {
+            $sidebarFaculties = \Illuminate\Support\Facades\DB::connection('simak_main')
+                ->table('s1m4k_masterprodi as p')
+                ->leftJoin('s1m4k_masterfakultas as f', 'p.id_fakultas', '=', 'f.id_fakultas')
+                ->select([
+                    'p.id_prodi',
+                    'p.nama_program_studi',
+                    'p.nama_jenjang_pendidikan',
+                    'f.id_fakultas',
+                    'f.nama_fakultas',
+                ])
+                ->where('p.status', 'A')
+                ->whereNotNull('p.nama_program_studi')
+                ->whereRaw("TRIM(p.nama_program_studi) <> ''")
+                ->orderBy('f.nama_fakultas')
+                ->orderBy('p.nama_program_studi')
+                ->get()
+                ->groupBy(function ($item) {
+                    return $item->nama_fakultas ?: 'Fakultas Lainnya';
+                });
+        } catch (\Throwable $e) {
+            $sidebarFaculties = collect();
+        }
+    @endphp
+
+    <div class="portal-app-layout" id="simak-shell">
+        <!-- ========================================================= -->
+        <!-- TOP AUTHENTICATED STICKY HEADER (58px, GLASS BLUR)        -->
+        <!-- ========================================================= -->
+        <header class="portal-auth-header">
+            <div class="portal-header-fluid">
+                <!-- Left: Sidebar Toggle & Brand Group -->
+                <div class="portal-header-left">
+                    <button type="button" class="portal-header-sidebar-toggle" id="sidebar-toggle-btn" aria-label="Toggle Side Menu" title="Perkecil / Perluas Menu">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+
+                    <a href="{{ route('dashboard') }}" class="portal-auth-brand-group">
+                        <img src="{{ $siteConfiguration['preloader_logo_url'] }}" class="portal-brand-logo" alt="{{ $siteConfiguration['institution_name'] }}" width="34" height="34">
+                        <div class="portal-brand-text">
+                            <span class="portal-brand-title">ASEAN UNIVERSITY</span>
+                            <div class="portal-brand-subtitle" aria-label="INTERNATIONAL">
+                                <span>I</span><span>N</span><span>T</span><span>E</span><span>R</span><span>N</span><span>A</span><span>T</span><span>I</span><span>O</span><span>N</span><span>A</span><span>L</span>
+                            </div>
                         </div>
-                    </section>
-                @endforeach
-            </nav>
-            <div class="sidebar-foot">Akses disusun berdasarkan role SIAKAD.</div>
-        </aside>
-        <div class="simak-workspace">
-            <header class="topbar">
-                <div class="topbar-left">
-                    <button class="mobile-toggle" type="button" aria-controls="simak-navigation" aria-expanded="false" data-open-navigation>Menu</button>
-                    <div><div class="topbar-kicker">Sistem Informasi Akademik</div><div class="topbar-title">@yield('topbar_title', $siteConfiguration['app_name'])</div></div>
+                        <span class="portal-brand-divider" aria-hidden="true"></span>
+                        <span class="portal-header-plain-title">PORTAL</span>
+                    </a>
                 </div>
-                <div class="topbar-user">
-                    <div class="language-switcher" role="group" aria-label="Bahasa / Language">
-                        <form method="POST" action="{{ route('locale.update') }}">
-                            @csrf
-                            <input type="hidden" name="locale" value="id">
-                            <button type="submit" aria-label="Bahasa Indonesia" aria-pressed="{{ app()->getLocale() === 'id' ? 'true' : 'false' }}" title="Bahasa Indonesia"><span aria-hidden="true">🇮🇩</span><span>ID</span></button>
-                        </form>
-                        <form method="POST" action="{{ route('locale.update') }}">
-                            @csrf
-                            <input type="hidden" name="locale" value="en">
-                            <button type="submit" aria-label="English" aria-pressed="{{ app()->getLocale() === 'en' ? 'true' : 'false' }}" title="English"><span aria-hidden="true">🇬🇧</span><span>EN</span></button>
-                        </form>
-                    </div>
+
+                <!-- Right: Header Actions (Notifs, Theme, User) -->
+                <div class="portal-header-actions">
+
+                    <!-- Notification Center -->
                     <div class="notification-center"
                         data-notification-center
-                        data-notification-label="Notifikasi SIAKAD"
-                        data-empty-message="Belum ada notifikasi SIAKAD"
+                        data-notification-label="Notifikasi SIMAK"
+                        data-empty-message="Belum ada notifikasi SIMAK"
                         data-notifications-url="{{ route('theses.notifications.index') }}"
                         data-mark-all-read-url="{{ route('theses.notifications.read-all') }}"
-                        data-mark-read-url-template="{{ route('theses.notifications.read', ['notification' => '__NOTIFICATION__']) }}">
-                        <button class="notification-trigger" type="button" data-notification-trigger aria-expanded="false" aria-controls="simak-notification-panel" aria-label="Notifikasi SIAKAD">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a2.2 2.2 0 0 0 2.12-1.62h-4.24A2.2 2.2 0 0 0 12 22Zm7-5.1-1.7-2.02V10a5.3 5.3 0 0 0-4.3-5.2V4a1 1 0 1 0-2 0v.8A5.3 5.3 0 0 0 6.7 10v4.88L5 16.9V19h14v-2.1Z"/></svg>
-                            <span class="notification-count" data-notification-count hidden></span>
+                        data-mark-read-url-template="{{ route('theses.notifications.read', ['notification' => '__NOTIFICATION__']) }}"
+                        style="position: relative;">
+                        <button class="portal-header-icon-btn notification-trigger" type="button" data-notification-trigger aria-expanded="false" aria-controls="simak-notification-panel" aria-label="Notifikasi SIMAK" title="Notifikasi SIMAK">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                            <span class="portal-header-badge-count notification-count" data-notification-count hidden></span>
                         </button>
-                        <section class="notification-panel" id="simak-notification-panel" data-notification-panel hidden aria-label="Notifikasi aplikasi">
+                        <section class="notification-panel" id="simak-notification-panel" data-notification-panel hidden aria-label="Notifikasi aplikasi" style="right: 0;">
                             <header class="notification-panel-head">
-                                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a2.2 2.2 0 0 0 2.12-1.62h-4.24A2.2 2.2 0 0 0 12 22Zm7-5.1-1.7-2.02V10a5.3 5.3 0 0 0-4.3-5.2V4a1 1 0 1 0-2 0v.8A5.3 5.3 0 0 0 6.7 10v4.88L5 16.9V19h14v-2.1Z"/></svg>Notifikasi SIAKAD</h2>
+                                <h2>Notifikasi SIMAK</h2>
                                 <button class="notification-mark-button" type="button" data-notification-mark-all>Semua dibaca</button>
                             </header>
                             <div class="notification-list" data-notification-list aria-live="polite"><p class="notification-error">Memuat notifikasi…</p></div>
                             <footer class="notification-panel-foot"><button class="notification-mark-button" type="button" data-notification-mark-all>Tandai Semua Dibaca</button></footer>
                         </section>
                     </div>
+
+                    <!-- Activity Log Center -->
                     <div class="notification-center"
                         data-notification-center
                         data-notification-label="Log Aktivitas"
                         data-empty-message="Belum ada aktivitas yang tercatat"
                         data-notifications-url="{{ route('activity-notifications.index') }}"
                         data-mark-all-read-url="{{ route('activity-notifications.read-all') }}"
-                        data-mark-read-url-template="{{ route('activity-notifications.read', ['activity' => '__NOTIFICATION__']) }}">
-                        <button class="notification-trigger" type="button" data-notification-trigger aria-expanded="false" aria-controls="simak-activity-log-panel" aria-label="Log Aktivitas">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h16v18H4V3Zm3 4v2h10V7H7Zm0 4v2h10v-2H7Zm0 4v2h7v-2H7Z"/></svg>
-                            <span class="notification-count" data-notification-count hidden></span>
+                        data-mark-read-url-template="{{ route('activity-notifications.read', ['activity' => '__NOTIFICATION__']) }}"
+                        style="position: relative;">
+                        <button class="portal-header-icon-btn notification-trigger" type="button" data-notification-trigger aria-expanded="false" aria-controls="simak-activity-log-panel" aria-label="Log Aktivitas" title="Log Aktivitas">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <span class="portal-header-badge-count notification-count" data-notification-count hidden></span>
                         </button>
-                        <section class="notification-panel" id="simak-activity-log-panel" data-notification-panel hidden aria-label="Log aktivitas pengguna">
+                        <section class="notification-panel" id="simak-activity-log-panel" data-notification-panel hidden aria-label="Log aktivitas pengguna" style="right: 0;">
                             <header class="notification-panel-head">
-                                <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h16v18H4V3Zm3 4v2h10V7H7Zm0 4v2h10v-2H7Zm0 4v2h7v-2H7Z"/></svg>Log Aktivitas Saya</h2>
+                                <h2>Log Aktivitas Saya</h2>
                                 <button class="notification-mark-button" type="button" data-notification-mark-all>Semua dibaca</button>
                             </header>
                             <div class="notification-list" data-notification-list aria-live="polite"><p class="notification-error">Memuat log aktivitas…</p></div>
                             <footer class="notification-panel-foot"><button class="notification-mark-button" type="button" data-notification-mark-all>Tandai Semua Dibaca</button></footer>
                         </section>
                     </div>
-                    @if ($currentUser->role !== 'admin')
-                        <details class="topbar-account-menu" data-account-menu>
-                            <summary class="topbar-account-trigger" aria-label="Menu akun {{ $accountName }}">
-                                <span class="topbar-account-avatar" aria-hidden="true">{{ $accountInitials }}</span>
-                                <span class="topbar-account-trigger-copy">
-                                    <strong>{{ $accountName }}</strong>
-                                    <small>{{ $accountIdentifierLabel }}: {{ $accountLogin ?: '-' }}</small>
-                                </span>
-                                <svg class="topbar-account-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-                            </summary>
-                            <div class="topbar-account-panel">
-                                <div class="topbar-account-identity">
-                                    <strong>{{ $accountName }}</strong>
-                                    <span>{{ $accountIdentifierLabel }}: {{ $accountLogin ?: '-' }}</span>
-                                    @if ($accountEmail !== '')<span>{{ $accountEmail }}</span>@endif
-                                    <span class="topbar-account-role">{{ $roleLabel }}</span>
-                                </div>
-                                <div class="topbar-account-actions">
-                                    <a class="topbar-account-action" href="{{ route('user-profile.edit') }}" data-account-edit><i data-lucide="user-round-pen"></i><span>Edit Profil</span></a>
-                                    <form method="POST" action="{{ route('logout') }}">@csrf<button class="topbar-account-action is-logout" type="submit"><i data-lucide="log-out"></i><span>Keluar dari SIAKAD</span></button></form>
+
+                    <!-- Theme Toggle (Light/Dark Mode) -->
+                    <button type="button" class="portal-theme-btn" id="theme-toggle-btn" aria-label="Ganti Tema Warna" title="Beralih Tema Warna (Dark/Light)">
+                        <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                        <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: block;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </button>
+
+                    <!-- User Account Profile Dropdown -->
+                    <div style="position: relative;" id="user-profile-container">
+                        <button type="button" class="portal-header-user-btn" id="user-profile-trigger" aria-expanded="false" aria-label="Menu akun {{ $accountName }}" @if($currentUser->role !== 'admin') data-account-menu @endif>
+                            <div class="portal-header-avatar-wrap">
+                                <span class="portal-header-avatar">{{ $accountInitials }}</span>
+                                <span class="portal-avatar-status-dot" title="Status: Online"></span>
+                            </div>
+                            <div class="portal-header-user-text">
+                                <span class="portal-header-user-name">{{ $accountName }}</span>
+                                <div class="portal-header-user-id-email">
+                                    <span class="portal-user-badge-id">{{ $accountLogin ?: '-' }}</span>
+                                    <span>·</span>
+                                    <span>{{ $roleLabel }}</span>
                                 </div>
                             </div>
-                        </details>
-                    @else
-                        <div><div class="topbar-user-name">{{ $accountName }}</div><span class="topbar-role">{{ $roleLabel }}</span></div>
-                        <form method="POST" action="{{ route('logout') }}">@csrf<button class="signout" type="submit">Keluar</button></form>
-                    @endif
+                            <span class="portal-header-chevron" aria-hidden="true">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                            </span>
+                        </button>
+
+                        <div class="portal-user-dropdown-card" id="user-profile-dropdown" hidden>
+                            <div class="portal-dropdown-profile-header">
+                                <span class="portal-dropdown-avatar">{{ $accountInitials }}</span>
+                                <div class="portal-dropdown-profile-meta">
+                                    <h4 class="portal-dropdown-name">{{ $accountName }}</h4>
+                                    <p class="portal-dropdown-email">{{ $accountEmail ?: ($accountLogin.'@aui.ac.id') }}</p>
+                                    <div class="portal-dropdown-badges">
+                                        <span class="portal-dropdown-id-chip">{{ $accountIdentifierLabel }}: {{ $accountLogin ?: '-' }}</span>
+                                        <span class="portal-dropdown-status-chip">{{ $roleLabel }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="portal-dropdown-divider"></div>
+
+                            <div class="portal-dropdown-menu-links">
+                                @if ($currentUser->role !== 'admin')
+                                    <a class="portal-dropdown-link" href="{{ route('user-profile.edit') }}" data-account-edit>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                        <span>Edit Profil</span>
+                                    </a>
+                                @endif
+                                <a class="portal-dropdown-link" href="{{ route('dashboard') }}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                    <span>Dashboard Utama</span>
+                                </a>
+                            </div>
+
+                            <div class="portal-dropdown-divider"></div>
+
+                            <div class="portal-dropdown-footer">
+                                <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                                    @csrf
+                                    <button class="portal-dropdown-logout-btn" type="submit">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                                        <span>Keluar dari SIMAK</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </header>
-            @include('partials.flash-notice')
-            <main class="simak-content">@yield('content')</main>
-            <footer class="site-footer">&copy; {{ date('Y') }} ASEAN University International. All Rights Reserved.</footer>
+            </div>
+        </header>
+
+        <!-- ========================================================= -->
+        <!-- MAIN APP BODY: SIDEBAR + MAIN STAGE                       -->
+        <!-- ========================================================= -->
+        <div class="portal-app-body">
+            <!-- COLLAPSIBLE LEFT SIDEBAR -->
+            <aside class="portal-sidebar expanded" id="portal-sidebar" aria-label="Navigasi SIAKAD">
+                <!-- Collapsed Search Trigger Header -->
+                <div class="tree-collapsed-filter-header">
+                    <button type="button" class="tree-collapsed-search-trigger" id="collapsed-search-btn" title="Cari modul / menu...">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </button>
+                </div>
+
+                <!-- Expanded Top Filter Container -->
+                <div class="tree-filter-container">
+                    <!-- Search Bar with Live Filter -->
+                    <div class="tree-search-bar">
+                        <span class="tree-search-icon">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        </span>
+                        <input type="text" class="tree-search-input" id="tree-search-input" placeholder="Cari modul / menu..." autocomplete="off">
+                        <button type="button" class="tree-search-clear-btn" id="tree-search-clear" title="Bersihkan pencarian" style="display: none;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </div>
+
+                    <!-- Program Studi Selector Filter (Connected to DB & Persistent) -->
+                    <div class="tree-prodi-selector-wrap">
+                        <div class="tree-filter-label">
+                            <span>Program Studi</span>
+                            <span class="tree-prodi-active-pill" id="prodi-filter-pill">SEMUA PRODI</span>
+                        </div>
+                        <div class="tree-select-box">
+                            <select class="tree-prodi-select" id="tree-prodi-select" aria-label="Filter berdasarkan Program Studi">
+                                <option value="ALL">Semua Program Studi (Universitas)</option>
+                                @if (isset($sidebarFaculties) && $sidebarFaculties->isNotEmpty())
+                                    @foreach ($sidebarFaculties as $facultyName => $prodis)
+                                        <optgroup label="{{ $facultyName }}">
+                                            @foreach ($prodis as $p)
+                                                <option value="{{ $p->id_prodi }}">
+                                                    {{ $p->nama_jenjang_pendidikan ? $p->nama_jenjang_pendidikan.' - ' : '' }}{{ $p->nama_program_studi }}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endforeach
+                                @else
+                                    <optgroup label="Faculty of Engineering & Technology (FET)">
+                                        <option value="PRODI-ET-S1">S1 - Bachelor of Computer Science</option>
+                                        <option value="PRODI-ET-S2">S2 - Master of Artificial Intelligence & CS</option>
+                                    </optgroup>
+                                    <optgroup label="Faculty of Business & Economics (FBE)">
+                                        <option value="PRODI-BE-S1">S1 - Bachelor of Management</option>
+                                        <option value="PRODI-BE-S2">S2 - Master of Business Administration (MBA)</option>
+                                    </optgroup>
+                                @endif
+                            </select>
+                            <span class="tree-select-chevron">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Actions Toolbar: Expand / Collapse All & Reset -->
+                    <div class="tree-actions-toolbar">
+                        <div style="display: flex; gap: 4px;">
+                            <button type="button" class="tree-toolbar-btn" id="btn-expand-all" title="Buka seluruh sub-menu">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg>
+                                <span>Buka Semua</span>
+                            </button>
+                            <button type="button" class="tree-toolbar-btn" id="btn-collapse-all" title="Tutup seluruh sub-menu">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline></svg>
+                                <span>Tutup Semua</span>
+                            </button>
+                        </div>
+                        <button type="button" class="tree-toolbar-btn reset" id="btn-reset-filters" title="Reset pencarian & filter">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scrollable Tree Navigation Wrapper -->
+                <div class="portal-sidebar-nav-wrap">
+                    <nav class="tree-menu-root" id="tree-menu-root">
+                        @php
+                            $isDashboardPage = request()->routeIs('dashboard');
+                        @endphp
+                        @foreach ($menuGroups as $groupIndex => $group)
+                            @php
+                                $groupLabel = (string) $group['label'];
+                                $meta = $getCategoryMeta($groupLabel);
+                                $hasActiveDescendant = false;
+                                foreach ($group['items'] as $it) {
+                                    if (is_array($it) && $isItemActive($it)) {
+                                        $hasActiveDescendant = true;
+                                        break;
+                                    }
+                                }
+                                // "menu samping default nya tutup semua"
+                                // All groups start closed by default. Active item indicator is preserved visually on the row.
+                                $isGroupOpen = false;
+                                $groupId = 'tree-group-'.$groupIndex;
+                            @endphp
+
+                            <div class="tree-domain-group" data-group-title="{{ strtolower($groupLabel) }}" data-badge="{{ $meta['badge'] }}" id="{{ $groupId }}">
+                                <div class="tree-node-row level-1 {{ $hasActiveDescendant ? 'active' : '' }}" data-group-row="{{ $groupId }}">
+                                    <!-- Collapsed Indicator Bar -->
+                                    @if ($hasActiveDescendant)
+                                        <span class="tree-collapsed-active-bar" aria-hidden="true"></span>
+                                    @endif
+
+                                    <!-- Chevron Toggle (expanded mode) -->
+                                    <button type="button" class="tree-chevron-toggle" aria-expanded="false" aria-controls="sub-{{ $groupId }}" title="Buka / Tutup {{ $groupLabel }}">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                                    </button>
+
+                                    <!-- Category Header / Button Tile (NOT a link! It toggles the accordion) -->
+                                    <button type="button" class="tree-node-button" data-group-index="{{ $groupIndex }}" aria-expanded="false" aria-controls="sub-{{ $groupId }}" title="{{ $groupLabel }}">
+                                        <span class="tree-node-icon">
+                                            @if ($meta['icon'] === 'layout-dashboard')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                            @elseif ($meta['icon'] === 'database')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                                            @elseif ($meta['icon'] === 'graduation-cap')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                                            @elseif ($meta['icon'] === 'calendar-days')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                            @elseif ($meta['icon'] === 'book-open-check')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path><polyline points="16 10 18 12 22 8"></polyline></svg>
+                                            @elseif ($meta['icon'] === 'scroll-text')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h12a2 2 0 0 0 2-2v-2H10v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4"></path><path d="M19 17V5a2 2 0 0 0-2-2H4"></path></svg>
+                                            @elseif ($meta['icon'] === 'wallet-cards')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                                            @elseif ($meta['icon'] === 'award')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                                            @elseif ($meta['icon'] === 'map-pinned')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8c0 4.5-6 9-6 9s-6-4.5-6-9a6 6 0 0 1 12 0z"></path><circle cx="12" cy="8" r="2"></circle></svg>
+                                            @elseif ($meta['icon'] === 'clipboard-check')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="4" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><polyline points="9 14 11 16 15 12"></polyline></svg>
+                                            @elseif ($meta['icon'] === 'settings')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                            @elseif ($meta['icon'] === 'chart-no-axes-column-increasing')
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+                                            @else
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                                            @endif
+                                        </span>
+                                        <span class="tree-node-label root-title">{{ $groupLabel }}</span>
+                                    </button>
+                                </div>
+
+                                <!-- Submenu list (Level 2) - Defaults to closed (is-collapsed) -->
+                                <div class="tree-sub-list is-collapsed" id="sub-{{ $groupId }}" inert>
+                                    @foreach ($group['items'] as $itemIndex => $item)
+                                        @php
+                                            $itemLabel = (string) ($item['label'] ?? '');
+                                            $itemRoute = (string) ($item['route'] ?? '');
+                                            $hasChildren = (!empty($item['items']) && is_array($item['items'])) || (!empty($item['children']) && is_array($item['children']));
+                                            $childList = !empty($item['items']) && is_array($item['items']) ? $item['items'] : (!empty($item['children']) && is_array($item['children']) ? $item['children'] : []);
+                                            $isItemActiveCurrent = $itemRoute !== '' && request()->routeIs($itemRoute);
+                                            $isSubBranchActive = $isItemActive($item);
+                                            $subItemId = $groupId.'-sub-'.$itemIndex;
+                                        @endphp
+
+                                        @if ($hasChildren)
+                                            <!-- Level 2 Sub-Group (has children -> toggles child hierarchy, does NOT navigate) -->
+                                            <div class="tree-sub-group" data-item-title="{{ strtolower($itemLabel) }}" id="{{ $subItemId }}">
+                                                <div class="tree-node-row level-2 {{ $isSubBranchActive ? 'active' : '' }}" data-sub-row="{{ $subItemId }}">
+                                                    <span class="tree-connector-elbow" aria-hidden="true"></span>
+                                                    <button type="button" class="tree-sub-chevron-toggle" aria-expanded="false" aria-controls="leaf-{{ $subItemId }}" title="Buka / Tutup {{ $itemLabel }}">
+                                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                                                    </button>
+                                                    <button type="button" class="tree-sub-node-button" aria-expanded="false" aria-controls="leaf-{{ $subItemId }}" title="{{ $itemLabel }}">
+                                                        <span class="tree-sub-folder {{ $isSubBranchActive ? 'active' : '' }}" aria-hidden="true">
+                                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+                                                        </span>
+                                                        <span class="tree-node-label sub-title">{{ $itemLabel }}</span>
+                                                    </button>
+                                                </div>
+
+                                                <!-- Level 3 Leaf List - Defaults to closed (is-collapsed) -->
+                                                <div class="tree-leaf-list is-collapsed" id="leaf-{{ $subItemId }}" inert>
+                                                    @foreach ($childList as $leafIndex => $leaf)
+                                                        @php
+                                                            $leafLabel = (string) ($leaf['label'] ?? '');
+                                                            $leafRoute = (string) ($leaf['route'] ?? '');
+                                                            $hasLeafChildren = (!empty($leaf['items']) && is_array($leaf['items'])) || (!empty($leaf['children']) && is_array($leaf['children']));
+                                                            $leafChildList = !empty($leaf['items']) && is_array($leaf['items']) ? $leaf['items'] : (!empty($leaf['children']) && is_array($leaf['children']) ? $leaf['children'] : []);
+                                                            $isLeafActive = $leafRoute !== '' && request()->routeIs($leafRoute);
+                                                            $isLeafBranchActive = $isItemActive($leaf);
+                                                            $leafItemId = $subItemId.'-leaf-'.$leafIndex;
+                                                        @endphp
+
+                                                        @if ($hasLeafChildren)
+                                                            <!-- Level 3 Sub-Group (has children -> toggles child hierarchy, does NOT navigate) -->
+                                                            <div class="tree-sub-group level-3-group" data-item-title="{{ strtolower($leafLabel) }}" id="{{ $leafItemId }}">
+                                                                <div class="tree-node-row level-3 {{ $isLeafBranchActive ? 'active' : '' }}" data-sub-row="{{ $leafItemId }}">
+                                                                    <span class="tree-connector-elbow" aria-hidden="true"></span>
+                                                                    <button type="button" class="tree-sub-chevron-toggle" aria-expanded="false" aria-controls="subleaf-{{ $leafItemId }}" title="Buka / Tutup {{ $leafLabel }}">
+                                                                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                                                                    </button>
+                                                                    <button type="button" class="tree-sub-node-button" aria-expanded="false" aria-controls="subleaf-{{ $leafItemId }}" title="{{ $leafLabel }}">
+                                                                        <span class="tree-sub-folder {{ $isLeafBranchActive ? 'active' : '' }}" aria-hidden="true">
+                                                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+                                                                        </span>
+                                                                        <span class="tree-node-label sub-title">{{ $leafLabel }}</span>
+                                                                    </button>
+                                                                </div>
+
+                                                                <!-- Level 4 Leaf List - Defaults to closed (is-collapsed) -->
+                                                                <div class="tree-leaf-list is-collapsed" id="subleaf-{{ $leafItemId }}" inert>
+                                                                    @foreach ($leafChildList as $deepLeaf)
+                                                                        @php
+                                                                            $deepRoute = (string) ($deepLeaf['route'] ?? '');
+                                                                            $deepLabel = (string) ($deepLeaf['label'] ?? '');
+                                                                            $isDeepActive = $deepRoute !== '' && request()->routeIs($deepRoute);
+                                                                        @endphp
+                                                                        <!-- Level 4 Final Leaf (NO children -> navigates to page!) -->
+                                                                        <a href="{{ $deepRoute !== '' ? route($deepRoute) : '#' }}" class="tree-leaf-link {{ $isDeepActive ? 'active' : '' }}" {!! $isDeepActive ? 'aria-current="page"' : '' !!} data-item-title="{{ strtolower($deepLabel) }}">
+                                                                            <span class="tree-sub-dot" aria-hidden="true"></span>
+                                                                            <span class="tree-node-label leaf-title">{{ $deepLabel }}</span>
+                                                                        </a>
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        @else
+                                                            <!-- Level 3 Final Leaf (NO children -> navigates to page!) -->
+                                                            <a href="{{ $leafRoute !== '' ? route($leafRoute) : '#' }}" class="tree-leaf-link {{ $isLeafActive ? 'active' : '' }}" {!! $isLeafActive ? 'aria-current="page"' : '' !!} data-item-title="{{ strtolower($leafLabel) }}">
+                                                                <span class="tree-sub-dot" aria-hidden="true"></span>
+                                                                <span class="tree-node-label leaf-title">{{ $leafLabel }}</span>
+                                                            </a>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @else
+                                            <!-- Level 2 Final Leaf (NO children -> navigates to page!) -->
+                                            <a href="{{ $itemRoute !== '' ? route($itemRoute) : '#' }}" class="tree-sub-link {{ $isItemActiveCurrent ? 'active' : '' }}" {!! $isItemActiveCurrent ? 'aria-current="page"' : '' !!} data-item-title="{{ strtolower($itemLabel) }}">
+                                                <span class="tree-sub-dot" aria-hidden="true"></span>
+                                                <span class="tree-node-label sub-title">{{ $itemLabel }}</span>
+                                            </a>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endforeach
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- Floating Hover Flyout Card for Collapsed Mode (Generated dynamically via JS) -->
+            <div class="tree-collapsed-flyout-card" id="collapsed-hover-flyout" hidden>
+                <div class="flyout-header">
+                    <span class="flyout-title" id="flyout-title">Modul</span>
+                    <span class="flyout-badge" id="flyout-badge">AUI</span>
+                </div>
+                <div class="flyout-items-list" id="flyout-items"></div>
+            </div>
+
+            <!-- Mobile Scrim -->
+            <button class="sidebar-scrim" id="sidebar-scrim" type="button" aria-label="Tutup navigasi mobile"></button>
+
+            <!-- MAIN STAGE -->
+            <div class="portal-main-stage" id="portal-main-stage">
+                <main class="portal-content-fluid">
+                    @include('partials.flash-notice')
+                    @yield('content')
+                </main>
+            </div>
         </div>
+
+        <!-- APP FOOTER (FULL WIDTH / FIT WIDTH UNDER SIDEBAR & STAGE) -->
+        <footer class="portal-app-footer">
+            <div class="portal-footer-fluid">
+                <div>&copy; {{ date('Y') }} ASEAN University International (AUI) • Sistem Informasi Akademik & LMS Enterprise.</div>
+                <div class="portal-footer-live-clock">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span id="portal-live-clock">{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }} • {{ \Carbon\Carbon::now()->format('H:i:s') }}</span>
+                </div>
+            </div>
+        </footer>
     </div>
+
+    <!-- Edit Profile Modal Dialog -->
     @if ($currentUser->role !== 'admin')
         <div class="account-profile-modal-backdrop" data-profile-modal hidden>
             <section class="account-profile-modal" role="dialog" aria-modal="true" aria-labelledby="account-profile-modal-title" tabindex="-1">
@@ -616,78 +670,547 @@
                         <h2 id="account-profile-modal-title">Edit Profil</h2>
                         <p>Perbarui informasi akun Anda.</p>
                     </div>
-                    <button class="account-profile-modal-close" type="button" data-profile-close aria-label="Tutup modal"><i data-lucide="x"></i></button>
+                    <button class="account-profile-modal-close" type="button" data-profile-close aria-label="Tutup modal">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
                 </header>
                 <div class="account-profile-modal-content" data-profile-modal-content></div>
             </section>
         </div>
     @endif
+
+    <!-- Client Script: Sidebar Toggle, Filter, Search, Theme & Role Simulator -->
     <script>
         (() => {
+            // Synchronize cross-tab authentication
             window.addEventListener('storage', (event) => {
                 if (event.key === 'simak-auth-changed') window.location.reload();
             });
             @if (session('auth_changed'))
                 try {
                     window.localStorage.setItem('simak-auth-changed', String(Date.now()));
-                } catch (error) {
-                    console.error('Authentication changes could not be synchronized across tabs.', error);
-                }
+                } catch (e) {}
             @endif
+
+            // DOM Elements
             const shell = document.getElementById('simak-shell');
-            const sidebar = document.getElementById('simak-navigation');
-            const openButton = document.querySelector('[data-open-navigation]');
-            const closeButton = document.querySelector('[data-close-navigation]');
-            const mobileNavigation = window.matchMedia('(max-width: 1100px), (hover: none) and (pointer: coarse) and (max-width: 1400px)');
+            const sidebar = document.getElementById('portal-sidebar');
+            const mainStage = document.getElementById('portal-main-stage');
+            const toggleTopBtn = document.getElementById('sidebar-toggle-btn');
+            const scrim = document.getElementById('sidebar-scrim');
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const sunIcon = themeToggleBtn?.querySelector('.sun-icon');
+            const moonIcon = themeToggleBtn?.querySelector('.moon-icon');
+            const searchInput = document.getElementById('tree-search-input');
+            const searchClearBtn = document.getElementById('tree-search-clear');
+            const prodiSelect = document.getElementById('tree-prodi-select');
+            const prodiPill = document.getElementById('prodi-filter-pill');
+            const btnExpandAll = document.getElementById('btn-expand-all');
+            const btnCollapseAll = document.getElementById('btn-collapse-all');
+            const btnResetFilters = document.getElementById('btn-reset-filters');
+            const treeGroups = document.querySelectorAll('.tree-domain-group');
+            const flyoutCard = document.getElementById('collapsed-hover-flyout');
+            const flyoutTitle = document.getElementById('flyout-title');
+            const flyoutBadge = document.getElementById('flyout-badge');
+            const flyoutItems = document.getElementById('flyout-items');
+            const userProfileTrigger = document.getElementById('user-profile-trigger');
+            const userProfileDropdown = document.getElementById('user-profile-dropdown');
+            const collapsedSearchBtn = document.getElementById('collapsed-search-btn');
 
-            const syncSidebarState = () => {
-                sidebar.inert = mobileNavigation.matches && !shell.classList.contains('is-nav-open');
-                if (!mobileNavigation.matches) {
-                    shell.classList.remove('is-nav-open');
-                    openButton?.setAttribute('aria-expanded', 'false');
+            // 1. Sidebar Collapse / Expand State
+            const updateSidebarState = (collapsed) => {
+                if (collapsed) {
+                    sidebar.classList.remove('expanded');
+                    sidebar.classList.add('collapsed');
+                    mainStage.classList.add('sidebar-collapsed');
+                } else {
+                    sidebar.classList.add('expanded');
+                    sidebar.classList.remove('collapsed');
+                    mainStage.classList.remove('sidebar-collapsed');
+                }
+                localStorage.setItem('simak_sidebar_collapsed', String(collapsed));
+            };
+
+            const storedCollapse = localStorage.getItem('simak_sidebar_collapsed');
+            if (storedCollapse === 'true') {
+                updateSidebarState(true);
+            }
+
+            const toggleSidebar = () => {
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.toggle('mobile-open');
+                } else {
+                    const isNowCollapsed = !sidebar.classList.contains('collapsed');
+                    updateSidebarState(isNowCollapsed);
                 }
             };
-            const closeSidebarAfterRotation = () => {
-                shell.classList.remove('is-nav-open');
-                sidebar.inert = mobileNavigation.matches;
-                openButton?.setAttribute('aria-expanded', 'false');
+
+            toggleTopBtn?.addEventListener('click', toggleSidebar);
+            scrim?.addEventListener('click', () => sidebar.classList.remove('mobile-open'));
+
+            // 2. Multi-Level Hierarchical Accordion System
+            // Rule:
+            // - "menu samping default nya tutup semua" -> all start closed
+            // - "menu parent ketika di klik terbuka hanya di hirarki tersebut jangan semua nya"
+            //   -> Clicking Level 1 toggles only that hierarchy; closes other Level 1 groups!
+            //   -> Inside that Level 1 group, nested sub-groups stay collapsed until clicked!
+            // - "jika menu di bawah nya masih ada child buka hirarki di bawah nya lagi smapai child terakhir"
+            //   -> Clicking Level 2 with children toggles Level 3; closes sibling Level 2 groups!
+            //   -> Clicking Level 3 with children toggles Level 4; closes sibling Level 3 groups!
+            // - "ketika di klik child terakhir nya baru buka halaman"
+            //   -> Final leaf nodes (a.tree-sub-link, a.tree-leaf-link) are standard links; clicking navigates to the page!
+
+            const treeRoot = document.getElementById('tree-menu-root');
+
+            const collapseDomainGroup = (group) => {
+                const subList = group?.querySelector(':scope > .tree-sub-list');
+                const chevron = group?.querySelector(':scope > .tree-node-row.level-1 .tree-chevron-toggle');
+                const btn = group?.querySelector(':scope > .tree-node-row.level-1 .tree-node-button');
+                subList?.classList.add('is-collapsed');
+                subList?.setAttribute('inert', '');
+                chevron?.classList.remove('open');
+                chevron?.setAttribute('aria-expanded', 'false');
+                btn?.setAttribute('aria-expanded', 'false');
+
+                // Collapse all nested child groups as well
+                group?.querySelectorAll('.tree-leaf-list').forEach((ll) => {
+                    ll.classList.add('is-collapsed');
+                    ll.setAttribute('inert', '');
+                });
+                group?.querySelectorAll('.tree-sub-chevron-toggle').forEach((sc) => {
+                    sc.classList.remove('open');
+                    sc.setAttribute('aria-expanded', 'false');
+                });
+                group?.querySelectorAll('.tree-sub-node-button').forEach((sb) => {
+                    sb.setAttribute('aria-expanded', 'false');
+                });
             };
 
-            syncSidebarState();
-            mobileNavigation.addEventListener('change', syncSidebarState);
-            window.addEventListener('orientationchange', closeSidebarAfterRotation);
+            const expandDomainGroup = (group) => {
+                const subList = group?.querySelector(':scope > .tree-sub-list');
+                const chevron = group?.querySelector(':scope > .tree-node-row.level-1 .tree-chevron-toggle');
+                const btn = group?.querySelector(':scope > .tree-node-row.level-1 .tree-node-button');
+                subList?.classList.remove('is-collapsed');
+                subList?.removeAttribute('inert');
+                chevron?.classList.add('open');
+                chevron?.setAttribute('aria-expanded', 'true');
+                btn?.setAttribute('aria-expanded', 'true');
+            };
 
-            openButton?.addEventListener('click', () => {
-                shell.classList.add('is-nav-open');
-                sidebar.inert = false;
-                openButton.setAttribute('aria-expanded', 'true');
-                sidebar.querySelector('.nav-link:not(.nav-link-disabled)')?.focus();
-            });
+            const collapseSubGroup = (subGroup) => {
+                const leafList = subGroup?.querySelector(':scope > .tree-leaf-list');
+                const chevron = subGroup?.querySelector(':scope > .tree-node-row .tree-sub-chevron-toggle');
+                const btn = subGroup?.querySelector(':scope > .tree-node-row .tree-sub-node-button');
+                leafList?.classList.add('is-collapsed');
+                leafList?.setAttribute('inert', '');
+                chevron?.classList.remove('open');
+                chevron?.setAttribute('aria-expanded', 'false');
+                btn?.setAttribute('aria-expanded', 'false');
 
-            closeButton?.addEventListener('click', () => {
-                shell.classList.remove('is-nav-open');
-                sidebar.inert = mobileNavigation.matches;
-                openButton?.setAttribute('aria-expanded', 'false');
-                openButton?.focus();
-            });
+                // Collapse deeper nested lists
+                leafList?.querySelectorAll('.tree-leaf-list').forEach((ll) => {
+                    ll.classList.add('is-collapsed');
+                    ll.setAttribute('inert', '');
+                });
+                leafList?.querySelectorAll('.tree-sub-chevron-toggle').forEach((sc) => {
+                    sc.classList.remove('open');
+                    sc.setAttribute('aria-expanded', 'false');
+                });
+                leafList?.querySelectorAll('.tree-sub-node-button').forEach((sb) => {
+                    sb.setAttribute('aria-expanded', 'false');
+                });
+            };
 
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && shell.classList.contains('is-nav-open')) {
-                    closeButton?.click();
+            const expandSubGroup = (subGroup) => {
+                const leafList = subGroup?.querySelector(':scope > .tree-leaf-list');
+                const chevron = subGroup?.querySelector(':scope > .tree-node-row .tree-sub-chevron-toggle');
+                const btn = subGroup?.querySelector(':scope > .tree-node-row .tree-sub-node-button');
+                leafList?.classList.remove('is-collapsed');
+                leafList?.removeAttribute('inert');
+                chevron?.classList.add('open');
+                chevron?.setAttribute('aria-expanded', 'true');
+                btn?.setAttribute('aria-expanded', 'true');
+            };
+
+            treeRoot?.addEventListener('click', (e) => {
+                const target = e.target;
+                if (!target) return;
+
+                // 1. Leaf link click (child terakhir) -> open page (standard link navigation)
+                const leafLink = target.closest('a.tree-sub-link, a.tree-leaf-link');
+                if (leafLink) {
+                    if (window.innerWidth <= 1024) {
+                        sidebar.classList.remove('mobile-open');
+                    }
+                    return; // Let browser open the route / page
+                }
+
+                // 2. Level 3 Sub-Group with children -> toggle Level 4
+                const level3Row = target.closest('.tree-node-row.level-3');
+                if (level3Row) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const subGroup = level3Row.closest('.tree-sub-group.level-3-group');
+                    const leafList = subGroup?.querySelector(':scope > .tree-leaf-list');
+                    if (leafList) {
+                        const isOpen = !leafList.classList.contains('is-collapsed');
+                        if (isOpen) {
+                            collapseSubGroup(subGroup);
+                        } else {
+                            // Close sibling Level 3 groups
+                            const parentContainer = subGroup.parentElement;
+                            parentContainer?.querySelectorAll(':scope > .tree-sub-group.level-3-group').forEach((sib) => {
+                                if (sib !== subGroup) collapseSubGroup(sib);
+                            });
+                            expandSubGroup(subGroup);
+                        }
+                    }
+                    return;
+                }
+
+                // 3. Level 2 Sub-Group with children -> toggle Level 3
+                const level2Row = target.closest('.tree-node-row.level-2');
+                if (level2Row) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const subGroup = level2Row.closest('.tree-sub-group');
+                    const leafList = subGroup?.querySelector(':scope > .tree-leaf-list');
+                    if (leafList) {
+                        const isOpen = !leafList.classList.contains('is-collapsed');
+                        if (isOpen) {
+                            collapseSubGroup(subGroup);
+                        } else {
+                            // Close sibling Level 2 groups in this domain group
+                            const domainGroup = subGroup.closest('.tree-domain-group');
+                            domainGroup?.querySelectorAll(':scope > .tree-sub-list > .tree-sub-group').forEach((sib) => {
+                                if (sib !== subGroup) collapseSubGroup(sib);
+                            });
+                            expandSubGroup(subGroup);
+                        }
+                    }
+                    return;
+                }
+
+                // 4. Level 1 Domain Group -> toggle Level 2
+                const level1Row = target.closest('.tree-node-row.level-1');
+                if (level1Row) {
+                    if (sidebar.classList.contains('collapsed')) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const group = level1Row.closest('.tree-domain-group');
+                    const subList = group?.querySelector(':scope > .tree-sub-list');
+                    if (subList) {
+                        const isOpen = !subList.classList.contains('is-collapsed');
+                        if (isOpen) {
+                            collapseDomainGroup(group);
+                        } else {
+                            // "terbuka hanya di hirarki tersebut jangan semua nya":
+                            // Close ALL other Level 1 domain groups
+                            treeGroups.forEach((otherGroup) => {
+                                if (otherGroup !== group) {
+                                    collapseDomainGroup(otherGroup);
+                                }
+                            });
+                            // Ensure nested sub-groups inside this group start closed
+                            group.querySelectorAll('.tree-leaf-list').forEach((ll) => {
+                                ll.classList.add('is-collapsed');
+                                ll.setAttribute('inert', '');
+                            });
+                            group.querySelectorAll('.tree-sub-chevron-toggle').forEach((sc) => {
+                                sc.classList.remove('open');
+                                sc.setAttribute('aria-expanded', 'false');
+                            });
+                            group.querySelectorAll('.tree-sub-node-button').forEach((sb) => {
+                                sb.setAttribute('aria-expanded', 'false');
+                            });
+
+                            expandDomainGroup(group);
+                        }
+                    }
+                    return;
                 }
             });
 
-            document.querySelectorAll('[data-nav-toggle]').forEach((button) => {
-                button.addEventListener('click', () => {
-                    const expanded = button.getAttribute('aria-expanded') === 'true';
-                    const items = button.nextElementSibling;
-                    button.setAttribute('aria-expanded', String(!expanded));
-                    items.classList.toggle('is-collapsed', expanded);
-                    items.inert = expanded;
+            // 3. Real-Time Search Filtering
+            const filterTree = () => {
+                const query = (searchInput?.value || '').trim().toLowerCase();
+                let visibleCount = 0;
+
+                if (searchClearBtn) {
+                    searchClearBtn.style.display = query.length > 0 ? 'flex' : 'none';
+                }
+
+                treeGroups.forEach((group) => {
+                    const groupTitle = group.dataset.groupTitle || '';
+                    const allLinks = group.querySelectorAll('.tree-sub-link, .tree-leaf-link');
+                    let hasMatchingLink = false;
+
+                    allLinks.forEach((link) => {
+                        const linkTitle = link.dataset.itemTitle || '';
+                        const matchesText = !query || linkTitle.includes(query) || groupTitle.includes(query);
+                        if (matchesText) {
+                            link.style.display = 'flex';
+                            hasMatchingLink = true;
+                            // Ensure all ancestor containers are visible and expanded during search
+                            if (query) {
+                                let ancestorSub = link.closest('.tree-sub-group');
+                                while (ancestorSub && group.contains(ancestorSub)) {
+                                    ancestorSub.style.display = 'flex';
+                                    const leafList = ancestorSub.querySelector(':scope > .tree-leaf-list');
+                                    const subChevron = ancestorSub.querySelector(':scope > .tree-node-row .tree-sub-chevron-toggle');
+                                    leafList?.classList.remove('is-collapsed');
+                                    leafList?.removeAttribute('inert');
+                                    subChevron?.classList.add('open');
+                                    ancestorSub = ancestorSub.parentElement?.closest('.tree-sub-group');
+                                }
+                            }
+                        } else {
+                            link.style.display = 'none';
+                        }
+                    });
+
+                    // If empty query, reset all link displays to default
+                    if (!query) {
+                        allLinks.forEach((link) => { link.style.display = ''; });
+                        group.querySelectorAll('.tree-sub-group').forEach((sg) => { sg.style.display = ''; });
+                    }
+
+                    if (!query || hasMatchingLink || groupTitle.includes(query)) {
+                        group.style.display = 'block';
+                        visibleCount++;
+                        if (query) {
+                            const subList = group.querySelector(':scope > .tree-sub-list');
+                            const chevron = group.querySelector(':scope > .tree-node-row.level-1 .tree-chevron-toggle');
+                            subList?.classList.remove('is-collapsed');
+                            subList?.removeAttribute('inert');
+                            chevron?.classList.add('open');
+                        }
+                    } else {
+                        group.style.display = 'none';
+                    }
+                });
+
+                if (!query) {
+                    // When query is cleared, collapse all back to default closed state
+                    treeGroups.forEach((g) => collapseDomainGroup(g));
+                }
+
+                const badgeCount = document.getElementById('visible-modules-count');
+                if (badgeCount) badgeCount.textContent = `${visibleCount} Modul`;
+            };
+
+            searchInput?.addEventListener('input', filterTree);
+            searchClearBtn?.addEventListener('click', () => {
+                if (searchInput) searchInput.value = '';
+                filterTree();
+                searchInput?.focus();
+            });
+
+            // 4. Program Studi Selector Interactivity & Persistence
+            const updateProdiUI = (selectedVal) => {
+                if (!prodiSelect) return;
+                prodiSelect.value = selectedVal;
+                const opt = prodiSelect.options[prodiSelect.selectedIndex];
+                const text = opt ? opt.text.trim() : '';
+
+                if (prodiPill) {
+                    if (selectedVal === 'ALL' || !selectedVal) {
+                        prodiPill.textContent = 'SEMUA PRODI';
+                    } else {
+                        const cleanText = text.replace(/^(S\d)\s*-\s*/, '$1: ');
+                        prodiPill.textContent = cleanText.length > 18 ? cleanText.substring(0, 18) + '…' : cleanText;
+                    }
+                }
+
+                // Filter dashboard DTPS table rows if present on page
+                const dtpsRows = document.querySelectorAll('tbody tr[data-prodi-id]');
+                if (dtpsRows.length > 0) {
+                    dtpsRows.forEach((row) => {
+                        const rowProdiId = row.getAttribute('data-prodi-id');
+                        if (selectedVal === 'ALL' || !selectedVal || rowProdiId === selectedVal) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                }
+
+                // Dispatch event so any page script can listen to prodi change
+                window.dispatchEvent(new CustomEvent('simak:prodi-changed', {
+                    detail: { prodiId: selectedVal, prodiName: text }
+                }));
+            };
+
+            // Restore stored prodi selection on load
+            const storedProdi = localStorage.getItem('simak_selected_prodi') || 'ALL';
+            if (storedProdi && prodiSelect) {
+                const exists = Array.from(prodiSelect.options).some(o => o.value === storedProdi);
+                if (exists) {
+                    updateProdiUI(storedProdi);
+                }
+            }
+
+            prodiSelect?.addEventListener('change', () => {
+                const val = prodiSelect.value;
+                localStorage.setItem('simak_selected_prodi', val);
+                updateProdiUI(val);
+            });
+
+            // 5. Expand / Collapse All & Reset
+            btnExpandAll?.addEventListener('click', () => {
+                treeGroups.forEach((group) => {
+                    expandDomainGroup(group);
+                    group.querySelectorAll('.tree-sub-group').forEach((sg) => {
+                        expandSubGroup(sg);
+                    });
                 });
             });
+
+            btnCollapseAll?.addEventListener('click', () => {
+                treeGroups.forEach((group) => {
+                    collapseDomainGroup(group);
+                });
+            });
+
+            btnResetFilters?.addEventListener('click', () => {
+                if (searchInput) searchInput.value = '';
+                if (prodiSelect) prodiSelect.value = 'ALL';
+                localStorage.setItem('simak_selected_prodi', 'ALL');
+                updateProdiUI('ALL');
+                filterTree();
+            });
+
+            // 7. Hover Flyout Modals on Collapsed Rail
+            let flyoutTimeout = null;
+            document.querySelectorAll('.tree-node-button').forEach((btn) => {
+                const group = btn.closest('.tree-domain-group');
+                btn.addEventListener('mouseenter', () => {
+                    if (!sidebar.classList.contains('collapsed')) return;
+                    clearTimeout(flyoutTimeout);
+
+                    const title = group?.querySelector('.tree-node-label')?.textContent || '';
+                    const badge = group?.dataset?.badge || 'AUI';
+                    const links = group?.querySelectorAll('.tree-sub-link, .tree-leaf-link') || [];
+
+                    if (flyoutTitle) flyoutTitle.textContent = title;
+                    if (flyoutBadge) flyoutBadge.textContent = badge;
+                    if (flyoutItems) {
+                        flyoutItems.innerHTML = '';
+                        links.forEach((l) => {
+                            const a = document.createElement('a');
+                            a.className = 'flyout-item-link' + (l.classList.contains('active') ? ' active' : '');
+                            a.href = l.href;
+                            a.textContent = l.textContent.trim();
+                            flyoutItems.appendChild(a);
+                        });
+                    }
+
+                    const rect = btn.getBoundingClientRect();
+                    if (flyoutCard) {
+                        flyoutCard.style.top = `${rect.top + rect.height / 2}px`;
+                        flyoutCard.style.transform = 'translateY(-50%)';
+                        flyoutCard.hidden = false;
+                    }
+                });
+
+                btn.addEventListener('mouseleave', () => {
+                    flyoutTimeout = setTimeout(() => {
+                        if (flyoutCard && !flyoutCard.matches(':hover')) {
+                            flyoutCard.hidden = true;
+                        }
+                    }, 120);
+                });
+            });
+
+            flyoutCard?.addEventListener('mouseleave', () => {
+                flyoutCard.hidden = true;
+            });
+
+            // 8. Theme Toggle (Light / Dark)
+            const syncThemeIcons = (theme) => {
+                if (theme === 'dark') {
+                    if (sunIcon) sunIcon.style.display = 'block';
+                    if (moonIcon) moonIcon.style.display = 'none';
+                    themeToggleBtn?.setAttribute('title', 'Beralih ke Tema Terang');
+                } else {
+                    if (sunIcon) sunIcon.style.display = 'none';
+                    if (moonIcon) moonIcon.style.display = 'block';
+                    themeToggleBtn?.setAttribute('title', 'Beralih ke Tema Gelap');
+                }
+            };
+
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            syncThemeIcons(currentTheme);
+
+            themeToggleBtn?.addEventListener('click', () => {
+                const now = document.documentElement.getAttribute('data-theme') || 'light';
+                const next = now === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('simak_theme', next);
+                localStorage.setItem('anvieo_theme', next);
+                syncThemeIcons(next);
+            });
+
+            // 7. Dropdown toggle (User profile)
+            userProfileTrigger?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = !userProfileDropdown.hidden;
+                userProfileDropdown.hidden = isOpen;
+                userProfileTrigger.classList.toggle('active', !isOpen);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (userProfileDropdown && !userProfileDropdown.contains(e.target) && !userProfileTrigger?.contains(e.target)) {
+                    userProfileDropdown.hidden = true;
+                    userProfileTrigger?.classList.remove('active');
+                }
+            });
+
+            // 10. Shortcut Keys (⌘K / Ctrl+K)
+            document.addEventListener('keydown', (e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    if (sidebar.classList.contains('collapsed')) {
+                        updateSidebarState(false);
+                    }
+                    searchInput?.focus();
+                }
+                if (e.key === 'Escape') {
+                    if (userProfileDropdown) userProfileDropdown.hidden = true;
+                    if (flyoutCard) flyoutCard.hidden = true;
+                }
+            });
+
+            collapsedSearchBtn?.addEventListener('click', () => {
+                updateSidebarState(false);
+                searchInput?.focus();
+            });
+
+            // 11. Live Running Clock (Hari, Tanggal Bulan Tahun & Jam)
+            const liveClockEl = document.getElementById('portal-live-clock');
+            if (liveClockEl) {
+                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                const months = [
+                    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                ];
+                const updateRunningClock = () => {
+                    const now = new Date();
+                    const day = days[now.getDay()];
+                    const date = String(now.getDate()).padStart(2, '0');
+                    const month = months[now.getMonth()];
+                    const year = now.getFullYear();
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    const seconds = String(now.getSeconds()).padStart(2, '0');
+                    liveClockEl.textContent = `${day}, ${date} ${month} ${year} • ${hours}:${minutes}:${seconds}`;
+                };
+                updateRunningClock();
+                setInterval(updateRunningClock, 1000);
+            }
         })();
     </script>
+
     @stack('scripts')
 </body>
 </html>

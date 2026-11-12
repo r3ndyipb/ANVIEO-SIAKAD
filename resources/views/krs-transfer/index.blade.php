@@ -3,16 +3,7 @@
 @section('title', 'KRS Transfer | SIAKAD')
 @section('topbar_title', 'KRS Transfer')
 
-@push('styles')
-    <style>
-        .transfer-search { display: grid; grid-template-columns: minmax(240px, 480px) auto; align-items: end; gap: 10px; margin: 16px 0 20px; }
-        .transfer-search label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .transfer-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-        .transfer-student-identity small { display: block; margin-top: 4px; color: #71805e; }
-        .transfer-pagination { margin-top: 14px; }
-        @media (max-width: 620px) { .transfer-search { grid-template-columns: 1fr; } }
-    </style>
-@endpush
+
 
 @section('content')
     <div class="page-heading">

@@ -3,48 +3,6 @@
 @section('title', 'KRS Mahasiswa | SIAKAD')
 @section('topbar_title', 'KRS Mahasiswa')
 
-@push('styles')
-    <style>
-        .krs-search { display: grid; grid-template-columns: minmax(220px, 430px) auto; align-items: end; gap: 10px; margin: 16px 0 20px; }
-        .krs-search label, .krs-program-form label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .krs-search-actions, .krs-actions, .krs-row-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-        .krs-student-list { margin-bottom: 24px; }
-        .krs-student-identity { min-width: 220px; font-weight: 700; }
-        .krs-student-identity small { display: block; margin-top: 4px; color: #71805e; font-weight: 500; }
-        .krs-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 18px 0; }
-        .krs-summary-card { padding: 13px 15px; border: 1px solid #e3e9e0; border-radius: 8px; background: #fbfdfb; }
-        .krs-summary-card small { display: block; margin-bottom: 6px; color: #71805e; font-size: 10px; font-weight: 700; text-transform: uppercase; }
-        .krs-summary-card strong { color: #315b3b; font-size: 15px; }
-        .krs-status { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0; }
-        .krs-status .status-chip { width: fit-content; }
-        .krs-program-form { margin-top: 20px; padding: 18px; border: 1px solid #e3e9e0; border-radius: 9px; background: #fff; }
-        .krs-program-form h2, .krs-section-title { margin: 0 0 12px; color: #315b3b; font-size: 15px; }
-        .krs-offering-table { width: 100%; }
-        .krs-offering-table td:last-child, .krs-offering-table th:last-child { text-align: center; }
-        .krs-offering-table .krs-semester-cell { text-align: center; }
-        .krs-offering-table tbody tr.krs-selected-row > td { background: #e8f2e7; }
-        .krs-select-cell input { width: 17px; height: 17px; accent-color: #356b45; }
-        .krs-approval-form { display: inline-flex; }
-        .krs-pagination { display: flex; justify-content: flex-end; margin-top: 10px; }
-        .krs-pagination .dt-paging { display: flex; align-items: center; gap: 4px; }
-        .krs-pagination .dt-paging-button { min-width: 32px; min-height: 30px; margin-left: 4px; padding: 0 9px; border: 1px solid #d5dfd3; border-radius: 5px; background: #fff; color: #386345; font-size: 10px; text-decoration: none; }
-        .krs-pagination .dt-paging-button.current { border-color: #73a17b; background: #e8f2e7; font-weight: 700; }
-        .krs-pagination .dt-paging-button.disabled { color: #a5afa2; }
-        .krs-alert { margin: 14px 0; padding: 12px 15px; border: 1px solid #eadba5; border-radius: 7px; background: #fffae9; color: #695426; font-size: 11px; line-height: 1.6; }
-        .krs-alert.error { border-color: #f0c9c3; background: #fff2f0; color: #8c382e; }
-        .krs-alert.success { border-color: #c9dfc8; background: #f0f8ef; color: #315b3b; }
-        .krs-bulk-approval { margin: 14px 0; padding: 16px 18px; border: 2px solid #d99018; border-left-width: 8px; border-radius: 9px; background: #fff6d9; color: #61420d; box-shadow: 0 4px 14px rgb(111 75 10 / 12%); }
-        .krs-bulk-approval p { margin: 0 0 12px; font-size: 13px; font-weight: 800; line-height: 1.65; }
-        .krs-modal-backdrop[hidden] { display: none; }
-        .krs-modal-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 20px; }
-        .krs-modal-copy { margin: 0; color: #4c5e4b; font-size: 12px; line-height: 1.6; }
-        @media (max-width: 640px) {
-            .krs-search { grid-template-columns: 1fr; }
-            .krs-actions > *, .krs-search-actions > * { flex: 1; }
-        }
-    </style>
-@endpush
-
 @section('content')
     @php($isReadOnlyRole = in_array($user->role, ['admin', 'pimuniv', 'pimfak', 'usertu', 'validasi', 'wisuda', 'regulang'], true))
     <div class="page-heading">

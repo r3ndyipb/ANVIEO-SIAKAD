@@ -3,21 +3,6 @@
 @section('title', 'Validasi Usulan Judul | SIAKAD')
 @section('topbar_title', 'Validasi Usulan Judul')
 
-@push('styles')
-    <style>
-        tr.title-proposal-status-0 > td { background: #fff8d8 !important; }
-        tr.title-proposal-status-1 > td { background: #e8f7ed !important; }
-        tr.title-proposal-status-2 > td { background: #fff0ef !important; }
-        .title-proposal-status-0 td { color: #664f0a; }
-        .title-proposal-status-1 td { color: #205a35; }
-        .title-proposal-status-2 td { color: #8b302b; }
-        .title-proposal-status-label { display: inline-flex; align-items: center; padding: 5px 9px; border-radius: 999px; font-size: 10px; font-weight: 800; white-space: nowrap; }
-        .title-proposal-status-0 .title-proposal-status-label { background: #f7e7a3; color: #664f0a; }
-        .title-proposal-status-1 .title-proposal-status-label { background: #c8ecd3; color: #205a35; }
-        .title-proposal-status-2 .title-proposal-status-label { background: #f5cfcc; color: #8b302b; }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

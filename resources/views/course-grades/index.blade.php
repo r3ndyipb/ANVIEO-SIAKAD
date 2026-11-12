@@ -8,22 +8,6 @@
 @section('title', $gradeTitle.' | SIAKAD')
 @section('topbar_title', $gradeTitle)
 
-@push('styles')
-    <style>
-        .grade-filter { display: grid; grid-template-columns: minmax(240px, 520px) auto; align-items: end; gap: 10px; margin: 16px 0 20px; }
-        .grade-filter label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .grade-course-cell { min-width: 240px; }
-        .grade-status { min-width: 150px; }
-        .grade-status .grade-status-chip { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; }
-        .grade-status .is-entered { background: #e5f3e9; color: #24643a; }
-        .grade-status .is-pending { background: #fde9e7; color: #9d352d; }
-        .grade-status .is-partial { background: #fff3d7; color: #805d10; }
-        .grade-process { white-space: nowrap; }
-        .grade-action-cell { width: 44px; text-align: center; }
-        @media (max-width: 640px) { .grade-filter { grid-template-columns: 1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

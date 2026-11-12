@@ -43,24 +43,4 @@
     </dialog>
 @endsection
 
-@push('styles')
-<style>
-    .kkn-list-actions { display: flex; justify-content: flex-end; margin: 16px 0; }
-    .kkn-dialog { position: fixed; inset: 0; width: min(600px, calc(100vw - 28px)); max-height: min(88dvh, 720px); margin: auto; overflow-y: auto; padding: 20px; border: 1px solid #dce5e0; border-radius: 8px; background: #fff; box-shadow: 0 24px 70px rgba(15, 35, 28, .25); }
-    .kkn-dialog::backdrop { background: rgba(18, 38, 31, .5); backdrop-filter: blur(2px); }
-    .kkn-dialog[open] { display: block; }
-    .kkn-dialog-head, .kkn-dialog-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .kkn-dialog-head { margin-bottom: 16px; }
-    .kkn-dialog-head h2 { margin: 0; color: #244a3d; font-size: 17px; }
-    .kkn-dialog-actions { justify-content: flex-end; grid-column: 1 / -1; margin-top: 8px; }
-    .kkn-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: 12px; }
-    .kkn-form label { display: grid; min-width: 190px; gap: 6px; color: #52645b; font-size: 11px; font-weight: 700; }
-    .kkn-form input, .kkn-form select, .kkn-inline-form input, .kkn-inline-form select { min-height: 38px; padding: 7px 9px; border: 1px solid #cbd8d1; border-radius: 5px; background: #fff; color: #263d33; }
-    .kkn-muted { color: #718078; font-size: 11px; }
-    .kkn-status { display: inline-flex; padding: 4px 8px; border-radius: 4px; background: #edf0ee; color: #59655e; font-size: 11px; font-weight: 700; }
-    .kkn-status.is-active { background: #e5f2e8; color: #27613a; }
-    .kkn-empty { padding: 24px; color: #69786f; text-align: center; }
-    .kkn-pagination { margin-top: 14px; }
-    @media (max-width: 620px) { .kkn-form { grid-template-columns: 1fr; } }
-</style>
-@endpush
+

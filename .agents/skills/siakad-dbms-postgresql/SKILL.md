@@ -212,62 +212,89 @@ GROUP BY student_id;
 
 ---
 
-## 6. Audit Trail & Trigger Keamanan Anti-Kecurangan Nilai
+## 6. Audit Trail & Trigger Keamanan Anti-Kecurangan Nilai (Cryptographic Hash Chains)
 
-Setiap modifikasi nilai akhir mata kuliah wajib tercatat permanen di tabel audit yang tidak dapat dihapus:
+Setiap modifikasi nilai akhir mata kuliah atau KRS wajib tercatat permanen di tabel audit WORM (*Write Once, Read Many*) yang dilindungi rantai hash kriptografis SHA-256 (`simak_audit_log`):
 
 ```sql
--- 1. Tabel Audit Nilai
-CREATE TABLE grade_audit_logs (
+-- 1. Tabel Audit Nilai Kriptografis Berantai
+CREATE TABLE simak_audit_log (
     id BIGSERIAL PRIMARY KEY,
-    course_grade_id BIGINT NOT NULL,
-    student_id BIGINT NOT NULL,
-    old_grade_point NUMERIC(3,2),
-    new_grade_point NUMERIC(3,2),
-    old_grade_letter VARCHAR(2),
-    new_grade_letter VARCHAR(2),
-    modified_by BIGINT NOT NULL, -- User ID yang mengubah
-    reason TEXT NOT NULL,
-    ip_address INET,
+    table_name VARCHAR(64) NOT NULL,
+    record_id BIGINT NOT NULL,
+    action VARCHAR(16) NOT NULL, -- 'INSERT', 'UPDATE', 'DELETE'
+    old_values JSONB NULL,
+    new_values JSONB NULL,
+    modified_by BIGINT NULL,
+    ip_address INET NULL,
+    previous_hash VARCHAR(64) NOT NULL,
+    record_hash VARCHAR(64) NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Trigger Function
-CREATE OR REPLACE FUNCTION trg_log_grade_modification()
+CREATE INDEX idx_simak_audit_table_record ON simak_audit_log (table_name, record_id);
+
+-- 2. Trigger Function dengan Proteksi Rantai Hash SHA-256
+CREATE OR REPLACE FUNCTION audit_grade_mutation()
 RETURNS TRIGGER AS $$
+DECLARE
+    last_hash VARCHAR(64);
+    new_hash VARCHAR(64);
 BEGIN
-    IF (OLD.grade_point IS DISTINCT FROM NEW.grade_point OR OLD.grade_letter IS DISTINCT FROM NEW.grade_letter) THEN
-        INSERT INTO grade_audit_logs (
-            course_grade_id,
-            student_id,
-            old_grade_point,
-            new_grade_point,
-            old_grade_letter,
-            new_grade_letter,
-            modified_by,
-            reason,
-            created_at
-        ) VALUES (
-            OLD.id,
-            OLD.student_id,
-            OLD.grade_point,
-            NEW.grade_point,
-            OLD.grade_letter,
-            NEW.grade_letter,
-            NEW.updated_by,
-            COALESCE(NEW.edit_reason, 'Pembaruan nilai via sistem'),
-            CURRENT_TIMESTAMP
-        );
+    -- Ambil hash terakhir untuk membentuk rantai hash anti-tamper
+    SELECT record_hash INTO last_hash 
+    FROM simak_audit_log 
+    ORDER BY id DESC LIMIT 1;
+    
+    IF last_hash IS NULL THEN
+        last_hash := 'GENESIS_HASH_SIAKAD_2026';
     END IF;
+
+    -- Hitung hash baru secara deterministik
+    new_hash := encode(digest(
+        COALESCE(OLD.id::text, '') || 
+        COALESCE(OLD.grade_point::text, '') || 
+        COALESCE(NEW.grade_point::text, '') || 
+        current_setting('app.current_user_id', true) || 
+        clock_timestamp()::text || 
+        last_hash, 
+        'sha256'
+    ), 'hex');
+
+    -- Simpan entri audit log yang tidak dapat diubah
+    INSERT INTO simak_audit_log (
+        table_name,
+        record_id,
+        action,
+        old_values,
+        new_values,
+        modified_by,
+        ip_address,
+        previous_hash,
+        record_hash,
+        created_at
+    ) VALUES (
+        TG_TABLE_NAME,
+        NEW.id,
+        TG_OP,
+        row_to_json(OLD)::jsonb,
+        row_to_json(NEW)::jsonb,
+        NULLIF(current_setting('app.current_user_id', true), '')::bigint,
+        inet_client_addr(),
+        last_hash,
+        new_hash,
+        clock_timestamp()
+    );
+
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- 3. Pasang Trigger
+-- 3. Pasang Trigger pada Tabel Penilaian
 CREATE TRIGGER trg_track_grade_changes
-AFTER UPDATE ON course_grades
+AFTER UPDATE OR DELETE ON course_grades
 FOR EACH ROW
-EXECUTE FUNCTION trg_log_grade_modification();
+EXECUTE FUNCTION audit_grade_mutation();
 ```
 
 ---

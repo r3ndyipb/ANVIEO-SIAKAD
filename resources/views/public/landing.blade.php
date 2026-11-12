@@ -1,3 +1,11 @@
+@php
+    /** @var array<string, mixed> $siteConfiguration */
+    $siteConfiguration = $siteConfiguration ?? [];
+    /** @var array<string, mixed> $landingData */
+    $landingData = $landingData ?? [];
+    /** @var string $pageType */
+    $pageType = $pageType ?? 'home';
+@endphp
 <!doctype html>
 <html lang="id">
 <head>
@@ -17,6 +25,8 @@
     <meta name="theme-color" content="{{ $siteConfiguration['primary_color'] }}">
     <link rel="canonical" href="{{ url()->current() }}">
     <link rel="icon" type="image/png" href="{{ $siteConfiguration['logo_url'] }}">
+    <link rel="shortcut icon" href="{{ $siteConfiguration['logo_url'] }}">
+    <link rel="apple-touch-icon" href="{{ $siteConfiguration['logo_url'] }}">
     <title>{{ $landingData['pageTitle'] }} | siakad smartkampus.id</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,13 +75,24 @@
                     <ul>
                         <li><a href="{{ route('public.faculties.index') }}">Fakultas</a></li>
                         <li><a href="{{ route('public.programs.index') }}">Program Studi</a></li>
-                        <li><a href="{{ route('login') }}">Login SIAKAD</a></li>
+                        <li><a href="{{ route('login') }}">LOGIN PORTAL</a></li>
                     </ul>
                 </div>
             </div>
             <header class="public-header hdr">
                 <div class="wrap">
-                    <a class="public-brand logo" href="{{ route('public.home') }}"><img src="{{ $siteConfiguration['logo_url'] }}" alt=""><span><strong>{{ $siteConfiguration['app_name'] }}</strong><small>{{ $siteConfiguration['app_full_name'] }}</small></span></a>
+                    <a class="public-brand logo brand-header-logo" href="{{ route('public.home') }}" aria-label="ASEAN University International — Home">
+                        <img src="{{ $siteConfiguration['logo_url'] }}" alt="Logo ASEAN University International" class="brand-logo-img">
+                        <div class="brand-text">
+                            <span class="brand-title">
+                                <span class="sr-only">ASEAN UNIVERSITU </span>
+                                ASEAN UNIVERSITY
+                            </span>
+                            <div class="brand-subtitle" aria-label="INTERNATIONAL">
+                                <span>I</span><span>N</span><span>T</span><span>E</span><span>R</span><span>N</span><span>A</span><span>T</span><span>I</span><span>O</span><span>N</span><span>A</span><span>L</span>
+                            </div>
+                        </div>
+                    </a>
                     <nav class="public-nav nav" aria-label="Navigasi utama">
                         <a href="{{ route('public.home') }}" class="is-active">Home</a>
                         <a href="{{ route('public.about') }}">About</a>
@@ -92,7 +113,7 @@
                                 <a href="{{ route('public.accreditation') }}">Accreditation</a>
                             </nav>
                         </details>
-                        <a class="login-button btn btn-gold" href="{{ route('login') }}">Login SIAKAD <span aria-hidden="true">&#8599;</span></a>
+                        <a class="login-button btn btn-gold" href="{{ route('login') }}">LOGIN PORTAL <span aria-hidden="true">&#8599;</span></a>
                     </div>
                 </div>
             </header>

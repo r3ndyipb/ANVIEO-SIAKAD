@@ -3,16 +3,6 @@
 @section('title', 'Transkrip Nilai | SIAKAD')
 @section('topbar_title', 'Transkrip Nilai')
 
-@push('styles')
-    <style>
-        .transcript-search { display: grid; grid-template-columns: minmax(240px, 1fr) auto; align-items: end; gap: 12px; margin: 16px 0 20px; padding: 15px; border: 1px solid #e3e9e2; border-radius: 7px; background: #fbfdfb; }
-        .transcript-search label { display: block; margin-bottom: 7px; color: #43543c; font-size: 11px; font-weight: 800; }
-        .transcript-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
-        .transcript-pagination { margin-top: 14px; }
-        @media (max-width: 640px) { .transcript-search { grid-template-columns: 1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

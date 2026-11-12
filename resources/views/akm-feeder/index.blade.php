@@ -3,21 +3,6 @@
 @section('title', 'Cek AKM SIAKAD - Feeder | SIAKAD')
 @section('topbar_title', 'Cek AKM SIAKAD - Feeder')
 
-@push('styles')
-    <style>
-        .akm-feeder-filters { display:grid; grid-template-columns:minmax(220px, 1fr) minmax(220px, 1fr) max-content; align-items:end; gap:12px; margin:16px 0 20px; }
-        .akm-feeder-filters label { display:grid; gap:6px; color:#52634f; font-size:11px; font-weight:700; }
-        .akm-feeder-filters select { min-height:38px; padding:8px 10px; border:1px solid #d9e2d7; border-radius:5px; background:#fff; color:#354a38; }
-        .akm-feeder-table-wrap { overflow-x:auto; border:1px solid #e2e9e0; border-radius:7px; background:#fff; }
-        .akm-feeder-table { width:100%; min-width:840px; border-collapse:collapse; font-size:11px; }
-        .akm-feeder-table th, .akm-feeder-table td { padding:10px 11px; border-bottom:1px solid #edf1eb; text-align:left; vertical-align:middle; }
-        .akm-feeder-table th { background:#f7f9f5; color:#63725e; font-size:9px; text-transform:uppercase; white-space:nowrap; }
-        .akm-feeder-table select { min-width:190px; min-height:36px; padding:6px 8px; border:1px solid #d9e2d7; border-radius:5px; background:#fff; }
-        .akm-feeder-muted { color:#71806e; }
-        @media (max-width:760px) { .akm-feeder-filters { grid-template-columns:1fr; } }
-    </style>
-@endpush
-
 @section('content')
     <div class="page-heading">
         <div>

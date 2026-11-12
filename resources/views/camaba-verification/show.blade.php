@@ -3,17 +3,7 @@
 @section('title', 'Verifikasi CAMABA | SIAKAD')
 @section('topbar_title', 'Verifikasi CAMABA')
 
-@push('styles')
-    <style>
-        .camaba-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-        .camaba-form-grid label { display:grid; gap:6px; color:#52634f; font-size:11px; font-weight:700; }
-        .camaba-form-grid input, .camaba-form-grid select { min-height:38px; width:100%; padding:8px 10px; border:1px solid #d9e2d7; border-radius:5px; background:#fff; color:#354a38; }
-        .camaba-form-section { margin:0 0 18px; padding:0 0 16px; border:0; border-bottom:1px solid #e5ebe2; }
-        .camaba-form-section legend { margin-bottom:12px; color:#315b3b; font-size:13px; font-weight:800; }
-        .camaba-form-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
-        @media(max-width:700px) { .camaba-form-grid { grid-template-columns:1fr; } }
-    </style>
-@endpush
+
 
 @section('content')
     <div class="page-heading">
