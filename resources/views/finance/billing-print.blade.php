@@ -36,7 +36,7 @@
     </style>
 </head>
 <body>
-    @php($paymentMethodLabel = ['midtrans' => 'Midtrans', 'beasiswa' => 'Beasiswa', 'pemda' => 'Bantuan pemerintah daerah', 'manual' => 'Pembayaran manual'][$billing['payment_method']] ?? 'Pembayaran')
+    @php($paymentMethodLabel = ['midtrans' => 'Midtrans', 'beasiswa' => 'Beasiswa', 'pemda' => 'Bantuan pemerintah daerah', 'manual' => 'Pembayaran manual'][$billing['payment_method']] ?? (filled($billing['payment_method']) ? ucwords((string) $billing['payment_method']) : 'Pembayaran'))
     @php($displayOrderId = preg_replace('/^SIMAK-/i', 'SIAKAD-', (string) $billing['order_id']))
     <main class="billing-sheet">
         <div class="billing-watermark {{ $billing['is_paid'] ? 'is-paid' : 'is-unpaid' }}" aria-hidden="true">{{ $billing['is_paid'] ? 'LUNAS' : 'BELUM LUNAS' }}</div>

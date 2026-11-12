@@ -1107,6 +1107,73 @@ class AcademicSeeder extends Seeder
             );
         }
 
+        if (Schema::connection('simak_main')->hasTable('simak_payment_transactions')) {
+            $demoTransactions = [
+                [
+                    'id' => 'TRX-PAY-20261-001',
+                    'gateway' => 'midtrans',
+                    'payment_type' => 'ukt',
+                    'payment_id' => 'PAY-20261-001',
+                    'student_id' => 'MHS-001',
+                    'order_id' => 'SIAKAD-UKT-PAY-20261-001',
+                    'gross_amount' => 5000000,
+                    'service_fee' => 0,
+                    'transaction_status' => 'settlement',
+                    'transaction_id' => 'MIDTRANS-20261001',
+                    'created_at' => '2026-08-05 10:15:30',
+                    'updated_at' => '2026-08-05 10:15:30',
+                ],
+                [
+                    'id' => 'TRX-PAY-20261-003',
+                    'gateway' => 'midtrans',
+                    'payment_type' => 'ukt',
+                    'payment_id' => 'PAY-20261-003',
+                    'student_id' => 'MHS-003',
+                    'order_id' => 'SIAKAD-UKT-PAY-20261-003',
+                    'gross_amount' => 6000000,
+                    'service_fee' => 0,
+                    'transaction_status' => 'settlement',
+                    'transaction_id' => 'MIDTRANS-20261003',
+                    'created_at' => '2026-08-02 14:22:10',
+                    'updated_at' => '2026-08-02 14:22:10',
+                ],
+                [
+                    'id' => 'TRX-PAY-20261-004',
+                    'gateway' => 'midtrans',
+                    'payment_type' => 'ukt',
+                    'payment_id' => 'PAY-20261-004',
+                    'student_id' => 'MHS-004',
+                    'order_id' => 'SIAKAD-UKT-PAY-20261-004',
+                    'gross_amount' => 6000000,
+                    'service_fee' => 0,
+                    'transaction_status' => 'settlement',
+                    'transaction_id' => 'MIDTRANS-20261004',
+                    'created_at' => '2026-08-03 09:12:45',
+                    'updated_at' => '2026-08-03 09:12:45',
+                ],
+                [
+                    'id' => 'TRX-PAY-20261-005',
+                    'gateway' => 'midtrans',
+                    'payment_type' => 'ukt',
+                    'payment_id' => 'PAY-20261-005',
+                    'student_id' => 'MHS-005',
+                    'order_id' => 'SIAKAD-UKT-PAY-20261-005',
+                    'gross_amount' => 5000000,
+                    'service_fee' => 0,
+                    'transaction_status' => 'settlement',
+                    'transaction_id' => 'MIDTRANS-20261005',
+                    'created_at' => '2026-08-01 11:05:00',
+                    'updated_at' => '2026-08-01 11:05:00',
+                ],
+            ];
+            foreach ($demoTransactions as $t) {
+                $conn->table('simak_payment_transactions')->updateOrInsert(
+                    ['id' => $t['id']],
+                    $t
+                );
+            }
+        }
+
         // =========================================================================
         // 8. Penerimaan Mahasiswa Baru / PMB (s1m4k_camaba)
         // =========================================================================

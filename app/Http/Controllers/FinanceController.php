@@ -1021,7 +1021,7 @@ class FinanceController extends Controller
 
     public function printPaymentBilling(Request $request, string $type, string $payment): View
     {
-        $this->authorizeFinanceWrite($request);
+        $this->authorizeFinance($request);
         abort_unless(in_array($type, ['ukt', 'ipi'], true), 404);
 
         $record = $this->paymentQuery($type)->where('payment.id', $payment)->first();
@@ -1049,8 +1049,7 @@ class FinanceController extends Controller
         }
         $paymentMethod = $transaction !== null
             ? 'midtrans'
-            : strtolower((string) $record->nama_bank);
-        abort_unless($transaction !== null || in_array($paymentMethod, ['beasiswa', 'pemda', 'manual'], true), 404);
+            : (filled($record->nama_bank) ? strtolower((string) $record->nama_bank) : 'manual');
 
         return view('finance.billing-print', [
             'billing' => [

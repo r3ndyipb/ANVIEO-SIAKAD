@@ -90,7 +90,7 @@
 </head>
 <body data-route-name="{{ request()->route()?->getName() }}" data-user-id="{{ auth()->id() }}">
     <div class="simak-page-loader" data-page-loader role="status" aria-live="polite" aria-label="loading..." aria-hidden="true" hidden>
-        <span class="simak-page-loader-mark"><img src="{{ $siteConfiguration['preloader_logo_url'] }}" alt=""><span class="simak-page-loader-orbit" aria-hidden="true"></span></span>
+        <span class="simak-page-loader-mark"><img src="{{ $siteConfiguration['preloader_logo_url'] }}" alt="" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';"><span class="simak-page-loader-orbit" aria-hidden="true"></span></span>
         <span class="simak-page-loader-label">loading<span class="simak-page-loader-dots"></span></span>
     </div>
 
@@ -161,8 +161,16 @@
         // Helper to check if an item or any of its descendants is currently active
         $isItemActive = static function (array $item) use (&$isItemActive): bool {
             $route = (string) ($item['route'] ?? '');
-            if ($route !== '' && request()->routeIs($route)) {
-                return true;
+            if ($route !== '') {
+                if (request()->routeIs($route)) {
+                    return true;
+                }
+                if (str_ends_with($route, '.index')) {
+                    $prefix = substr($route, 0, -6);
+                    if (request()->routeIs($prefix . '.*')) {
+                        return true;
+                    }
+                }
             }
             $children = !empty($item['items']) && is_array($item['items'])
                 ? $item['items']
@@ -251,7 +259,7 @@
                     </button>
 
                     <a href="{{ route('dashboard') }}" class="portal-auth-brand-group">
-                        <img src="{{ $siteConfiguration['preloader_logo_url'] }}" class="portal-brand-logo" alt="{{ $siteConfiguration['institution_name'] }}" width="34" height="34">
+                        <img src="{{ $siteConfiguration['preloader_logo_url'] }}" class="portal-brand-logo" alt="{{ $siteConfiguration['institution_name'] }}" width="34" height="34" onerror="this.onerror=null; this.src='{{ asset('images/landing/icon.png') }}';">
                         <div class="portal-brand-text">
                             <span class="portal-brand-title">ASEAN UNIVERSITY</span>
                             <div class="portal-brand-subtitle" aria-label="INTERNATIONAL">
@@ -481,9 +489,9 @@
                                         break;
                                     }
                                 }
-                                // "menu samping default nya tutup semua"
-                                // All groups start closed by default. Active item indicator is preserved visually on the row.
-                                $isGroupOpen = false;
+                                // "ketika menu aktif di hirarki yang sedang di buka menu nya harus nya terbuka"
+                                // Hirarki yang memiliki menu aktif otomatis terbuka; hirarki lain tetap tertutup secara default.
+                                $isGroupOpen = $hasActiveDescendant;
                                 $groupId = 'tree-group-'.$groupIndex;
                             @endphp
 
@@ -495,13 +503,13 @@
                                     @endif
 
                                     <!-- Chevron Toggle (expanded mode) -->
-                                    <button type="button" class="tree-chevron-toggle" aria-expanded="false" aria-controls="sub-{{ $groupId }}" title="Buka / Tutup {{ $groupLabel }}">
+                                    <button type="button" class="tree-chevron-toggle {{ $isGroupOpen ? 'open' : '' }}" aria-expanded="{{ $isGroupOpen ? 'true' : 'false' }}" aria-controls="sub-{{ $groupId }}" title="Buka / Tutup {{ $groupLabel }}">
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                                     </button>
 
                                     <!-- Category Header / Button Tile (NOT a link! It toggles the accordion) -->
-                                    <button type="button" class="tree-node-button" data-group-index="{{ $groupIndex }}" aria-expanded="false" aria-controls="sub-{{ $groupId }}" title="{{ $groupLabel }}">
-                                        <span class="tree-node-icon">
+                                    <button type="button" class="tree-node-button" data-group-index="{{ $groupIndex }}" aria-expanded="{{ $isGroupOpen ? 'true' : 'false' }}" aria-controls="sub-{{ $groupId }}" title="{{ $groupLabel }}">
+                                        <span class="tree-node-icon {{ $hasActiveDescendant ? 'active' : '' }}">
                                             @if ($meta['icon'] === 'layout-dashboard')
                                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                                             @elseif ($meta['icon'] === 'database')
@@ -534,15 +542,21 @@
                                     </button>
                                 </div>
 
-                                <!-- Submenu list (Level 2) - Defaults to closed (is-collapsed) -->
-                                <div class="tree-sub-list is-collapsed" id="sub-{{ $groupId }}" inert>
+                                <!-- Submenu list (Level 2) - Open if has active descendant, otherwise closed -->
+                                <div class="tree-sub-list {{ $isGroupOpen ? '' : 'is-collapsed' }}" id="sub-{{ $groupId }}" {!! $isGroupOpen ? '' : 'inert' !!}>
                                     @foreach ($group['items'] as $itemIndex => $item)
                                         @php
                                             $itemLabel = (string) ($item['label'] ?? '');
                                             $itemRoute = (string) ($item['route'] ?? '');
                                             $hasChildren = (!empty($item['items']) && is_array($item['items'])) || (!empty($item['children']) && is_array($item['children']));
                                             $childList = !empty($item['items']) && is_array($item['items']) ? $item['items'] : (!empty($item['children']) && is_array($item['children']) ? $item['children'] : []);
-                                            $isItemActiveCurrent = $itemRoute !== '' && request()->routeIs($itemRoute);
+                                            $isItemActiveCurrent = false;
+                                            if ($itemRoute !== '') {
+                                                $isItemActiveCurrent = request()->routeIs($itemRoute);
+                                                if (!$isItemActiveCurrent && str_ends_with($itemRoute, '.index')) {
+                                                    $isItemActiveCurrent = request()->routeIs(substr($itemRoute, 0, -6) . '.*');
+                                                }
+                                            }
                                             $isSubBranchActive = $isItemActive($item);
                                             $subItemId = $groupId.'-sub-'.$itemIndex;
                                         @endphp
@@ -552,10 +566,10 @@
                                             <div class="tree-sub-group" data-item-title="{{ strtolower($itemLabel) }}" id="{{ $subItemId }}">
                                                 <div class="tree-node-row level-2 {{ $isSubBranchActive ? 'active' : '' }}" data-sub-row="{{ $subItemId }}">
                                                     <span class="tree-connector-elbow" aria-hidden="true"></span>
-                                                    <button type="button" class="tree-sub-chevron-toggle" aria-expanded="false" aria-controls="leaf-{{ $subItemId }}" title="Buka / Tutup {{ $itemLabel }}">
+                                                    <button type="button" class="tree-sub-chevron-toggle {{ $isSubBranchActive ? 'open' : '' }}" aria-expanded="{{ $isSubBranchActive ? 'true' : 'false' }}" aria-controls="leaf-{{ $subItemId }}" title="Buka / Tutup {{ $itemLabel }}">
                                                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                                                     </button>
-                                                    <button type="button" class="tree-sub-node-button" aria-expanded="false" aria-controls="leaf-{{ $subItemId }}" title="{{ $itemLabel }}">
+                                                    <button type="button" class="tree-sub-node-button" aria-expanded="{{ $isSubBranchActive ? 'true' : 'false' }}" aria-controls="leaf-{{ $subItemId }}" title="{{ $itemLabel }}">
                                                         <span class="tree-sub-folder {{ $isSubBranchActive ? 'active' : '' }}" aria-hidden="true">
                                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
                                                         </span>
@@ -563,15 +577,21 @@
                                                     </button>
                                                 </div>
 
-                                                <!-- Level 3 Leaf List - Defaults to closed (is-collapsed) -->
-                                                <div class="tree-leaf-list is-collapsed" id="leaf-{{ $subItemId }}" inert>
+                                                <!-- Level 3 Leaf List - Open if has active descendant, otherwise closed -->
+                                                <div class="tree-leaf-list {{ $isSubBranchActive ? '' : 'is-collapsed' }}" id="leaf-{{ $subItemId }}" {!! $isSubBranchActive ? '' : 'inert' !!}>
                                                     @foreach ($childList as $leafIndex => $leaf)
                                                         @php
                                                             $leafLabel = (string) ($leaf['label'] ?? '');
                                                             $leafRoute = (string) ($leaf['route'] ?? '');
                                                             $hasLeafChildren = (!empty($leaf['items']) && is_array($leaf['items'])) || (!empty($leaf['children']) && is_array($leaf['children']));
                                                             $leafChildList = !empty($leaf['items']) && is_array($leaf['items']) ? $leaf['items'] : (!empty($leaf['children']) && is_array($leaf['children']) ? $leaf['children'] : []);
-                                                            $isLeafActive = $leafRoute !== '' && request()->routeIs($leafRoute);
+                                                            $isLeafActive = false;
+                                                            if ($leafRoute !== '') {
+                                                                $isLeafActive = request()->routeIs($leafRoute);
+                                                                if (!$isLeafActive && str_ends_with($leafRoute, '.index')) {
+                                                                    $isLeafActive = request()->routeIs(substr($leafRoute, 0, -6) . '.*');
+                                                                }
+                                                            }
                                                             $isLeafBranchActive = $isItemActive($leaf);
                                                             $leafItemId = $subItemId.'-leaf-'.$leafIndex;
                                                         @endphp
@@ -581,10 +601,10 @@
                                                             <div class="tree-sub-group level-3-group" data-item-title="{{ strtolower($leafLabel) }}" id="{{ $leafItemId }}">
                                                                 <div class="tree-node-row level-3 {{ $isLeafBranchActive ? 'active' : '' }}" data-sub-row="{{ $leafItemId }}">
                                                                     <span class="tree-connector-elbow" aria-hidden="true"></span>
-                                                                    <button type="button" class="tree-sub-chevron-toggle" aria-expanded="false" aria-controls="subleaf-{{ $leafItemId }}" title="Buka / Tutup {{ $leafLabel }}">
+                                                                    <button type="button" class="tree-sub-chevron-toggle {{ $isLeafBranchActive ? 'open' : '' }}" aria-expanded="{{ $isLeafBranchActive ? 'true' : 'false' }}" aria-controls="subleaf-{{ $leafItemId }}" title="Buka / Tutup {{ $leafLabel }}">
                                                                         <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                                                                     </button>
-                                                                    <button type="button" class="tree-sub-node-button" aria-expanded="false" aria-controls="subleaf-{{ $leafItemId }}" title="{{ $leafLabel }}">
+                                                                    <button type="button" class="tree-sub-node-button" aria-expanded="{{ $isLeafBranchActive ? 'true' : 'false' }}" aria-controls="subleaf-{{ $leafItemId }}" title="{{ $leafLabel }}">
                                                                         <span class="tree-sub-folder {{ $isLeafBranchActive ? 'active' : '' }}" aria-hidden="true">
                                                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
                                                                         </span>
@@ -592,13 +612,19 @@
                                                                     </button>
                                                                 </div>
 
-                                                                <!-- Level 4 Leaf List - Defaults to closed (is-collapsed) -->
-                                                                <div class="tree-leaf-list is-collapsed" id="subleaf-{{ $leafItemId }}" inert>
+                                                                <!-- Level 4 Leaf List - Open if has active descendant, otherwise closed -->
+                                                                <div class="tree-leaf-list {{ $isLeafBranchActive ? '' : 'is-collapsed' }}" id="subleaf-{{ $leafItemId }}" {!! $isLeafBranchActive ? '' : 'inert' !!}>
                                                                     @foreach ($leafChildList as $deepLeaf)
                                                                         @php
                                                                             $deepRoute = (string) ($deepLeaf['route'] ?? '');
                                                                             $deepLabel = (string) ($deepLeaf['label'] ?? '');
-                                                                            $isDeepActive = $deepRoute !== '' && request()->routeIs($deepRoute);
+                                                                            $isDeepActive = false;
+                                                                            if ($deepRoute !== '') {
+                                                                                $isDeepActive = request()->routeIs($deepRoute);
+                                                                                if (!$isDeepActive && str_ends_with($deepRoute, '.index')) {
+                                                                                    $isDeepActive = request()->routeIs(substr($deepRoute, 0, -6) . '.*');
+                                                                                }
+                                                                            }
                                                                         @endphp
                                                                         <!-- Level 4 Final Leaf (NO children -> navigates to page!) -->
                                                                         <a href="{{ $deepRoute !== '' ? route($deepRoute) : '#' }}" class="tree-leaf-link {{ $isDeepActive ? 'active' : '' }}" {!! $isDeepActive ? 'aria-current="page"' : '' !!} data-item-title="{{ strtolower($deepLabel) }}">
@@ -840,6 +866,41 @@
                 btn?.setAttribute('aria-expanded', 'true');
             };
 
+            // Auto-expand full hierarchy leading to active menu item
+            const autoExpandActiveHierarchy = () => {
+                const activeLeaf = treeRoot?.querySelector('a.tree-sub-link.active, a.tree-leaf-link.active, a[aria-current="page"]');
+                if (!activeLeaf) return;
+
+                let current = activeLeaf.parentElement;
+                while (current && current !== treeRoot) {
+                    if (current.classList.contains('tree-sub-group')) {
+                        expandSubGroup(current);
+                    } else if (current.classList.contains('tree-domain-group')) {
+                        expandDomainGroup(current);
+                    }
+                    current = current.parentElement;
+                }
+
+                // Ensure other non-active Level 1 domain groups are collapsed
+                const activeDomainGroup = activeLeaf.closest('.tree-domain-group');
+                if (activeDomainGroup) {
+                    treeGroups.forEach((g) => {
+                        if (g !== activeDomainGroup) {
+                            collapseDomainGroup(g);
+                        }
+                    });
+                }
+
+                // Smooth scroll active item into view
+                try {
+                    setTimeout(() => {
+                        activeLeaf.scrollIntoView({ block: 'nearest' });
+                    }, 60);
+                } catch (e) {}
+            };
+
+            autoExpandActiveHierarchy();
+
             treeRoot?.addEventListener('click', (e) => {
                 const target = e.target;
                 if (!target) return;
@@ -919,18 +980,28 @@
                                     collapseDomainGroup(otherGroup);
                                 }
                             });
-                            // Ensure nested sub-groups inside this group start closed
-                            group.querySelectorAll('.tree-leaf-list').forEach((ll) => {
-                                ll.classList.add('is-collapsed');
-                                ll.setAttribute('inert', '');
-                            });
-                            group.querySelectorAll('.tree-sub-chevron-toggle').forEach((sc) => {
-                                sc.classList.remove('open');
-                                sc.setAttribute('aria-expanded', 'false');
-                            });
-                            group.querySelectorAll('.tree-sub-node-button').forEach((sb) => {
-                                sb.setAttribute('aria-expanded', 'false');
-                            });
+                            // If this group contains an active link, restore its active hierarchy
+                            const activeLink = group.querySelector('a.active, .tree-leaf-link.active, .tree-sub-link.active');
+                            if (activeLink) {
+                                let ancestorSub = activeLink.closest('.tree-sub-group');
+                                while (ancestorSub && group.contains(ancestorSub)) {
+                                    expandSubGroup(ancestorSub);
+                                    ancestorSub = ancestorSub.parentElement?.closest('.tree-sub-group');
+                                }
+                            } else {
+                                // Ensure nested sub-groups inside this newly opened group start closed
+                                group.querySelectorAll('.tree-leaf-list').forEach((ll) => {
+                                    ll.classList.add('is-collapsed');
+                                    ll.setAttribute('inert', '');
+                                });
+                                group.querySelectorAll('.tree-sub-chevron-toggle').forEach((sc) => {
+                                    sc.classList.remove('open');
+                                    sc.setAttribute('aria-expanded', 'false');
+                                });
+                                group.querySelectorAll('.tree-sub-node-button').forEach((sb) => {
+                                    sb.setAttribute('aria-expanded', 'false');
+                                });
+                            }
 
                             expandDomainGroup(group);
                         }
@@ -999,8 +1070,9 @@
                 });
 
                 if (!query) {
-                    // When query is cleared, collapse all back to default closed state
+                    // When query is cleared, restore active hierarchy to open, keep other non-active groups collapsed
                     treeGroups.forEach((g) => collapseDomainGroup(g));
+                    autoExpandActiveHierarchy();
                 }
 
                 const badgeCount = document.getElementById('visible-modules-count');

@@ -55,21 +55,97 @@
         @endif
 
         @if ($module === 'materi')
-            <section class="lms-panel">
-                <div class="lms-meta"><span>Status: {{ ucfirst($record->status_publikasi) }}</span></div>
-                <div class="lms-prose">{!! nl2br(e($record->deskripsi ?: 'Tidak ada deskripsi.')) !!}</div>
-                <div class="lms-actions">
-                    @if ($record->path_berkas)
-                        <a class="table-icon-button" href="{{ route('lms.materials.download', $record->id_materi) }}" data-page-loader-skip aria-label="Unduh {{ $record->nama_berkas }}" title="Unduh {{ $record->nama_berkas }}"><span data-lucide="file-down" aria-hidden="true"></span></a>
-                    @endif
-                    @if ($canManage)
-                        <button class="table-icon-button" type="button" data-lms-open="lms-edit-modal" aria-label="Ubah materi" title="Ubah materi"><span data-lucide="pencil" aria-hidden="true"></span></button>
-                        @if ($record->used_in_meeting)
-                            <span class="subtext">Materi ini sudah digunakan pada pertemuan mata kuliah, hanya bisa dilakukan edit.</span>
-                        @else
-                            <button class="table-icon-button reset" type="button" data-lms-open="lms-delete-modal" aria-label="Hapus materi" title="Hapus materi"><span data-lucide="trash-2" aria-hidden="true"></span></button>
+            <section class="lms-material-detail-card">
+                <div class="lms-material-detail-header">
+                    <div class="lms-material-detail-title-group">
+                        <span class="status-chip {{ $record->status_publikasi === 'terbit' ? 'active' : '' }}">
+                            {{ ucfirst($record->status_publikasi) }}
+                        </span>
+                        <h2>{{ $record->judul }}</h2>
+                        @if (isset($record->nama_mata_kuliah))
+                            <p class="lms-material-detail-subtitle">
+                                <span data-lucide="book-open" aria-hidden="true"></span>
+                                {{ $record->kode_mata_kuliah }} — {{ $record->nama_mata_kuliah }} · {{ $record->nama_program_studi }}
+                            </p>
                         @endif
+                    </div>
+                    @if ($record->path_berkas)
+                        <a class="button button-primary lms-material-hero-download" href="{{ route('lms.materials.download', $record->id_materi) }}" data-page-loader-skip aria-label="Unduh {{ $record->nama_berkas }}" title="Unduh {{ $record->nama_berkas }}">
+                            <span data-lucide="download" aria-hidden="true"></span>
+                            <span>Unduh Berkas</span>
+                        </a>
                     @endif
+                </div>
+
+                <div class="lms-material-detail-grid">
+                    <div class="lms-material-detail-main">
+                        <div class="lms-material-section">
+                            <h3>Deskripsi Materi</h3>
+                            <div class="lms-prose">
+                                {!! nl2br(e($record->deskripsi ?: 'Tidak ada deskripsi.')) !!}
+                            </div>
+                        </div>
+
+                        @if ($record->path_berkas)
+                            <div class="lms-material-file-preview-box">
+                                <div class="lms-material-file-icon">
+                                    <span data-lucide="file-check-2" aria-hidden="true"></span>
+                                </div>
+                                <div class="lms-material-file-info">
+                                    <strong>{{ $record->nama_berkas }}</strong>
+                                    <span>Tipe: {{ $record->tipe_berkas ?: 'Dokumen Perkuliahan' }} · Ukuran: {{ number_format(($record->ukuran_berkas ?? 0) / 1024, 0) }} KB</span>
+                                </div>
+                                <a class="button button-secondary button-compact" href="{{ route('lms.materials.download', $record->id_materi) }}" data-page-loader-skip>
+                                    <span data-lucide="download" aria-hidden="true"></span> Unduh
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+
+                    <aside class="lms-material-detail-aside">
+                        <div class="lms-material-meta-panel">
+                            <h3>Informasi Materi</h3>
+                            <dl class="lms-material-meta-list">
+                                <div>
+                                    <dt>Dosen Pengampu</dt>
+                                    <dd>{{ \App\Support\LecturerName::format($record->nama_dosen ?? '', $record->gelar_depan ?? null, $record->gelar_belakang ?? null) ?: 'Dosen Pengampu' }}</dd>
+                                </div>
+                                <div>
+                                    <dt>Status Tayang</dt>
+                                    <dd><span class="status-chip {{ $record->status_publikasi === 'terbit' ? 'active' : '' }}">{{ ucfirst($record->status_publikasi) }}</span></dd>
+                                </div>
+                                <div>
+                                    <dt>Mata Kuliah</dt>
+                                    <dd>{{ $record->nama_mata_kuliah ?? '—' }} ({{ $record->kode_mata_kuliah ?? '—' }})</dd>
+                                </div>
+                                <div>
+                                    <dt>Program Studi</dt>
+                                    <dd>{{ $record->nama_program_studi ?? '—' }}</dd>
+                                </div>
+                                @if ($record->dibuat_pada)
+                                    <div>
+                                        <dt>Diunggah Pada</dt>
+                                        <dd>{{ \Illuminate\Support\Carbon::parse($record->dibuat_pada, 'Asia/Jayapura')->locale('id')->translatedFormat('d F Y, H:i') }} WIT</dd>
+                                    </div>
+                                @endif
+                            </dl>
+
+                            @if ($canManage)
+                                <div class="lms-material-aside-actions">
+                                    <button class="button button-secondary" type="button" data-lms-open="lms-edit-modal">
+                                        <span data-lucide="pencil" aria-hidden="true"></span> Ubah Materi
+                                    </button>
+                                    @if ($record->used_in_meeting)
+                                        <span class="subtext">Materi ini sudah digunakan pada pertemuan mata kuliah, hanya bisa dilakukan edit.</span>
+                                    @else
+                                        <button class="button button-danger" type="button" data-lms-open="lms-delete-modal">
+                                            <span data-lucide="trash-2" aria-hidden="true"></span> Hapus Materi
+                                        </button>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+                    </aside>
                 </div>
             </section>
         @elseif ($module === 'pertemuan' && $isStudent)
@@ -424,6 +500,10 @@
         </dialog>
     @endif
 @endsection
+
+@push('styles')
+<style>.lms-chat{height:min(60vh,620px);overflow-y:auto}</style>
+@endpush
 
 @push('scripts')
 <script>

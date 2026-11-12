@@ -191,60 +191,99 @@
         @if ($module === 'materi' && $materialViewer)
             @if ($materialProgramFilterRequired)
                 <form method="GET" action="{{ route('lms.materials.index') }}" class="lms-material-program-filter">
-                    <label for="material-program-select">Program studi</label>
-                    <select id="material-program-select" name="id_prodi" data-searchable-select required>
-                        <option value="">Pilih program studi untuk menampilkan dosen</option>
-                        @foreach ($materialPrograms as $program)
-                            <option value="{{ $program->id_prodi }}" @selected((string) $selectedProgramId === (string) $program->id_prodi)>{{ $program->nama_program_studi }}</option>
-                        @endforeach
-                    </select>
+                    <div class="lms-material-filter-field">
+                        <label for="material-program-select">Program studi</label>
+                        <select id="material-program-select" name="id_prodi" data-searchable-select required>
+                            <option value="">Pilih program studi untuk menampilkan dosen</option>
+                            @foreach ($materialPrograms as $program)
+                                <option value="{{ $program->id_prodi }}" @selected((string) $selectedProgramId === (string) $program->id_prodi)>{{ $program->nama_program_studi }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <button type="submit" class="button button-primary"><span data-lucide="users-round" aria-hidden="true"></span>Tampilkan dosen</button>
                 </form>
             @endif
             @if ($materialProgramFilterRequired && $selectedProgramId === '')
-                <div class="lms-material-empty"><span data-lucide="school" aria-hidden="true"></span><strong>Pilih program studi terlebih dahulu</strong><p>Daftar dosen dan mata kuliah akan dimuat setelah Anda memilih program studi.</p></div>
+                <div class="lms-material-empty">
+                    <span data-lucide="school" aria-hidden="true"></span>
+                    <strong>Pilih program studi terlebih dahulu</strong>
+                    <p>Daftar dosen dan mata kuliah akan dimuat setelah Anda memilih program studi.</p>
+                </div>
             @elseif ($selectedLecturerId !== '' && $selectedCourseId !== '')
                 <section class="lms-material-library">
                     <div class="lms-material-library-heading">
                         <a class="button button-secondary" href="{{ route('lms.materials.index', $materialProgramFilterRequired ? ['id_prodi' => $selectedProgramId] : []) }}"><span data-lucide="arrow-left" aria-hidden="true"></span>Kembali ke dosen</a>
-                        <div>
+                        <div class="lms-material-library-heading-info">
                             <p class="lms-material-library-kicker">{{ $selectedMaterialCourse->kode_mata_kuliah }} · {{ $selectedMaterialCourse->nama_program_studi ?: 'Program studi' }}</p>
                             <h2>{{ $selectedMaterialCourse->nama_mata_kuliah }}</h2>
                             @php
                                 $selectedLecturer = $materialLibrary->firstWhere('id_dosen', $selectedLecturerId);
                             @endphp
-                            <p>{{ \App\Support\LecturerName::format($selectedLecturer->nama_dosen, $selectedLecturer->gelar_depan, $selectedLecturer->gelar_belakang) }} · {{ $records->count() }} materi tersedia</p>
+                            <p class="lms-material-library-sub">{{ \App\Support\LecturerName::format($selectedLecturer->nama_dosen, $selectedLecturer->gelar_depan, $selectedLecturer->gelar_belakang) }} · <span class="badge">{{ $records->count() }} materi tersedia</span></p>
                         </div>
                     </div>
                     @if ($records->isEmpty())
-                        <div class="lms-material-empty"><span data-lucide="folder-open" aria-hidden="true"></span><strong>Belum ada materi tersedia</strong><p>Dosen belum mengunggah materi untuk mata kuliah ini.</p></div>
+                        <div class="lms-material-empty">
+                            <span data-lucide="folder-open" aria-hidden="true"></span>
+                            <strong>Belum ada materi tersedia</strong>
+                            <p>Dosen belum mengunggah materi untuk mata kuliah ini.</p>
+                        </div>
                     @else
                         <div class="lms-material-resource-grid">
                             @foreach ($records as $item)
                                 <article class="lms-material-resource-card">
-                                    <div class="lms-material-resource-icon"><span data-lucide="file-text" aria-hidden="true"></span></div>
-                                    <div class="lms-material-resource-content">
-                                        <span class="lms-material-resource-label">Materi kuliah</span>
-                                        <h3>{{ $item->judul }}</h3>
-                                        <p>{{ $item->nama_berkas ?: 'Dokumen materi' }} · {{ \App\Support\LecturerName::format($item->nama_dosen, $item->gelar_depan, $item->gelar_belakang) }}</p>
+                                    <div class="lms-material-resource-icon">
+                                        @php
+                                            $ext = strtolower(pathinfo($item->nama_berkas ?? '', PATHINFO_EXTENSION));
+                                        @endphp
+                                        @if (in_array($ext, ['ppt', 'pptx', 'odp']))
+                                            <span data-lucide="presentation" aria-hidden="true"></span>
+                                        @elseif (in_array($ext, ['doc', 'docx', 'odt', 'rtf']))
+                                            <span data-lucide="file-type" aria-hidden="true"></span>
+                                        @else
+                                            <span data-lucide="file-text" aria-hidden="true"></span>
+                                        @endif
                                     </div>
-                                    @if ($item->path_berkas)
-                                        <a class="button button-primary lms-material-download" href="{{ route('lms.materials.download', $item->id_materi) }}" data-page-loader-skip aria-label="Unduh materi {{ $item->nama_berkas }}" title="Unduh materi"><span data-lucide="download" aria-hidden="true"></span><span>Unduh</span></a>
-                                    @else
-                                        <span class="lms-material-unavailable">File belum tersedia</span>
-                                    @endif
+                                    <div class="lms-material-resource-content">
+                                        <div class="lms-material-resource-header">
+                                            <span class="lms-material-resource-label">Materi kuliah</span>
+                                            @if ($ext)
+                                                <span class="lms-material-type-pill">{{ strtoupper($ext) }}</span>
+                                            @endif
+                                        </div>
+                                        <h3>{{ $item->judul }}</h3>
+                                        @if ($item->deskripsi)
+                                            <p class="lms-material-desc">{{ \Illuminate\Support\Str::limit($item->deskripsi, 130) }}</p>
+                                        @endif
+                                        <p class="lms-material-file-info">{{ $item->nama_berkas ?: 'Dokumen materi' }} · {{ \App\Support\LecturerName::format($item->nama_dosen, $item->gelar_depan, $item->gelar_belakang) }}</p>
+                                        <div class="lms-material-card-footer">
+                                            @if ($item->path_berkas)
+                                                <a class="button button-primary lms-material-download" href="{{ route('lms.materials.download', $item->id_materi) }}" data-page-loader-skip aria-label="Unduh materi {{ $item->nama_berkas }}" title="Unduh materi"><span data-lucide="download" aria-hidden="true"></span><span>Unduh</span></a>
+                                            @else
+                                                <span class="lms-material-unavailable">File belum tersedia</span>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </article>
                             @endforeach
                         </div>
                     @endif
                 </section>
             @elseif ($materialLibrary->isEmpty())
-                <div class="lms-material-empty"><span data-lucide="library" aria-hidden="true"></span><strong>Belum ada dosen untuk ditampilkan</strong><p>Daftar dosen akan muncul jika tersedia jadwal mengajar dalam cakupan akses akun Anda.</p></div>
+                <div class="lms-material-empty">
+                    <span data-lucide="library" aria-hidden="true"></span>
+                    <strong>Belum ada dosen untuk ditampilkan</strong>
+                    <p>Daftar dosen akan muncul jika tersedia jadwal mengajar dalam cakupan akses akun Anda.</p>
+                </div>
             @else
                 <section class="lms-material-library">
                     <div class="lms-material-library-intro">
                         <span class="lms-material-library-intro-icon"><span data-lucide="library" aria-hidden="true"></span></span>
-                        <div><p class="lms-material-library-kicker">Perpustakaan digital</p><h2>Materi dari dosen</h2><p>Pilih mata kuliah untuk melihat dan mengunduh materi yang tersedia.</p></div>
+                        <div>
+                            <p class="lms-material-library-kicker">Perpustakaan digital</p>
+                            <h2>Materi dari dosen</h2>
+                            <p>Pilih mata kuliah untuk melihat dan mengunduh materi yang tersedia.</p>
+                        </div>
                     </div>
                     <label class="lms-material-search">
                         <span data-lucide="search" aria-hidden="true"></span>
@@ -256,7 +295,10 @@
                             <article class="lms-material-lecturer-card" data-material-lecturer="{{ \App\Support\LecturerName::format($lecturer->nama_dosen, $lecturer->gelar_depan, $lecturer->gelar_belakang) }}">
                                 <header class="lms-material-lecturer-profile">
                                     <span class="lms-material-avatar">{{ collect(explode(' ', trim($lecturer->nama_dosen ?: 'Dosen')))->filter()->take(2)->map(fn ($part) => mb_substr($part, 0, 1))->implode('') }}</span>
-                                    <div><h3>{{ \App\Support\LecturerName::format($lecturer->nama_dosen, $lecturer->gelar_depan, $lecturer->gelar_belakang) ?: 'Dosen' }}</h3><p>{{ $lecturer->nidn ? 'NIDN '.$lecturer->nidn : 'Dosen pengampu' }}</p></div>
+                                    <div class="lms-material-lecturer-info">
+                                        <h3>{{ \App\Support\LecturerName::format($lecturer->nama_dosen, $lecturer->gelar_depan, $lecturer->gelar_belakang) ?: 'Dosen' }}</h3>
+                                        <p>{{ $lecturer->nidn ? 'NIDN '.$lecturer->nidn : 'Dosen pengampu' }}</p>
+                                    </div>
                                     <span class="lms-material-count">{{ $lecturer->material_count }} materi</span>
                                 </header>
                                 <div class="lms-material-lecturer-courses">
@@ -264,7 +306,10 @@
                                     @foreach ($lecturer->courses as $course)
                                         <a class="lms-material-course-link" data-material-course="{{ $course->nama_mata_kuliah }}" href="{{ route('lms.materials.index', ['id_dosen' => $lecturer->id_dosen, 'id_matkul' => $course->id_matkul, 'id_prodi' => $course->id_prodi]) }}">
                                             <span class="lms-material-course-icon"><span data-lucide="book-open" aria-hidden="true"></span></span>
-                                            <span class="lms-material-course-name"><strong>{{ $course->nama_mata_kuliah }}</strong><small>{{ $course->kode_mata_kuliah }} · {{ $course->nama_program_studi ?: 'Program studi' }}</small></span>
+                                            <span class="lms-material-course-name">
+                                                <strong>{{ $course->nama_mata_kuliah }}</strong>
+                                                <small>{{ $course->kode_mata_kuliah }} · {{ $course->nama_program_studi ?: 'Program studi' }}</small>
+                                            </span>
                                             <span class="lms-material-course-count">{{ $course->material_count }} <span>materi</span></span>
                                             <span class="lms-material-course-arrow" data-lucide="arrow-right" aria-hidden="true"></span>
                                         </a>
@@ -311,7 +356,19 @@
                         @forelse ($records as $item)
                             <tr>
                                 @if ($module === 'materi')
-                                    <td>{{ $item->judul }}</td>
+                                    <td>
+                                        <div class="lms-table-item">
+                                            <span class="lms-table-item-icon" aria-hidden="true"><span data-lucide="file-text"></span></span>
+                                            <div class="lms-table-item-info">
+                                                <strong>{{ $item->judul }}</strong>
+                                                @if ($item->nama_berkas)
+                                                    <span class="subtext">{{ $item->nama_berkas }} · {{ number_format(($item->ukuran_berkas ?? 0) / 1024, 0) }} KB</span>
+                                                @elseif ($item->deskripsi)
+                                                    <span class="subtext">{{ \Illuminate\Support\Str::limit($item->deskripsi, 60) }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td>{{ $item->kode_mata_kuliah ? $item->kode_mata_kuliah.' — '.$item->nama_mata_kuliah : '—' }}</td>
                                     <td>{{ $item->nama_program_studi ?: '—' }}</td>
                                     <td>{{ \App\Support\LecturerName::format($item->nama_dosen, $item->gelar_depan, $item->gelar_belakang) ?: '—' }}</td>
@@ -720,6 +777,10 @@
         </dialog>
     @endif
 @endsection
+
+@push('styles')
+    <style>.lms-question-edit-dialog[open]{display:flex;flex-direction:column}</style>
+@endpush
 
 @push('scripts')
     <script>

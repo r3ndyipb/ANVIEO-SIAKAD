@@ -229,6 +229,41 @@ class StudentPaymentsTest extends TestCase
             ->assertDontSee('images/payments/midtrans.svg');
     }
 
+    public function test_student_and_staff_can_print_bank_paid_bill(): void
+    {
+        $this->seedStudentBills();
+        DB::connection('simak_main')->table('s1m4k_pembayaranukt')->where('id', 'ukt-own')->update([
+            'lunas' => 1,
+            'nama_bank' => 'Bank Mandiri',
+            'trx_id' => 'TRX20261001',
+            'tanggal_bayar' => '2026-08-05 10:15:30',
+        ]);
+
+        // Student owner can print
+        $this->actingAs($this->studentUser('student-1'));
+        $this->get(route('student-payments.index'))
+            ->assertOk()
+            ->assertSee('Bank Mandiri')
+            ->assertSee('TRX20261001');
+        $this->get(route('student-payments.billing', ['type' => 'ukt', 'payment' => 'ukt-own']))
+            ->assertOk()
+            ->assertSee('Bank Mandiri')
+            ->assertSee('TRX20261001')
+            ->assertSee('LUNAS');
+
+        // Staff (admin) can print
+        $this->actingAs(new GenericUser(['id' => 'admin-1', 'legacy_id' => '1', 'role' => 'admin']));
+        $this->get(route('student-payments.billing', ['type' => 'ukt', 'payment' => 'ukt-own']))
+            ->assertOk()
+            ->assertSee('Bank Mandiri')
+            ->assertSee('TRX20261001');
+
+        // Other student cannot view other student's bill
+        $this->actingAs($this->studentUser('student-2'));
+        $this->get(route('student-payments.billing', ['type' => 'ukt', 'payment' => 'ukt-own']))
+            ->assertNotFound();
+    }
+
     public function test_nonstudent_cannot_open_student_payment_page(): void
     {
         $this->actingAs(new GenericUser(['id' => 'admin', 'legacy_id' => 'admin', 'role' => 'admin']));

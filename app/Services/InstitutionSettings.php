@@ -186,6 +186,10 @@ class InstitutionSettings
 
     private function publicImageUrl(?string $path, string $fallback): string
     {
-        return filled($path) ? url('storage/'.ltrim($path, '/')) : $fallback;
+        if (filled($path) && Storage::disk('public')->exists($path)) {
+            return url('storage/'.ltrim($path, '/'));
+        }
+
+        return $fallback;
     }
 }

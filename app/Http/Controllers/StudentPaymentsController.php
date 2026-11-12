@@ -114,16 +114,24 @@ class StudentPaymentsController extends Controller
             $payment->midtrans_redirect_url = $transaction?->redirect_url;
             $payment->midtrans_order_id = $transaction?->order_id;
             $payment->midtrans_status = $transaction?->transaction_status;
-            $isManualPayment = (int) $payment->lunas === 1
-                && in_array(strtoupper((string) $payment->nama_bank), ['BEASISWA', 'PEMDA', 'MANUAL'], true);
-            $payment->payment_reference = $isManualPayment ? $payment->trx_id : $payment->midtrans_order_id;
-            $payment->payment_method = $isManualPayment
-                ? ([
+            $isPaid = (int) $payment->lunas === 1;
+            $bankUpper = strtoupper(trim((string) $payment->nama_bank));
+            $isSpecificManual = in_array($bankUpper, ['BEASISWA', 'PEMDA', 'MANUAL'], true);
+            $isManualPayment = $isPaid && ($isSpecificManual || $payment->midtrans_order_id === null);
+
+            $payment->payment_reference = $isManualPayment ? ($payment->trx_id ?: ($payment->no_va ?? $payment->midtrans_order_id)) : $payment->midtrans_order_id;
+            if ($payment->midtrans_order_id !== null) {
+                $payment->payment_method = 'Midtrans';
+            } elseif ($isPaid) {
+                $payment->payment_method = match ($bankUpper) {
                     'BEASISWA' => 'Beasiswa',
                     'PEMDA' => 'Bantuan pemerintah daerah',
                     'MANUAL' => 'Pembayaran manual',
-                ][strtoupper((string) $payment->nama_bank)])
-                : ($payment->midtrans_order_id !== null ? 'Midtrans' : null);
+                    default => filled($payment->nama_bank) ? $payment->nama_bank : 'Pembayaran manual',
+                };
+            } else {
+                $payment->payment_method = null;
+            }
             $pending = in_array($transaction?->transaction_status, ['pending', 'capture'], true);
             $payment->can_pay_midtrans = $midtransEnabled
                 && (int) $payment->lunas !== 1
@@ -151,7 +159,8 @@ class StudentPaymentsController extends Controller
     public function printBilling(Request $request, string $type, string $payment): View
     {
         $user = $request->user();
-        abort_unless($user?->role === 'mahasiswa', 403);
+        $isStaff = in_array($user?->role, ['admin', 'keuangan', 'pimuniv', 'pimfak'], true);
+        abort_unless($user?->role === 'mahasiswa' || $isStaff, 403);
         abort_unless(in_array($type, ['ukt', 'ipi'], true), 404);
 
         $table = $type === 'ukt' ? 's1m4k_pembayaranukt' : 's1m4k_pembayaranipi';
@@ -159,14 +168,18 @@ class StudentPaymentsController extends Controller
             ->join('s1m4k_mastermhs as student', 'payment.id_mahasiswa', '=', 'student.id_mahasiswa')
             ->leftJoin('s1m4k_masterprodi as program', 'student.id_prodi', '=', 'program.id_prodi')
             ->leftJoin('s1m4k_masterfakultas as faculty', 'program.id_fakultas', '=', 'faculty.id_fakultas')
-            ->where('payment.id', $payment)
-            ->where('payment.id_mahasiswa', (string) $user->legacy_id)
-            ->select([
-                'payment.id_mahasiswa', 'payment.nominal', 'payment.lunas', 'payment.tanggal_bayar',
-                'payment.nama_bank', 'payment.trx_id',
-                'student.nim', 'student.nama_mahasiswa',
-                'program.nama_program_studi', 'faculty.nama_fakultas',
-            ]);
+            ->where('payment.id', $payment);
+
+        if (! $isStaff) {
+            $query->where('payment.id_mahasiswa', (string) $user->legacy_id);
+        }
+
+        $query->select([
+            'payment.id_mahasiswa', 'payment.nominal', 'payment.lunas', 'payment.tanggal_bayar',
+            'payment.nama_bank', 'payment.trx_id',
+            'student.nim', 'student.nama_mahasiswa',
+            'program.nama_program_studi', 'faculty.nama_fakultas',
+        ]);
         if ($type === 'ukt') {
             $query->leftJoin('s1m4k_periode as period', function ($join): void {
                 $join->on('payment.tahun', '=', 'period.tahun')->where('period.jenis', '=', 'ukt');
@@ -199,8 +212,7 @@ class StudentPaymentsController extends Controller
         }
         $paymentMethod = $transaction !== null
             ? 'midtrans'
-            : strtolower((string) $record->nama_bank);
-        abort_unless($transaction !== null || in_array($paymentMethod, ['beasiswa', 'pemda', 'manual'], true), 404);
+            : (filled($record->nama_bank) ? strtolower((string) $record->nama_bank) : 'manual');
 
         return view('finance.billing-print', [
             'billing' => [

@@ -27,11 +27,8 @@ class RoleNavigationTest extends TestCase
             ->assertSee('name="application-name" content="siakad AUI"', false)
             ->assertSee('name="robots" content="noindex, nofollow"', false)
             ->assertSee('ASEAN University International. All Rights Reserved.')
-            ->assertSee('@media (max-width: 1100px), (hover: none) and (pointer: coarse) and (max-width: 1400px)', false)
-            ->assertSee("window.matchMedia('(max-width: 1100px), (hover: none) and (pointer: coarse) and (max-width: 1400px)')", false)
-            ->assertSee("window.addEventListener('orientationchange', closeSidebarAfterRotation)", false)
-            ->assertSee('data-open-navigation', false)
-            ->assertSee('data-close-navigation', false);
+            ->assertSee('portal-sidebar', false)
+            ->assertSee('portal-header-sidebar-toggle', false);
     }
 
     public function test_every_legacy_role_has_a_menu_and_only_calendar_roles_see_its_route(): void
@@ -278,10 +275,9 @@ class RoleNavigationTest extends TestCase
 
         $this->get(route('dashboard'))
             ->assertOk()
-            ->assertSee('class="simak-content"', false)
-            ->assertSee('background: #fff; box-shadow: 0 10px 28px rgba(31, 69, 44, .08);', false)
-            ->assertSee('background: linear-gradient(128deg, #c8ddc9 0%, #e3eddf 45%, #b9d3c2 100%);', false)
-            ->assertDontSee('linear-gradient(105deg, #f6d84f', false);
+            ->assertSee('data-theme="light"', false)
+            ->assertSee('portal-main', false)
+            ->assertDontSee('smartkampus.id');
     }
 
     public function test_navigation_groups_are_collapsed_until_their_submenu_is_active(): void

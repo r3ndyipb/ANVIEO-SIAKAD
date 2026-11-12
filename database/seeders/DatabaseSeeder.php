@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 require_once __DIR__.'/UserSeeder.php';
 require_once __DIR__.'/AcademicSeeder.php';
 require_once __DIR__.'/LegalPagesSeeder.php';
+require_once __DIR__.'/LmsMateriSeeder.php';
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AcademicSeeder::class,
             LegalPagesSeeder::class,
+            LmsMateriSeeder::class,
         ]);
     }
 }
