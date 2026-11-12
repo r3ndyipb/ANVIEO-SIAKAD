@@ -23,7 +23,8 @@ class RoleNavigationTest extends TestCase
         ]));
 
         $this->get(route('dashboard'))->assertOk()
-            ->assertSee('name="application-name" content="siakad smartkampus.id"', false)
+            ->assertDontSee('smartkampus.id')
+            ->assertSee('name="application-name" content="siakad AUI"', false)
             ->assertSee('name="robots" content="noindex, nofollow"', false)
             ->assertSee('ASEAN University International. All Rights Reserved.')
             ->assertSee('@media (max-width: 1100px), (hover: none) and (pointer: coarse) and (max-width: 1400px)', false)

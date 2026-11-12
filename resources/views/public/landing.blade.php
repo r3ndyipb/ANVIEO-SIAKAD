@@ -12,14 +12,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
-    <meta name="description" content="siakad smartkampus.id — Sistem Informasi Akademik {{ $siteConfiguration['institution_name'] }} untuk layanan akademik, fakultas, dan program studi.">
-    <meta name="keywords" content="siakad smartkampus.id, salkin siakad, Sistem Informasi Akademik, {{ $siteConfiguration['institution_name'] }}">
-    <meta name="application-name" content="siakad smartkampus.id">
+    <meta name="description" content="Sistem Informasi Akademik {{ $siteConfiguration['institution_name'] }} untuk layanan akademik, fakultas, dan program studi.">
+    <meta name="keywords" content="siakad, Sistem Informasi Akademik, {{ $siteConfiguration['institution_name'] }}">
+    <meta name="application-name" content="{{ config('app.name', 'siakad AUI') }}">
     <meta name="robots" content="index, follow">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="siakad smartkampus.id">
-    <meta property="og:title" content="{{ $landingData['pageTitle'] }} | siakad smartkampus.id">
-    <meta property="og:description" content="siakad smartkampus.id — Sistem Informasi Akademik {{ $siteConfiguration['institution_name'] }}.">
+    <meta property="og:site_name" content="{{ config('app.name', 'siakad AUI') }}">
+    <meta property="og:title" content="{{ $landingData['pageTitle'] }} | {{ config('app.name', 'siakad AUI') }}">
+    <meta property="og:description" content="Sistem Informasi Akademik {{ $siteConfiguration['institution_name'] }}.">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta name="twitter:card" content="summary">
     <meta name="theme-color" content="{{ $siteConfiguration['primary_color'] }}">
@@ -27,7 +27,7 @@
     <link rel="icon" type="image/png" href="{{ $siteConfiguration['logo_url'] }}">
     <link rel="shortcut icon" href="{{ $siteConfiguration['logo_url'] }}">
     <link rel="apple-touch-icon" href="{{ $siteConfiguration['logo_url'] }}">
-    <title>{{ $landingData['pageTitle'] }} | siakad smartkampus.id</title>
+    <title>{{ $landingData['pageTitle'] }} | {{ config('app.name', 'siakad AUI') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">

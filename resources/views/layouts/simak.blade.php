@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
-    <meta name="application-name" content="siakad smartkampus.id">
+    <meta name="application-name" content="{{ config('app.name', 'siakad AUI') }}">
     <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -101,16 +101,24 @@
         $accountLogin = (string) (data_get($currentUser, 'login') ?? data_get($currentUser, 'legacy_id') ?? '');
         $degreeTrack = in_array($currentRole, ['mahasiswa', 'userprodi', 'usertu'], true) ? '' : null;
         if ($currentRole === 'mahasiswa') {
-            $degreeTrack = \Illuminate\Support\Facades\DB::connection('simak_main')
-                ->table('s1m4k_mastermhs as student')
-                ->join('s1m4k_masterprodi as program', 'student.id_prodi', '=', 'program.id_prodi')
-                ->where('student.id_mahasiswa', (string) data_get($currentUser, 'legacy_id'))
-                ->value('program.nama_jenjang_pendidikan');
+            try {
+                $degreeTrack = \Illuminate\Support\Facades\DB::connection('simak_main')
+                    ->table('s1m4k_mastermhs as student')
+                    ->join('s1m4k_masterprodi as program', 'student.id_prodi', '=', 'program.id_prodi')
+                    ->where('student.id_mahasiswa', (string) data_get($currentUser, 'legacy_id'))
+                    ->value('program.nama_jenjang_pendidikan');
+            } catch (\Throwable) {
+                $degreeTrack = null;
+            }
         } elseif (in_array($currentRole, ['userprodi', 'usertu'], true)) {
-            $degreeTrack = \Illuminate\Support\Facades\DB::connection('simak_main')
-                ->table('s1m4k_masterprodi')
-                ->where('id_prodi', (string) data_get($currentUser, 'id_prodi'))
-                ->value('nama_jenjang_pendidikan');
+            try {
+                $degreeTrack = \Illuminate\Support\Facades\DB::connection('simak_main')
+                    ->table('s1m4k_masterprodi')
+                    ->where('id_prodi', (string) data_get($currentUser, 'id_prodi'))
+                    ->value('nama_jenjang_pendidikan');
+            } catch (\Throwable) {
+                $degreeTrack = null;
+            }
         }
         $degreeTrack = $degreeTrack === null ? null : strtoupper(trim((string) $degreeTrack));
         $roleLabel = app()->getLocale() === 'en'
@@ -649,7 +657,7 @@
         <!-- APP FOOTER (FULL WIDTH / FIT WIDTH UNDER SIDEBAR & STAGE) -->
         <footer class="portal-app-footer">
             <div class="portal-footer-fluid">
-                <div>&copy; {{ date('Y') }} ASEAN University International (AUI) • Sistem Informasi Akademik & LMS Enterprise.</div>
+                <div>&copy; {{ date('Y') }} ASEAN University International. All Rights Reserved. • Sistem Informasi Akademik & LMS Enterprise</div>
                 <div class="portal-footer-live-clock">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <circle cx="12" cy="12" r="10"></circle>

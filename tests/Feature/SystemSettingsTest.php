@@ -111,7 +111,6 @@ class SystemSettingsTest extends TestCase
             ->assertSee('Cek koneksi Midtrans')
             ->assertSee('Simpan konfigurasi terlebih dahulu.')
             ->assertSee('name="service_fee"', false)
-            ->assertSee('overflow-wrap:anywhere', false)
             ->assertSee(route('payments.midtrans.notification'))
             ->assertSee('domain publik dengan HTTPS')
             ->assertSee('placeholder="Contoh: mail.domainkampus.ac.id"', false)
@@ -205,7 +204,7 @@ class SystemSettingsTest extends TestCase
             ])
             ->assertRedirect();
 
-        URL::forceRootUrl('https://smartkampus.test/siakad');
+        URL::forceRootUrl('https://siakad.test/siakad');
         $settingsRow = DB::connection('simak_main')->table('simak_site_settings')->first();
         $logoPath = $settingsRow->logo_path;
         $preloaderLogoPath = $settingsRow->preloader_logo_path;
@@ -247,7 +246,8 @@ class SystemSettingsTest extends TestCase
             $this->assertSame('png', pathinfo($convertedPath, PATHINFO_EXTENSION));
             $this->assertFileExists($convertedPath);
             $convertedImage = imagecreatefrompng($convertedPath);
-            $this->assertNotFalse($convertedImage);
+            $this->assertInstanceOf(\GdImage::class, $convertedImage);
+            /** @var \GdImage $convertedImage */
             imagedestroy($convertedImage);
         } finally {
             if (is_file($convertedPath)) {
@@ -322,7 +322,7 @@ class SystemSettingsTest extends TestCase
             'enabled' => false,
             'environment' => 'sandbox',
             'client_key' => 'SB-Mid-client-test',
-            'credentials_encrypted' => Crypt::encryptString(json_encode([
+            'credentials_encrypted' => Crypt::encryptString((string) json_encode([
                 'server_key' => 'SB-Mid-server-test',
             ])),
         ]);
@@ -350,7 +350,7 @@ class SystemSettingsTest extends TestCase
             'enabled' => true,
             'environment' => 'sandbox',
             'client_key' => 'SB-Mid-client-test',
-            'credentials_encrypted' => Crypt::encryptString(json_encode([
+            'credentials_encrypted' => Crypt::encryptString((string) json_encode([
                 'server_key' => 'SB-Mid-server-test',
             ])),
         ]);

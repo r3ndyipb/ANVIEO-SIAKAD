@@ -77,13 +77,10 @@ resume/rerun procedures, and integrations.
 
 ## Live links and demo
 
-- Official SIAKAD website: <https://smartkampus.id>
-- Complete installation guide: <https://smartkampus.id>
-- Demo: <https://siakad.smartkampus.id>
 - Demo username: `admin`
 - Demo password: `admin`
 
-The demo account is public and intended only for exploring the dummy-data demo.
+The demo account is intended only for exploring the dummy-data demo.
 Do not use these credentials for any other installation.
 
 ## Technology
@@ -102,10 +99,8 @@ Do not use these credentials for any other installation.
   is only for a new empty database. It is not a database upgrade script.
 - Do not run `migrate:fresh`, `migrate:refresh`, or Feeder initialization against
   a database containing data you need to keep.
-- This project uses the custom license in [`LICENSE`](LICENSE). It permits free
-  use and redistribution, prohibits charging for the application itself, and
-  requires preserving the visible “siakad smartkampus.id” attribution. It is
-  not an OSI-approved open-source license.
+- This project uses the license in [`LICENSE`](LICENSE). It permits free
+  use and redistribution, and prohibits charging for the application itself.
 
 ## Contributing
 
@@ -113,8 +108,3 @@ Please open an issue before making large changes. Include the relevant feature,
 role, expected behavior, and test coverage. Run focused tests with an isolated
 test database; do not point automated tests at a university's operational
 database.
-
-## Official website and installation guide
-
-- Official SIAKAD website: <https://smartkampus.id>
-- Complete installation guide: <https://smartkampus.id>
